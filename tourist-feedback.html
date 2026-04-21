@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tourist Feedback - Tourist Safety System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #f5f5f5; }
+        .header { background: linear-gradient(135deg, #FF6B35, #F7931E); color: white; padding: 1rem; text-align: center; }
+        .container { max-width: 800px; margin: 2rem auto; padding: 0 1rem; }
+        .feedback-card { background: white; border-radius: 10px; padding: 2rem; margin: 1rem 0; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .form-group { margin: 1rem 0; }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: bold; }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 5px; }
+        .rating { display: flex; gap: 0.5rem; margin: 0.5rem 0; }
+        .star { font-size: 2rem; color: #ddd; cursor: pointer; transition: color 0.3s; }
+        .star.active, .star:hover { color: #ffc107; }
+        .btn { padding: 0.8rem 1.5rem; border: none; border-radius: 5px; cursor: pointer; margin: 0.5rem; }
+        .btn-primary { background: #007bff; color: white; }
+        .btn-success { background: #28a745; color: white; }
+        .feedback-item { border: 1px solid #ddd; border-radius: 5px; padding: 1rem; margin: 0.5rem 0; }
+    </style>
+</head>
+<body>    <script src="universal-menu.js"></script>
+    <div class="header">
+        <h1><i class="fas fa-comment-alt"></i> Tourist Feedback</h1>
+        <p>Help us improve tourist safety and services</p>
+    </div>
+
+    <div class="container">
+        <div class="feedback-card">
+            <h3><i class="fas fa-star"></i> Rate Your Experience</h3>
+            <form id="feedbackForm">
+                <div class="form-group">
+                    <label>Overall Safety Experience</label>
+                    <div class="rating" data-rating="safety">
+                        <span class="star" data-value="1">★</span>
+                        <span class="star" data-value="2">★</span>
+                        <span class="star" data-value="3">★</span>
+                        <span class="star" data-value="4">★</span>
+                        <span class="star" data-value="5">★</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Digital Tourist ID System</label>
+                    <div class="rating" data-rating="digital-id">
+                        <span class="star" data-value="1">★</span>
+                        <span class="star" data-value="2">★</span>
+                        <span class="star" data-value="3">★</span>
+                        <span class="star" data-value="4">★</span>
+                        <span class="star" data-value="5">★</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Emergency Response System</label>
+                    <div class="rating" data-rating="emergency">
+                        <span class="star" data-value="1">★</span>
+                        <span class="star" data-value="2">★</span>
+                        <span class="star" data-value="3">★</span>
+                        <span class="star" data-value="4">★</span>
+                        <span class="star" data-value="5">★</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="location">Location Visited</label>
+                    <select id="location" required>
+                        <option value="">Select Location</option>
+                        <option value="kaziranga">Kaziranga National Park</option>
+                        <option value="guwahati">Guwahati</option>
+                        <option value="shillong">Shillong</option>
+                        <option value="imphal">Imphal</option>
+                        <option value="aizawl">Aizawl</option>
+                        <option value="kohima">Kohima</option>
+                        <option value="gangtok">Gangtok</option>
+                        <option value="agartala">Agartala</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="category">Feedback Category</label>
+                    <select id="category" required>
+                        <option value="">Select Category</option>
+                        <option value="safety">Safety & Security</option>
+                        <option value="technology">Technology & Apps</option>
+                        <option value="emergency">Emergency Services</option>
+                        <option value="information">Tourist Information</option>
+                        <option value="staff">Staff Behavior</option>
+                        <option value="infrastructure">Infrastructure</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="comments">Your Comments</label>
+                    <textarea id="comments" rows="5" placeholder="Please share your detailed feedback..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="suggestions">Suggestions for Improvement</label>
+                    <textarea id="suggestions" rows="3" placeholder="How can we improve our services?"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Would you recommend our safety system to other tourists?</label>
+                    <div>
+                        <input type="radio" id="recommend-yes" name="recommend" value="yes">
+                        <label for="recommend-yes" style="display: inline; margin-left: 0.5rem;">Yes, definitely</label>
+                    </div>
+                    <div>
+                        <input type="radio" id="recommend-maybe" name="recommend" value="maybe">
+                        <label for="recommend-maybe" style="display: inline; margin-left: 0.5rem;">Maybe</label>
+                    </div>
+                    <div>
+                        <input type="radio" id="recommend-no" name="recommend" value="no">
+                        <label for="recommend-no" style="display: inline; margin-left: 0.5rem;">No</label>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-success">Submit Feedback</button>
+                <button type="button" class="btn btn-primary" onclick="saveDraft()">Save as Draft</button>
+            </form>
+        </div>
+
+        <div class="feedback-card">
+            <h3><i class="fas fa-chart-bar"></i> Recent Feedback Summary</h3>
+            <div class="feedback-item">
+                <p><strong>Anonymous Tourist</strong> - Kaziranga National Park</p>
+                <p>Rating: ⭐⭐⭐⭐⭐ (5/5)</p>
+                <p>"Excellent safety system. The GPS tracking gave me confidence while exploring."</p>
+                <small>2 days ago</small>
+            </div>
+            <div class="feedback-item">
+                <p><strong>John D.</strong> - Shillong</p>
+                <p>Rating: ⭐⭐⭐⭐ (4/5)</p>
+                <p>"Digital ID system is very convenient. Emergency response was quick."</p>
+                <small>1 week ago</small>
+            </div>
+            <div class="feedback-item">
+                <p><strong>Sarah M.</strong> - Guwahati</p>
+                <p>Rating: ⭐⭐⭐⭐⭐ (5/5)</p>
+                <p>"Multilingual support helped a lot. Family tracking feature is amazing."</p>
+                <small>2 weeks ago</small>
+            </div>
+        </div>
+
+        <div class="feedback-card">
+            <h3><i class="fas fa-info-circle"></i> Feedback Guidelines</h3>
+            <ul>
+                <li>Be honest and constructive in your feedback</li>
+                <li>Provide specific examples when possible</li>
+                <li>Suggest practical improvements</li>
+                <li>Your feedback helps improve services for all tourists</li>
+                <li>All feedback is reviewed by our improvement team</li>
+            </ul>
+        </div>
+    </div>
+
+    <script>
+        let ratings = {};
+
+        // Handle star ratings
+        document.querySelectorAll('.rating').forEach(ratingGroup => {
+            const stars = ratingGroup.querySelectorAll('.star');
+            const ratingType = ratingGroup.dataset.rating;
+            
+            stars.forEach((star, index) => {
+                star.addEventListener('click', () => {
+                    ratings[ratingType] = index + 1;
+                    updateStars(ratingGroup, index + 1);
+                });
+                
+                star.addEventListener('mouseover', () => {
+                    updateStars(ratingGroup, index + 1);
+                });
+            });
+            
+            ratingGroup.addEventListener('mouseleave', () => {
+                updateStars(ratingGroup, ratings[ratingType] || 0);
+            });
+        });
+
+        function updateStars(ratingGroup, rating) {
+            const stars = ratingGroup.querySelectorAll('.star');
+            stars.forEach((star, index) => {
+                if (index < rating) {
+                    star.classList.add('active');
+                } else {
+                    star.classList.remove('active');
+                }
+            });
+        }
+
+        document.getElementById('feedbackForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = {
+                ratings: ratings,
+                location: document.getElementById('location').value,
+                category: document.getElementById('category').value,
+                comments: document.getElementById('comments').value,
+                suggestions: document.getElementById('suggestions').value,
+                recommend: document.querySelector('input[name="recommend"]:checked')?.value
+            };
+            
+            alert('Thank you for your feedback! Your input helps us improve tourist safety services.');
+            console.log('Feedback submitted:', formData);
+            
+            // Reset form
+            this.reset();
+            ratings = {};
+            document.querySelectorAll('.star').forEach(star => star.classList.remove('active'));
+        });
+
+        function saveDraft() {
+            alert('Feedback saved as draft. You can complete it later.');
+        }
+    </script>
+    <!-- Universal Menu Script -->`n    <script src="universal-menu.js"></script>`n</body>
+</html>

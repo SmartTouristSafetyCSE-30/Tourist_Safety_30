@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Police Reports | Police Module | Tourist Safety System</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f8f9fa; }
+        .header { background: linear-gradient(135deg, #1e3c72, #2a5298); color: white; padding: 20px 0; }
+        .header-content { max-width: 1400px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 30px 20px; }
+        .reports-nav { background: white; border-radius: 10px; padding: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); margin-bottom: 30px; }
+        .nav-tabs { display: flex; gap: 10px; margin-bottom: 20px; }
+        .nav-tab { padding: 10px 20px; border: 1px solid #dee2e6; border-radius: 5px; background: #f8f9fa; cursor: pointer; transition: all 0.3s; }
+        .nav-tab.active { background: #1e3c72; color: white; border-color: #1e3c72; }
+        .report-filters { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; align-items: end; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 600; }
+        .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; }
+        .btn { padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: 600; }
+        .btn-primary { background: #1e3c72; color: white; }
+        .btn-success { background: #28a745; color: white; }
+        .btn-warning { background: #ffc107; color: #212529; }
+        .reports-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 20px; }
+        .report-card { background: white; border-radius: 10px; padding: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .report-header { display: flex; justify-content: between; align-items: center; margin-bottom: 15px; }
+        .report-title { font-size: 16px; font-weight: 600; color: #1e3c72; }
+        .report-meta { font-size: 12px; color: #666; margin-bottom: 15px; }
+        .report-stats { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px; }
+        .stat-item { text-align: center; padding: 10px; background: #f8f9fa; border-radius: 5px; }
+        .stat-value { font-size: 20px; font-weight: bold; color: #1e3c72; }
+        .stat-label { font-size: 12px; color: #666; }
+        .report-actions { display: flex; gap: 10px; }
+        .btn-sm { padding: 6px 12px; font-size: 12px; }
+        .chart-placeholder { height: 200px; background: #f8f9fa; border-radius: 5px; display: flex; align-items: center; justify-content: center; color: #666; margin: 15px 0; }
+    </style>
+</head>
+<body>    <script src="universal-menu.js"></script>
+    <header class="header">
+        <div class="header-content">
+            <div style="display: flex; align-items: center;">
+                <div style="width: 50px; height: 50px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #1e3c72; margin-right: 15px;">📊</div>
+                <div>
+                    <div style="font-size: 24px; font-weight: bold;">Police Reports & Analytics</div>
+                    <div style="font-size: 14px; opacity: 0.9;">Incident Reports & Performance Metrics</div>
+                </div>
+            </div>
+            <button class="btn btn-primary" onclick="window.location.href='police-dashboard.html'">← Back to Dashboard</button>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Reports Navigation -->
+        <div class="reports-nav">
+            <div class="nav-tabs">
+                <div class="nav-tab active" onclick="switchTab('daily')">Daily Reports</div>
+                <div class="nav-tab" onclick="switchTab('weekly')">Weekly Reports</div>
+                <div class="nav-tab" onclick="switchTab('monthly')">Monthly Reports</div>
+                <div class="nav-tab" onclick="switchTab('custom')">Custom Reports</div>
+            </div>
+            
+            <div class="report-filters">
+                <div class="form-group">
+                    <label for="dateFrom">From Date</label>
+                    <input type="date" id="dateFrom">
+                </div>
+                <div class="form-group">
+                    <label for="dateTo">To Date</label>
+                    <input type="date" id="dateTo">
+                </div>
+                <div class="form-group">
+                    <label for="reportType">Report Type</label>
+                    <select id="reportType">
+                        <option value="all">All Reports</option>
+                        <option value="incidents">Incident Reports</option>
+                        <option value="performance">Performance Reports</option>
+                        <option value="safety">Safety Reports</option>
+                        <option value="analytics">Analytics Reports</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="district">District</label>
+                    <select id="district">
+                        <option value="all">All Districts</option>
+                        <option value="kamrup">Kamrup</option>
+                        <option value="guwahati">Guwahati</option>
+                        <option value="dibrugarh">Dibrugarh</option>
+                        <option value="jorhat">Jorhat</option>
+                    </select>
+                </div>
+                <button class="btn btn-primary" onclick="generateReports()">Generate Reports</button>
+                <button class="btn btn-success" onclick="exportReports()">📊 Export All</button>
+            </div>
+        </div>
+
+        <!-- Reports Grid -->
+        <div class="reports-grid" id="reportsGrid">
+            <!-- Daily Incident Summary -->
+            <div class="report-card">
+                <div class="report-header">
+                    <div class="report-title">📋 Daily Incident Summary</div>
+                </div>
+                <div class="report-meta">
+                    Generated: Today, 4:00 PM | Period: January 15, 2024
+                </div>
+                <div class="report-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">23</div>
+                        <div class="stat-label">Total Incidents</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">18</div>
+                        <div class="stat-label">Resolved</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">3</div>
+                        <div class="stat-label">High Priority</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">2</div>
+                        <div class="stat-label">Pending</div>
+                    </div>
+                </div>
+                <div class="chart-placeholder">
+                    📊 Incident Distribution Chart
+                </div>
+                <div class="report-actions">
+                    <button class="btn btn-primary btn-sm" onclick="viewReport('daily-incident')">👁️ View</button>
+                    <button class="btn btn-success btn-sm" onclick="downloadReport('daily-incident')">⬇️ Download</button>
+                    <button class="btn btn-warning btn-sm" onclick="shareReport('daily-incident')">📤 Share</button>
+                </div>
+            </div>
+
+            <!-- Tourist Safety Performance -->
+            <div class="report-card">
+                <div class="report-header">
+                    <div class="report-title">🛡️ Tourist Safety Performance</div>
+                </div>
+                <div class="report-meta">
+                    Generated: Today, 3:45 PM | Period: This Week
+                </div>
+                <div class="report-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">1,247</div>
+                        <div class="stat-label">Active Tourists</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">96.1%</div>
+                        <div class="stat-label">Safety Rate</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">8.5</div>
+                        <div class="stat-label">Avg Response Time (min)</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">47</div>
+                        <div class="stat-label">Alerts Handled</div>
+                    </div>
+                </div>
+                <div class="chart-placeholder">
+                    📈 Safety Trends Graph
+                </div>
+                <div class="report-actions">
+                    <button class="btn btn-primary btn-sm" onclick="viewReport('safety-performance')">👁️ View</button>
+                    <button class="btn btn-success btn-sm" onclick="downloadReport('safety-performance')">⬇️ Download</button>
+                    <button class="btn btn-warning btn-sm" onclick="shareReport('safety-performance')">📤 Share</button>
+                </div>
+            </div>
+
+            <!-- Officer Performance Report -->
+            <div class="report-card">
+                <div class="report-header">
+                    <div class="report-title">👮 Officer Performance Report</div>
+                </div>
+                <div class="report-meta">
+                    Generated: Today, 3:30 PM | Period: This Month
+                </div>
+                <div class="report-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">15</div>
+                        <div class="stat-label">Active Officers</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">142</div>
+                        <div class="stat-label">Cases Handled</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">94.3%</div>
+                        <div class="stat-label">Resolution Rate</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">7.2</div>
+                        <div class="stat-label">Avg Response (min)</div>
+                    </div>
+                </div>
+                <div class="chart-placeholder">
+                    📊 Officer Performance Metrics
+                </div>
+                <div class="report-actions">
+                    <button class="btn btn-primary btn-sm" onclick="viewReport('officer-performance')">👁️ View</button>
+                    <button class="btn btn-success btn-sm" onclick="downloadReport('officer-performance')">⬇️ Download</button>
+                    <button class="btn btn-warning btn-sm" onclick="shareReport('officer-performance')">📤 Share</button>
+                </div>
+            </div>
+
+            <!-- Geographic Analysis -->
+            <div class="report-card">
+                <div class="report-header">
+                    <div class="report-title">🗺️ Geographic Incident Analysis</div>
+                </div>
+                <div class="report-meta">
+                    Generated: Today, 3:15 PM | Period: Last 30 Days
+                </div>
+                <div class="report-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">8</div>
+                        <div class="stat-label">High-Risk Zones</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">23</div>
+                        <div class="stat-label">Tourist Hotspots</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">67%</div>
+                        <div class="stat-label">Urban Incidents</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">33%</div>
+                        <div class="stat-label">Rural Incidents</div>
+                    </div>
+                </div>
+                <div class="chart-placeholder">
+                    🗺️ Heat Map Visualization
+                </div>
+                <div class="report-actions">
+                    <button class="btn btn-primary btn-sm" onclick="viewReport('geographic-analysis')">👁️ View</button>
+                    <button class="btn btn-success btn-sm" onclick="downloadReport('geographic-analysis')">⬇️ Download</button>
+                    <button class="btn btn-warning btn-sm" onclick="shareReport('geographic-analysis')">📤 Share</button>
+                </div>
+            </div>
+
+            <!-- Emergency Response Analytics -->
+            <div class="report-card">
+                <div class="report-header">
+                    <div class="report-title">🚨 Emergency Response Analytics</div>
+                </div>
+                <div class="report-meta">
+                    Generated: Today, 3:00 PM | Period: This Quarter
+                </div>
+                <div class="report-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">89</div>
+                        <div class="stat-label">Emergency Calls</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">6.8</div>
+                        <div class="stat-label">Avg Response (min)</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">97.8%</div>
+                        <div class="stat-label">Success Rate</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">12</div>
+                        <div class="stat-label">False Alarms</div>
+                    </div>
+                </div>
+                <div class="chart-placeholder">
+                    ⏱️ Response Time Trends
+                </div>
+                <div class="report-actions">
+                    <button class="btn btn-primary btn-sm" onclick="viewReport('emergency-response')">👁️ View</button>
+                    <button class="btn btn-success btn-sm" onclick="downloadReport('emergency-response')">⬇️ Download</button>
+                    <button class="btn btn-warning btn-sm" onclick="shareReport('emergency-response')">📤 Share</button>
+                </div>
+            </div>
+
+            <!-- Tourist Feedback Analysis -->
+            <div class="report-card">
+                <div class="report-header">
+                    <div class="report-title">⭐ Tourist Feedback Analysis</div>
+                </div>
+                <div class="report-meta">
+                    Generated: Today, 2:45 PM | Period: This Month
+                </div>
+                <div class="report-stats">
+                    <div class="stat-item">
+                        <div class="stat-value">4.6</div>
+                        <div class="stat-label">Avg Rating</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">234</div>
+                        <div class="stat-label">Feedback Count</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">87%</div>
+                        <div class="stat-label">Positive Reviews</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value">13%</div>
+                        <div class="stat-label">Improvement Areas</div>
+                    </div>
+                </div>
+                <div class="chart-placeholder">
+                    📊 Satisfaction Metrics
+                </div>
+                <div class="report-actions">
+                    <button class="btn btn-primary btn-sm" onclick="viewReport('tourist-feedback')">👁️ View</button>
+                    <button class="btn btn-success btn-sm" onclick="downloadReport('tourist-feedback')">⬇️ Download</button>
+                    <button class="btn btn-warning btn-sm" onclick="shareReport('tourist-feedback')">📤 Share</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Set default dates
+        document.addEventListener('DOMContentLoaded', function() {
+            const today = new Date();
+            const weekAgo = new Date(today.getTime() - 7 * 24 * 60 * 60 * 1000);
+            
+            document.getElementById('dateFrom').value = weekAgo.toISOString().split('T')[0];
+            document.getElementById('dateTo').value = today.toISOString().split('T')[0];
+        });
+
+        function switchTab(tabType) {
+            // Remove active class from all tabs
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+            
+            console.log(`Switched to ${tabType} reports`);
+            // In real implementation, this would filter reports by type
+        }
+
+        function generateReports() {
+            const filters = {
+                dateFrom: document.getElementById('dateFrom').value,
+                dateTo: document.getElementById('dateTo').value,
+                reportType: document.getElementById('reportType').value,
+                district: document.getElementById('district').value
+            };
+            
+            console.log('Generating reports with filters:', filters);
+            alert('Reports generated successfully!');
+            // In real implementation, this would generate filtered reports
+        }
+
+        function exportReports() {
+            if (confirm('Export all visible reports as PDF?')) {
+                alert('Exporting reports... Download will start shortly.');
+                // In real implementation, this would export reports as PDF/Excel
+            }
+        }
+
+        function viewReport(reportId) {
+            alert(`Opening detailed view for report: ${reportId}`);
+            // In real implementation, this would open detailed report view
+        }
+
+        function downloadReport(reportId) {
+            alert(`Downloading report: ${reportId}`);
+            // In real implementation, this would download specific report
+        }
+
+        function shareReport(reportId) {
+            const shareUrl = `${window.location.origin}/shared-report?id=${reportId}`;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: `Police Report - ${reportId}`,
+                    url: shareUrl
+                });
+            } else {
+                navigator.clipboard.writeText(shareUrl);
+                alert('Report link copied to clipboard!');
+            }
+        }
+
+        // Auto-refresh reports every 5 minutes
+        setInterval(() => {
+            console.log('Auto-refreshing reports...');
+            // In real implementation, this would refresh report data
+        }, 300000);
+    </script>
+    <!-- Universal Menu Script -->`n    <script src="universal-menu.js"></script>`n</body>
+</html>

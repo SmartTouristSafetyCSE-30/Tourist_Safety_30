@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tourism Department Login - Tourist Safety System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+        .login-container { background: white; border-radius: 15px; padding: 3rem; box-shadow: 0 15px 35px rgba(0,0,0,0.1); max-width: 400px; width: 100%; }
+        .logo { text-align: center; margin-bottom: 2rem; }
+        .logo i { font-size: 4rem; color: #667eea; margin-bottom: 1rem; }
+        .form-group { margin: 1.5rem 0; }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: bold; color: #333; }
+        .form-group input, .form-group select { width: 100%; padding: 1rem; border: 2px solid #e1e5e9; border-radius: 8px; font-size: 1rem; transition: border-color 0.3s; }
+        .form-group input:focus, .form-group select:focus { outline: none; border-color: #667eea; }
+        .btn { width: 100%; padding: 1rem; background: linear-gradient(135deg, #667eea, #764ba2); color: white; border: none; border-radius: 8px; font-size: 1.1rem; cursor: pointer; transition: transform 0.3s; }
+        .btn:hover { transform: translateY(-2px); }
+        .links { text-align: center; margin-top: 2rem; }
+        .links a { color: #667eea; text-decoration: none; margin: 0 1rem; }
+        .govt-header { background: #f8f9fa; padding: 1rem; border-radius: 8px; margin-bottom: 2rem; text-align: center; }
+    </style>
+</head>
+<body>    <script src="universal-menu.js"></script>
+    <div class="login-container">
+        <div class="govt-header">
+            <h4 style="color: #333; margin: 0;">Government of India</h4>
+            <p style="color: #666; margin: 0;">Ministry of Development of North Eastern Region</p>
+        </div>
+        
+        <div class="logo">
+            <i class="fas fa-building"></i>
+            <h2 style="color: #333;">Tourism Department</h2>
+            <p style="color: #666;">Administrative Portal</p>
+        </div>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input type="text" id="username" name="username" required placeholder="Enter your username">
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required placeholder="Enter your password">
+            </div>
+
+            <div class="form-group">
+                <label for="department">Department</label>
+                <select id="department" name="department" required>
+                    <option value="">Select Department</option>
+                    <option value="assam">Assam Tourism</option>
+                    <option value="meghalaya">Meghalaya Tourism</option>
+                    <option value="manipur">Manipur Tourism</option>
+                    <option value="mizoram">Mizoram Tourism</option>
+                    <option value="nagaland">Nagaland Tourism</option>
+                    <option value="tripura">Tripura Tourism</option>
+                    <option value="arunachal">Arunachal Pradesh Tourism</option>
+                    <option value="sikkim">Sikkim Tourism</option>
+                    <option value="modoner">MoDoNER Central</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="role">Role</label>
+                <select id="role" name="role" required>
+                    <option value="">Select Role</option>
+                    <option value="director">Director</option>
+                    <option value="joint-director">Joint Director</option>
+                    <option value="assistant-director">Assistant Director</option>
+                    <option value="tourism-officer">Tourism Officer</option>
+                    <option value="data-analyst">Data Analyst</option>
+                    <option value="safety-coordinator">Safety Coordinator</option>
+                </select>
+            </div>
+
+            <button type="submit" class="btn">
+                <i class="fas fa-sign-in-alt"></i> Login to Dashboard
+            </button>
+        </form>
+
+        <div class="links">
+            <a href="forgot-password.html"><i class="fas fa-key"></i> Forgot Password?</a>
+            <a href="help-support.html"><i class="fas fa-question-circle"></i> Help</a>
+        </div>
+
+        <div style="text-align: center; margin-top: 2rem; padding-top: 1rem; border-top: 1px solid #eee;">
+            <p style="color: #666; font-size: 0.9rem;">
+                <i class="fas fa-shield-alt"></i> Secure Government Portal<br>
+                For official use only
+            </p>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const department = document.getElementById('department').value;
+            const role = document.getElementById('role').value;
+            
+            // Demo credentials
+            if (username === 'tourism_dept' && password === 'tourism123') {
+                alert('Login successful! Redirecting to Tourism Dashboard...');
+                window.location.href = 'tourism-dashboard.html';
+            } else {
+                alert('Invalid credentials. Please try again.\n\nDemo credentials:\nUsername: tourism_dept\nPassword: tourism123');
+            }
+        });
+    </script>
+    <!-- Universal Menu Script -->`n    <script src="universal-menu.js"></script>`n</body>
+</html>

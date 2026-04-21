@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ask India Gov AI - Smart Tourist Safety System</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; background: linear-gradient(rgba(102,126,234,0.9), rgba(118,75,162,0.9)), url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><rect fill="%23e3f2fd" width="1200" height="800"/><g fill="%23bbdefb" opacity="0.3"><circle cx="200" cy="150" r="30"/><circle cx="400" cy="200" r="25"/><circle cx="600" cy="100" r="35"/><circle cx="800" cy="180" r="28"/><circle cx="1000" cy="120" r="32"/><path d="M100,300 Q200,250 300,300 T500,300" stroke="%2390caf9" stroke-width="3" fill="none"/><path d="M600,400 Q700,350 800,400 T1000,400" stroke="%2390caf9" stroke-width="3" fill="none"/><polygon points="150,500 170,480 190,500 170,520" fill="%2381c784"/><polygon points="350,450 370,430 390,450 370,470" fill="%2381c784"/><polygon points="750,520 770,500 790,520 770,540" fill="%2381c784"/><rect x="250" y="600" width="40" height="60" fill="%23a5d6a7"/><rect x="500" y="580" width="35" height="80" fill="%23a5d6a7"/><rect x="850" y="620" width="45" height="40" fill="%23a5d6a7"/></g></svg>') fixed; background-size: cover; min-height: 100vh; }
+        .skip-link { position: absolute; top: -40px; left: 6px; background: #000; color: #fff; padding: 8px; text-decoration: none; z-index: 1000; }
+        .skip-link:focus { top: 6px; }
+        .gov-header { background: linear-gradient(135deg, #ff6600, #ff9933); color: white; padding: 10px 0; }
+        .header-top { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        .logo-section { display: flex; align-items: center; gap: 15px; }
+        .emblem { width: 60px; height: 60px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #ff6600; }
+        .site-title { font-size: 24px; font-weight: bold; }
+        .site-subtitle { font-size: 14px; opacity: 0.9; }
+        .main-nav { background: #003366; }
+        .nav-container { max-width: 1200px; margin: 0 auto; }
+        .nav-menu { display: flex; list-style: none; }
+        .nav-menu li a { display: block; padding: 15px 20px; color: white; text-decoration: none; }
+        .nav-menu li a:hover { background: #004080; }
+        .ai-container { max-width: 800px; margin: 30px auto; padding: 20px; }
+        .ai-header { background: white; border-radius: 15px 15px 0 0; padding: 30px; text-align: center; }
+        .ai-avatar { width: 80px; height: 80px; background: linear-gradient(135deg, #667eea, #764ba2); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px; color: white; font-size: 36px; }
+        .ai-title { font-size: 28px; color: #003366; margin-bottom: 10px; }
+        .ai-subtitle { color: #666; margin-bottom: 20px; }
+        .language-selector { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; }
+        .lang-btn { background: #f0f0f0; border: 1px solid #ddd; padding: 8px 15px; border-radius: 20px; cursor: pointer; transition: all 0.3s; }
+        .lang-btn.active { background: #667eea; color: white; }
+        .lang-btn:hover { background: #e0e0e0; }
+        .lang-btn.active:hover { background: #5a6fd8; }
+        .chat-container { background: white; border-radius: 0 0 15px 15px; height: 500px; display: flex; flex-direction: column; }
+        .chat-messages { flex: 1; padding: 20px; overflow-y: auto; background: #f8f9fa; }
+        .message { margin-bottom: 15px; display: flex; align-items: flex-start; gap: 10px; }
+        .message.user { flex-direction: row-reverse; }
+        .message-avatar { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; }
+        .message.ai .message-avatar { background: linear-gradient(135deg, #667eea, #764ba2); color: white; }
+        .message.user .message-avatar { background: #ff6600; color: white; }
+        .message-content { max-width: 70%; padding: 12px 16px; border-radius: 18px; }
+        .message.ai .message-content { background: white; border: 1px solid #e0e0e0; }
+        .message.user .message-content { background: #ff6600; color: white; }
+        .message-time { font-size: 11px; opacity: 0.7; margin-top: 5px; }
+        .chat-input-container { padding: 20px; border-top: 1px solid #e0e0e0; }
+        .chat-input-wrapper { display: flex; gap: 10px; }
+        .chat-input { flex: 1; padding: 12px 16px; border: 2px solid #e0e0e0; border-radius: 25px; font-size: 16px; }
+        .chat-input:focus { outline: none; border-color: #667eea; }
+        .send-btn { background: #667eea; color: white; border: none; padding: 12px 20px; border-radius: 25px; cursor: pointer; font-size: 16px; }
+        .send-btn:hover { background: #5a6fd8; }
+        .send-btn:disabled { background: #ccc; cursor: not-allowed; }
+        .quick-questions { display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 15px; }
+        .quick-btn { background: #e3f2fd; color: #1976d2; border: 1px solid #bbdefb; padding: 8px 12px; border-radius: 15px; cursor: pointer; font-size: 14px; }
+        .quick-btn:hover { background: #bbdefb; }
+        .typing-indicator { display: none; align-items: center; gap: 10px; padding: 12px 16px; }
+        .typing-dots { display: flex; gap: 4px; }
+        .typing-dot { width: 8px; height: 8px; background: #667eea; border-radius: 50%; animation: typing 1.4s infinite; }
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+        @keyframes typing { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-10px); } }
+        .gov-footer { background: #003366; color: white; padding: 20px 0; margin-top: 30px; text-align: center; }
+        @media (max-width: 768px) {
+            .header-top { flex-direction: column; gap: 10px; }
+            .nav-menu { flex-direction: column; }
+            .ai-container { margin: 10px; padding: 10px; }
+            .chat-container { height: 400px; }
+            .message-content { max-width: 85%; }
+        }
+    </style>
+</head>
+<body>    <script src="universal-menu.js"></script>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    
+    <header class="gov-header">
+        <div class="header-top">
+            <div class="logo-section">
+                <div class="emblem">🇮🇳</div>
+                <div>
+                    <div class="site-title">Smart Tourist Safety System</div>
+                    <div class="site-subtitle">Ministry of Development of North Eastern Region</div>
+                    <div style="font-size: 11px; opacity: 0.8; margin-top: 2px;">SDG-9: Industry, Innovation & Infrastructure</div>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <nav class="main-nav">
+        <div class="nav-container">
+            <ul class="nav-menu">
+                <li><a href="tourist-dashboard.html">Dashboard</a></li>
+                <li><a href="ask-india-gov-ai.html">AI Assistant</a></li>
+                <li><a href="panic-button.html">Emergency</a></li>
+                <li><a href="help-support.html">Help</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <main id="main-content" class="ai-container">
+        <div class="ai-header">
+            <div class="ai-avatar">🤖</div>
+            <h1 class="ai-title">Ask India Gov AI</h1>
+            <p class="ai-subtitle">Your multilingual AI assistant for tourist safety and guidance</p>
+            
+            <div class="language-selector">
+                <button class="lang-btn active" onclick="changeLanguage('en')" data-lang="en">English</button>
+                <button class="lang-btn" onclick="changeLanguage('hi')" data-lang="hi">हिंदी</button>
+                <button class="lang-btn" onclick="changeLanguage('as')" data-lang="as">অসমীয়া</button>
+                <button class="lang-btn" onclick="changeLanguage('bn')" data-lang="bn">বাংলা</button>
+                <button class="lang-btn" onclick="changeLanguage('mni')" data-lang="mni">মৈতৈলোন্</button>
+                <button class="lang-btn" onclick="changeLanguage('ne')" data-lang="ne">नेपाली</button>
+            </div>
+        </div>
+        
+        <div class="chat-container">
+            <div class="chat-messages" id="chatMessages">
+                <div class="message ai">
+                    <div class="message-avatar">🤖</div>
+                    <div class="message-content">
+                        <div>Hello! I'm Ask India Gov AI, your official government assistant for tourist safety in Northeast India. How can I help you today?</div>
+                        <div class="message-time" id="welcomeTime"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="typing-indicator" id="typingIndicator">
+                <div class="message-avatar">🤖</div>
+                <div class="typing-dots">
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                    <div class="typing-dot"></div>
+                </div>
+                <span style="margin-left: 10px;">AI is typing...</span>
+            </div>
+            
+            <div class="chat-input-container">
+                <div class="quick-questions">
+                    <button class="quick-btn" onclick="sendQuickQuestion('emergency')">🚨 Emergency Help</button>
+                    <button class="quick-btn" onclick="sendQuickQuestion('safety')">🛡️ Safety Tips</button>
+                    <button class="quick-btn" onclick="sendQuickQuestion('places')">📍 Tourist Places</button>
+                    <button class="quick-btn" onclick="sendQuickQuestion('weather')">🌤️ Weather Info</button>
+                    <button class="quick-btn" onclick="sendQuickQuestion('transport')">🚗 Transportation</button>
+                </div>
+                
+                <div class="chat-input-wrapper">
+                    <input type="text" class="chat-input" id="chatInput" placeholder="Type your question here..." 
+                           onkeypress="handleKeyPress(event)">
+                    <button class="send-btn" id="sendBtn" onclick="sendMessage()">Send</button>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <footer class="gov-footer">
+        <p>&copy; 2024 Ministry of Development of North Eastern Region, Government of India</p>
+    </footer>
+    
+    <script>
+        let currentLanguage = 'en';
+        let chatHistory = [];
+        
+        // Initialize
+        window.onload = function() {
+            document.getElementById('welcomeTime').textContent = new Date().toLocaleTimeString();
+            
+            // Check authentication
+            const token = localStorage.getItem('authToken');
+            if (!token) {
+                addMessage('ai', 'Please login to access personalized assistance. You can still ask general questions about Northeast India tourism.');
+            }
+        };
+        
+        function changeLanguage(lang) {
+            currentLanguage = lang;
+            
+            // Update active language button
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            document.querySelector(`[data-lang="${lang}"]`).classList.add('active');
+            
+            // Update placeholder text based on language
+            const placeholders = {
+                'en': 'Type your question here...',
+                'hi': 'अपना प्रश्न यहाँ लिखें...',
+                'as': 'আপোনাৰ প্ৰশ্ন ইয়াত লিখক...',
+                'bn': 'আপনার প্রশ্ন এখানে লিখুন...',
+                'mni': 'অহাংবা ৱাহাং অসিদা ইবিউ...',
+                'ne': 'आफ्नो प्रश्न यहाँ लेख्नुहोस्...'
+            };
+            
+            document.getElementById('chatInput').placeholder = placeholders[lang] || placeholders['en'];
+            
+            // Send language change notification
+            addMessage('ai', `Language changed to ${getLanguageName(lang)}. How can I help you?`);
+        }
+        
+        function getLanguageName(lang) {
+            const names = {
+                'en': 'English',
+                'hi': 'हिंदी (Hindi)',
+                'as': 'অসমীয়া (Assamese)',
+                'bn': 'বাংলা (Bengali)',
+                'mni': 'মৈতৈলোন্ (Manipuri)',
+                'ne': 'नेपाली (Nepali)'
+            };
+            return names[lang] || 'English';
+        }
+        
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+        
+        function sendQuickQuestion(type) {
+            const questions = {
+                'emergency': 'What should I do in case of emergency?',
+                'safety': 'What are the safety tips for tourists?',
+                'places': 'What are the popular tourist places in Northeast India?',
+                'weather': 'What is the weather like in Northeast India?',
+                'transport': 'How can I travel safely in Northeast India?'
+            };
+            
+            const question = questions[type];
+            if (question) {
+                document.getElementById('chatInput').value = question;
+                sendMessage();
+            }
+        }
+        
+        async function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            // Add user message
+            addMessage('user', message);
+            input.value = '';
+            
+            // Show typing indicator
+            showTypingIndicator();
+            
+            try {
+                // Send to AI API
+                const response = await fetch('/api/ai/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${localStorage.getItem('authToken') || ''}`
+                    },
+                    body: JSON.stringify({
+                        message: message,
+                        language: currentLanguage,
+                        history: chatHistory.slice(-5) // Send last 5 messages for context
+                    })
+                });
+                
+                const data = await response.json();
+                
+                // Hide typing indicator
+                hideTypingIndicator();
+                
+                if (data.success) {
+                    addMessage('ai', data.response);
+                } else {
+                    addMessage('ai', 'I apologize, but I\'m having trouble processing your request. Please try again or contact our helpline at 1363.');
+                }
+            } catch (error) {
+                console.error('AI chat error:', error);
+                hideTypingIndicator();
+                
+                // Fallback responses
+                const aiResponse = generateFallbackResponse(message);
+                addMessage('ai', aiResponse);
+            }
+        }
+        
+        function generateFallbackResponse(message) {
+            const msg = message.toLowerCase();
+            
+            if (msg.includes('emergency') || msg.includes('help') || msg.includes('panic')) {
+                return '🚨 For emergencies:\n• Press the panic button in your app\n• Call 112 for emergency services\n• Call 1363 for tourist helpline\n• Your location will be shared with authorities automatically.';
+            }
+            
+            if (msg.includes('safety') || msg.includes('safe') || msg.includes('secure')) {
+                return '🛡️ Tourist Safety Tips:\n• Keep your Digital Tourist ID active\n• Share your location with family\n• Stay in groups when possible\n• Avoid isolated areas after dark\n• Keep emergency contacts handy\n• Follow local guidelines and advisories.';
+            }
+            
+            if (msg.includes('place') || msg.includes('visit') || msg.includes('tourist') || msg.includes('attraction')) {
+                return '📍 Popular Northeast India destinations:\n• Kaziranga National Park (Assam)\n• Tawang Monastery (Arunachal Pradesh)\n• Cherrapunji (Meghalaya)\n• Loktak Lake (Manipur)\n• Kohima War Cemetery (Nagaland)\n• Neermahal Palace (Tripura)\n• Tsomgo Lake (Sikkim)\n• Blue Mountain (Mizoram)';
+            }
+            
+            if (msg.includes('weather') || msg.includes('climate') || msg.includes('temperature')) {
+                return '🌤️ Northeast India Weather:\n• Best time to visit: October to April\n• Monsoon season: June to September\n• Winter: Pleasant and cool\n• Summer: Mild compared to other parts of India\n• Carry rain gear during monsoon\n• Check weather updates regularly.';
+            }
+            
+            if (msg.includes('transport') || msg.includes('travel') || msg.includes('bus') || msg.includes('train')) {
+                return '🚗 Transportation in Northeast:\n• Book through verified operators\n• Use government-approved taxis\n• Keep vehicle details handy\n• Share travel plans with family\n• Avoid night travel in remote areas\n• Use GPS tracking when available.';
+            }
+            
+            if (msg.includes('food') || msg.includes('eat') || msg.includes('restaurant')) {
+                return '🍽️ Food Safety Tips:\n• Eat at clean, reputable places\n• Try local cuisines safely\n• Drink bottled or boiled water\n• Avoid street food if sensitive\n• Carry basic medicines\n• Ask locals for recommendations.';
+            }
+            
+            return 'I\'m here to help with tourist safety and information about Northeast India. You can ask me about:\n• Emergency procedures\n• Safety tips\n• Tourist attractions\n• Weather information\n• Transportation\n• Local guidelines\n\nFor immediate assistance, call 1363 (Tourist Helpline) or 112 (Emergency).';
+        }
+        
+        function addMessage(sender, content) {
+            const messagesContainer = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+            
+            const avatar = document.createElement('div');
+            avatar.className = 'message-avatar';
+            avatar.textContent = sender === 'ai' ? '🤖' : '👤';
+            
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'message-content';
+            
+            const textDiv = document.createElement('div');
+            textDiv.textContent = content;
+            
+            const timeDiv = document.createElement('div');
+            timeDiv.className = 'message-time';
+            timeDiv.textContent = new Date().toLocaleTimeString();
+            
+            contentDiv.appendChild(textDiv);
+            contentDiv.appendChild(timeDiv);
+            
+            messageDiv.appendChild(avatar);
+            messageDiv.appendChild(contentDiv);
+            
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            
+            // Add to chat history
+            chatHistory.push({ sender, content, timestamp: new Date().toISOString() });
+        }
+        
+        function showTypingIndicator() {
+            document.getElementById('typingIndicator').style.display = 'flex';
+            document.getElementById('sendBtn').disabled = true;
+            
+            const messagesContainer = document.getElementById('chatMessages');
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+        
+        function hideTypingIndicator() {
+            document.getElementById('typingIndicator').style.display = 'none';
+            document.getElementById('sendBtn').disabled = false;
+        }
+    </script>
+    <!-- Universal Menu Script -->`n    <script src="universal-menu.js"></script>`n</body>
+</html>

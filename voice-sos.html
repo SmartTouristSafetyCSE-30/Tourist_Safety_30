@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Voice SOS - Tourist Safety System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #f5f5f5; text-align: center; }
+        .header { background: linear-gradient(135deg, #FF6B35, #F7931E); color: white; padding: 1rem; }
+        .container { max-width: 600px; margin: 2rem auto; padding: 0 1rem; }
+        .sos-button { width: 200px; height: 200px; border-radius: 50%; background: linear-gradient(135deg, #dc3545, #c82333); border: none; color: white; font-size: 2rem; cursor: pointer; margin: 2rem auto; display: block; box-shadow: 0 8px 16px rgba(220,53,69,0.3); transition: all 0.3s; }
+        .sos-button:hover { transform: scale(1.05); }
+        .sos-button:active { transform: scale(0.95); }
+        .voice-status { background: white; border-radius: 10px; padding: 2rem; margin: 1rem 0; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .recording { animation: pulse 1s infinite; }
+        .btn { padding: 0.8rem 1.5rem; border: none; border-radius: 5px; cursor: pointer; margin: 0.5rem; }
+        .btn-primary { background: #007bff; color: white; }
+        .btn-success { background: #28a745; color: white; }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(220,53,69,0.7); } 70% { box-shadow: 0 0 0 10px rgba(220,53,69,0); } 100% { box-shadow: 0 0 0 0 rgba(220,53,69,0); } }
+    </style>
+</head>
+<body>    <script src="universal-menu.js"></script>
+    <div class="header">
+        <h1><i class="fas fa-microphone"></i> Voice SOS</h1>
+        <p>Emergency voice activation system</p>
+    </div>
+
+    <div class="container">
+        <button class="sos-button" id="sosBtn" onclick="activateVoiceSOS()">
+            <i class="fas fa-microphone"></i><br>
+            VOICE SOS
+        </button>
+
+        <div class="voice-status">
+            <h3 id="statusTitle"><i class="fas fa-microphone-slash"></i> Voice SOS Ready</h3>
+            <p id="statusText">Press and hold the SOS button to activate voice emergency</p>
+            <div id="recordingIndicator" style="display: none;">
+                <i class="fas fa-circle" style="color: red; animation: blink 1s infinite;"></i>
+                <span>Recording emergency message...</span>
+            </div>
+        </div>
+
+        <div class="voice-status">
+            <h3><i class="fas fa-language"></i> Voice Commands</h3>
+            <p><strong>"Emergency"</strong> - Immediate emergency alert</p>
+            <p><strong>"Help me"</strong> - Request assistance</p>
+            <p><strong>"Medical emergency"</strong> - Medical help needed</p>
+            <p><strong>"Lost"</strong> - Location assistance required</p>
+            <p><strong>"Cancel SOS"</strong> - Cancel emergency alert</p>
+        </div>
+
+        <div class="voice-status">
+            <h3><i class="fas fa-cog"></i> Voice Settings</h3>
+            <p>Language: <select id="language">
+                <option>English</option>
+                <option>Hindi</option>
+                <option>Assamese</option>
+                <option>Bengali</option>
+            </select></p>
+            <p>Voice sensitivity: <input type="range" min="1" max="10" value="7"></p>
+            <p>Auto-transcription: <input type="checkbox" checked> Enabled</p>
+            <button class="btn btn-primary" onclick="testVoice()">Test Voice Recognition</button>
+            <button class="btn btn-success">Save Settings</button>
+        </div>
+
+        <div class="voice-status">
+            <h3><i class="fas fa-history"></i> Recent Voice Alerts</h3>
+            <p><strong>Today 14:30:</strong> "Help me" - Alert sent successfully</p>
+            <p><strong>Yesterday 16:45:</strong> "Medical emergency" - Response team dispatched</p>
+            <p><strong>2 days ago:</strong> "Lost" - Location shared with authorities</p>
+        </div>
+    </div>
+
+    <script>
+        let isRecording = false;
+
+        function activateVoiceSOS() {
+            if (!isRecording) {
+                startRecording();
+            } else {
+                stopRecording();
+            }
+        }
+
+        function startRecording() {
+            isRecording = true;
+            document.getElementById('sosBtn').classList.add('recording');
+            document.getElementById('statusTitle').innerHTML = '<i class="fas fa-microphone"></i> Recording Emergency Message';
+            document.getElementById('statusText').textContent = 'Speak clearly. Say "Emergency", "Help me", or describe your situation.';
+            document.getElementById('recordingIndicator').style.display = 'block';
+            
+            // Simulate voice recognition
+            setTimeout(() => {
+                processVoiceCommand("Emergency - I need help at Kaziranga National Park");
+            }, 3000);
+        }
+
+        function stopRecording() {
+            isRecording = false;
+            document.getElementById('sosBtn').classList.remove('recording');
+            document.getElementById('statusTitle').innerHTML = '<i class="fas fa-microphone-slash"></i> Voice SOS Ready';
+            document.getElementById('statusText').textContent = 'Press and hold the SOS button to activate voice emergency';
+            document.getElementById('recordingIndicator').style.display = 'none';
+        }
+
+        function processVoiceCommand(command) {
+            stopRecording();
+            alert(`Voice command processed: "${command}"\n\nEmergency alert sent to:\n- Local Police\n- Tourist Helpline\n- Emergency Contacts\n- Family Members`);
+        }
+
+        function testVoice() {
+            alert('Voice recognition test started. Please say "Test emergency"');
+        }
+    </script>
+    <!-- Universal Menu Script -->`n    <script src="universal-menu.js"></script>`n</body>
+</html>

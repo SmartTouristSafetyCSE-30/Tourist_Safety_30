@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Tourist ID - Smart Tourist Safety System</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; background: linear-gradient(rgba(0,51,102,0.9), rgba(0,51,102,0.9)), url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><rect fill="%23e3f2fd" width="1200" height="800"/><g fill="%23bbdefb" opacity="0.3"><circle cx="200" cy="150" r="30"/><circle cx="400" cy="200" r="25"/><circle cx="600" cy="100" r="35"/><circle cx="800" cy="180" r="28"/><circle cx="1000" cy="120" r="32"/><path d="M100,300 Q200,250 300,300 T500,300" stroke="%2390caf9" stroke-width="3" fill="none"/><path d="M600,400 Q700,350 800,400 T1000,400" stroke="%2390caf9" stroke-width="3" fill="none"/><polygon points="150,500 170,480 190,500 170,520" fill="%2381c784"/><polygon points="350,450 370,430 390,450 370,470" fill="%2381c784"/><polygon points="750,520 770,500 790,520 770,540" fill="%2381c784"/><rect x="250" y="600" width="40" height="60" fill="%23a5d6a7"/><rect x="500" y="580" width="35" height="80" fill="%23a5d6a7"/><rect x="850" y="620" width="45" height="40" fill="%23a5d6a7"/></g></svg>') fixed; background-size: cover; }
+        .skip-link { position: absolute; top: -40px; left: 6px; background: #000; color: #fff; padding: 8px; text-decoration: none; z-index: 1000; }
+        .skip-link:focus { top: 6px; }
+        .gov-header { background: linear-gradient(135deg, #ff6600, #ff9933); color: white; padding: 10px 0; }
+        .header-top { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        .logo-section { display: flex; align-items: center; gap: 15px; }
+        .emblem { width: 60px; height: 60px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #ff6600; }
+        .site-title { font-size: 24px; font-weight: bold; }
+        .site-subtitle { font-size: 14px; opacity: 0.9; }
+        .main-nav { background: #003366; }
+        .nav-container { max-width: 1200px; margin: 0 auto; }
+        .nav-menu { display: flex; list-style: none; }
+        .nav-menu li a { display: block; padding: 15px 20px; color: white; text-decoration: none; }
+        .qr-container { max-width: 600px; margin: 50px auto; padding: 20px; }
+        .qr-card { background: white; border-radius: 15px; padding: 40px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); text-align: center; }
+        .qr-header { margin-bottom: 30px; }
+        .qr-title { font-size: 28px; color: #003366; margin-bottom: 10px; }
+        .qr-subtitle { color: #666; }
+        .qr-display { background: #f8f9fa; border: 2px solid #ddd; border-radius: 15px; padding: 30px; margin: 30px 0; }
+        .qr-code { width: 250px; height: 250px; background: white; border: 2px solid #333; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 12px; }
+        .qr-info { color: #666; font-size: 14px; }
+        .tourist-details { background: #e3f2fd; border-radius: 10px; padding: 20px; margin: 20px 0; text-align: left; }
+        .detail-row { display: flex; justify-content: space-between; margin-bottom: 10px; }
+        .detail-label { font-weight: bold; color: #003366; }
+        .detail-value { color: #333; }
+        .action-buttons { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-top: 30px; }
+        .action-btn { background: #ff6600; color: white; padding: 12px 20px; border: none; border-radius: 8px; cursor: pointer; text-decoration: none; display: block; text-align: center; }
+        .action-btn:hover { background: #e55a00; }
+        .action-btn.secondary { background: #4caf50; }
+        .action-btn.secondary:hover { background: #45a049; }
+        .gov-footer { background: #003366; color: white; padding: 20px 0; margin-top: 50px; text-align: center; }
+    </style>
+</head>
+<body>    <script src="universal-menu.js"></script>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    
+    <header class="gov-header">
+        <div class="header-top">
+            <div class="logo-section">
+                <div class="emblem">🇮🇳</div>
+                <div>
+                    <div class="site-title">Smart Tourist Safety System</div>
+                    <div class="site-subtitle">Ministry of Development of North Eastern Region</div>
+                    <div style="font-size: 11px; opacity: 0.8; margin-top: 2px;">SDG-9: Industry, Innovation & Infrastructure</div>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <nav class="main-nav">
+        <div class="nav-container">
+            <ul class="nav-menu">
+                <li><a href="tourist-dashboard.html">Dashboard</a></li>
+                <li><a href="digital-tourist-id.html">Digital ID</a></li>
+                <li><a href="qr-tourist-id.html">QR Code</a></li>
+                <li><a href="panic-button.html">Emergency</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <main id="main-content" class="qr-container">
+        <div class="qr-card">
+            <div class="qr-header">
+                <h1 class="qr-title">📱 QR Tourist ID</h1>
+                <p class="qr-subtitle">Show this QR code for instant verification</p>
+            </div>
+            
+            <div class="qr-display">
+                <div class="qr-code" id="qrCode">
+                    <div style="text-align: center;">
+                        <div style="font-size: 20px; margin-bottom: 10px;">📱</div>
+                        <div>QR CODE</div>
+                        <div>PLACEHOLDER</div>
+                        <div style="font-size: 10px; margin-top: 10px;">Scan to Verify</div>
+                    </div>
+                </div>
+                <div class="qr-info">Present this QR code to authorities for instant verification</div>
+            </div>
+            
+            <div class="tourist-details">
+                <div class="detail-row">
+                    <span class="detail-label">Tourist Name:</span>
+                    <span class="detail-value" id="touristName">John Doe</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Digital ID:</span>
+                    <span class="detail-value" id="digitalId">DT24ABC123XYZ789</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Valid Until:</span>
+                    <span class="detail-value" id="validUntil">2024-02-14</span>
+                </div>
+                <div class="detail-row">
+                    <span class="detail-label">Status:</span>
+                    <span class="detail-value" style="color: #4caf50; font-weight: bold;">✅ VERIFIED</span>
+                </div>
+            </div>
+            
+            <div class="action-buttons">
+                <button onclick="refreshQR()" class="action-btn">🔄 Refresh QR</button>
+                <button onclick="shareQR()" class="action-btn secondary">📤 Share</button>
+                <button onclick="downloadQR()" class="action-btn">💾 Download</button>
+                <a href="digital-tourist-id.html" class="action-btn">← Back to ID</a>
+            </div>
+        </div>
+    </main>
+    
+    <footer class="gov-footer">
+        <p>&copy; 2024 Ministry of Development of North Eastern Region, Government of India</p>
+    </footer>
+    
+    <script>
+        function refreshQR() {
+            const qrCode = document.getElementById('qrCode');
+            qrCode.style.opacity = '0.5';
+            setTimeout(() => {
+                qrCode.style.opacity = '1';
+                alert('QR Code refreshed successfully!');
+            }, 1000);
+        }
+        
+        function shareQR() {
+            if (navigator.share) {
+                navigator.share({
+                    title: 'My Digital Tourist ID',
+                    text: 'Digital Tourist ID: DT24ABC123XYZ789',
+                    url: window.location.href
+                });
+            } else {
+                alert('QR Code sharing functionality will be implemented with backend integration.');
+            }
+        }
+        
+        function downloadQR() {
+            alert('QR Code download functionality will be implemented with backend integration.');
+        }
+        
+        window.onload = function() {
+            const token = localStorage.getItem('authToken');
+            if (!token) {
+                window.location.href = 'tourist-login.html';
+            }
+        };
+    </script>
+    <!-- Universal Menu Script -->`n    <script src="universal-menu.js"></script>`n</body>
+</html>

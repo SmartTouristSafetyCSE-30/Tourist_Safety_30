@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Route Deviation Alert - Tourist Safety System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #f5f5f5; }
+        .header { background: linear-gradient(135deg, #FF6B35, #F7931E); color: white; padding: 1rem; text-align: center; }
+        .container { max-width: 800px; margin: 2rem auto; padding: 0 1rem; }
+        .alert-card { background: white; border-radius: 10px; padding: 2rem; margin: 1rem 0; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .alert-high { border-left: 5px solid #ff4444; }
+        .alert-medium { border-left: 5px solid #ffaa00; }
+        .alert-low { border-left: 5px solid #00aa00; }
+        .btn { padding: 0.8rem 1.5rem; border: none; border-radius: 5px; cursor: pointer; margin: 0.5rem; }
+        .btn-primary { background: #007bff; color: white; }
+        .btn-danger { background: #dc3545; color: white; }
+        .route-map { height: 300px; background: #e9ecef; border-radius: 5px; margin: 1rem 0; }
+    </style>
+</head>
+<body>    <script src="universal-menu.js"></script>
+    <div class="header">
+        <h1><i class="fas fa-route"></i> Route Deviation Alert</h1>
+        <p>Real-time route monitoring and deviation alerts</p>
+    </div>
+
+    <div class="container">
+        <div class="alert-card alert-high">
+            <h3><i class="fas fa-exclamation-triangle"></i> High Priority Alert</h3>
+            <p><strong>Current Location:</strong> 26.1445° N, 91.7362° E</p>
+            <p><strong>Planned Route:</strong> Guwahati to Kaziranga</p>
+            <p><strong>Deviation:</strong> 2.5 km off planned route</p>
+            <p><strong>Time:</strong> 14:30 IST</p>
+            <div class="route-map">
+                <p style="text-align: center; padding-top: 130px; color: #666;">Route Map Visualization</p>
+            </div>
+            <button class="btn btn-primary" onclick="correctRoute()">Get Back on Route</button>
+            <button class="btn btn-danger" onclick="emergencyAlert()">Emergency Alert</button>
+        </div>
+
+        <div class="alert-card alert-medium">
+            <h3><i class="fas fa-info-circle"></i> Route Information</h3>
+            <p><strong>Recommended Action:</strong> Turn right at next junction</p>
+            <p><strong>Distance to Route:</strong> 800 meters</p>
+            <p><strong>Estimated Time to Correct:</strong> 5 minutes</p>
+        </div>
+    </div>
+
+    <script>
+        function correctRoute() {
+            alert('Redirecting to correct route...');
+        }
+        function emergencyAlert() {
+            alert('Emergency alert sent to authorities!');
+        }
+    </script>
+    <!-- Universal Menu Script -->`n    <script src="universal-menu.js"></script>`n</body>
+</html>

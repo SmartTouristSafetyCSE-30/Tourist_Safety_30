@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QR Generator - Smart Tourist Safety System</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; background: linear-gradient(rgba(0,51,102,0.9), rgba(0,51,102,0.9)), url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><rect fill="%23e3f2fd" width="1200" height="800"/><g fill="%23bbdefb" opacity="0.3"><circle cx="200" cy="150" r="30"/><circle cx="400" cy="200" r="25"/><circle cx="600" cy="100" r="35"/><circle cx="800" cy="180" r="28"/><circle cx="1000" cy="120" r="32"/><path d="M100,300 Q200,250 300,300 T500,300" stroke="%2390caf9" stroke-width="3" fill="none"/><path d="M600,400 Q700,350 800,400 T1000,400" stroke="%2390caf9" stroke-width="3" fill="none"/><polygon points="150,500 170,480 190,500 170,520" fill="%2381c784"/><polygon points="350,450 370,430 390,450 370,470" fill="%2381c784"/><polygon points="750,520 770,500 790,520 770,540" fill="%2381c784"/><rect x="250" y="600" width="40" height="60" fill="%23a5d6a7"/><rect x="500" y="580" width="35" height="80" fill="%23a5d6a7"/><rect x="850" y="620" width="45" height="40" fill="%23a5d6a7"/></g></svg>') fixed; background-size: cover; }
+        .skip-link { position: absolute; top: -40px; left: 6px; background: #000; color: #fff; padding: 8px; text-decoration: none; z-index: 1000; }
+        .skip-link:focus { top: 6px; }
+        .gov-header { background: linear-gradient(135deg, #ff6600, #ff9933); color: white; padding: 10px 0; }
+        .header-top { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        .logo-section { display: flex; align-items: center; gap: 15px; }
+        .emblem { width: 60px; height: 60px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #ff6600; }
+        .site-title { font-size: 24px; font-weight: bold; }
+        .site-subtitle { font-size: 14px; opacity: 0.9; }
+        .main-nav { background: #003366; }
+        .nav-container { max-width: 1200px; margin: 0 auto; }
+        .nav-menu { display: flex; list-style: none; }
+        .nav-menu li a { display: block; padding: 15px 20px; color: white; text-decoration: none; }
+        .qr-container { max-width: 800px; margin: 30px auto; padding: 20px; }
+        .qr-card { background: white; border-radius: 15px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .qr-header { text-align: center; margin-bottom: 30px; }
+        .qr-title { font-size: 28px; color: #003366; margin-bottom: 10px; }
+        .qr-subtitle { color: #666; }
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 20px; }
+        .form-group { margin-bottom: 15px; }
+        .form-label { display: block; margin-bottom: 5px; font-weight: bold; color: #333; }
+        .form-input, .form-select { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px; }
+        .form-input:focus, .form-select:focus { outline: none; border-color: #ff6600; }
+        .generate-btn { width: 100%; background: #ff6600; color: white; padding: 15px; border: none; border-radius: 8px; font-size: 18px; font-weight: bold; cursor: pointer; margin: 20px 0; }
+        .generate-btn:hover { background: #e55a00; }
+        .qr-display { display: none; text-align: center; padding: 30px; background: #f8f9fa; border-radius: 10px; margin: 20px 0; }
+        .qr-code-visual { width: 200px; height: 200px; background: white; border: 2px solid #333; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-family: monospace; font-size: 8px; line-height: 1; word-break: break-all; padding: 10px; }
+        .blockchain-info { background: #e3f2fd; border: 1px solid #2196f3; border-radius: 8px; padding: 15px; margin: 20px 0; }
+        .blockchain-title { font-weight: bold; color: #1976d2; margin-bottom: 10px; }
+        .blockchain-details { font-size: 14px; color: #333; }
+        .action-buttons { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-top: 20px; }
+        .action-btn { padding: 10px 15px; border: none; border-radius: 5px; cursor: pointer; text-decoration: none; text-align: center; }
+        .btn-download { background: #4caf50; color: white; }
+        .btn-share { background: #2196f3; color: white; }
+        .btn-verify { background: #ff9800; color: white; }
+        .gov-footer { background: #003366; color: white; padding: 20px 0; margin-top: 50px; text-align: center; }
+    </style>
+</head>
+<body>    <script src="universal-menu.js"></script>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    
+    <header class="gov-header">
+        <div class="header-top">
+            <div class="logo-section">
+                <div class="emblem">🇮🇳</div>
+                <div>
+                    <div class="site-title">Smart Tourist Safety System</div>
+                    <div class="site-subtitle">Ministry of Development of North Eastern Region</div>
+                    <div style="font-size: 11px; opacity: 0.8; margin-top: 2px;">SDG-9: Industry, Innovation & Infrastructure</div>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <nav class="main-nav">
+        <div class="nav-container">
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="qr-generator.html">QR Generator</a></li>
+                <li><a href="qr-scanner.html">QR Scanner</a></li>
+                <li><a href="blockchain-verify.html">Blockchain Verify</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <main id="main-content" class="qr-container">
+        <div class="qr-card">
+            <div class="qr-header">
+                <h1 class="qr-title">📱 QR Code Generator</h1>
+                <p class="qr-subtitle">Generate blockchain-secured QR codes for tourist verification</p>
+            </div>
+            
+            <form id="qrForm" onsubmit="generateQR(event)">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="touristName" class="form-label">Tourist Name *</label>
+                        <input type="text" id="touristName" name="touristName" class="form-input" required placeholder="Enter full name">
+                    </div>
+                    <div class="form-group">
+                        <label for="touristId" class="form-label">Tourist ID</label>
+                        <input type="text" id="touristId" name="touristId" class="form-input" placeholder="Auto-generated if empty">
+                    </div>
+                </div>
+                
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="nationality" class="form-label">Nationality *</label>
+                        <select id="nationality" name="nationality" class="form-select" required>
+                            <option value="">Select Nationality</option>
+                            <option value="Indian">Indian</option>
+                            <option value="Foreign">Foreign National</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="visitState" class="form-label">Visiting State *</label>
+                        <select id="visitState" name="visitState" class="form-select" required>
+                            <option value="">Select State</option>
+                            <option value="Assam">Assam</option>
+                            <option value="Meghalaya">Meghalaya</option>
+                            <option value="Manipur">Manipur</option>
+                            <option value="Nagaland">Nagaland</option>
+                            <option value="Mizoram">Mizoram</option>
+                            <option value="Tripura">Tripura</option>
+                            <option value="Arunachal Pradesh">Arunachal Pradesh</option>
+                            <option value="Sikkim">Sikkim</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="purpose" class="form-label">Purpose of Visit</label>
+                    <select id="purpose" name="purpose" class="form-select">
+                        <option value="Tourism">Tourism</option>
+                        <option value="Business">Business</option>
+                        <option value="Education">Education</option>
+                        <option value="Medical">Medical</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                
+                <button type="submit" class="generate-btn">🔐 Generate Blockchain QR Code</button>
+            </form>
+            
+            <div id="qrDisplay" class="qr-display">
+                <div class="qr-code-visual" id="qrCodeVisual"></div>
+                <div><strong>QR Code Generated Successfully!</strong></div>
+                
+                <div class="blockchain-info">
+                    <div class="blockchain-title">⛓️ Blockchain Verification</div>
+                    <div class="blockchain-details">
+                        <div><strong>Block Hash:</strong> <span id="blockHash"></span></div>
+                        <div><strong>Timestamp:</strong> <span id="timestamp"></span></div>
+                        <div><strong>Chain Status:</strong> <span id="chainStatus"></span></div>
+                        <div><strong>Tourist ID:</strong> <span id="generatedId"></span></div>
+                    </div>
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="action-btn btn-download" onclick="downloadQR()">💾 Download QR</button>
+                    <button class="action-btn btn-share" onclick="shareQR()">📤 Share</button>
+                    <button class="action-btn btn-verify" onclick="verifyQR()">✅ Verify</button>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <footer class="gov-footer">
+        <p>&copy; 2024 Ministry of Development of North Eastern Region, Government of India</p>
+    </footer>
+    
+    <script>
+        // Blockchain implementation
+        class TouristBlockchain {
+            constructor() {
+                this.chain = [];
+                this.createGenesisBlock();
+            }
+            
+            createGenesisBlock() {
+                const genesisBlock = {
+                    index: 0,
+                    timestamp: Date.now(),
+                    data: 'Genesis Block - MoDoNER Tourist Safety',
+                    previousHash: '0',
+                    hash: this.calculateHash(0, Date.now(), 'Genesis Block', '0')
+                };
+                this.chain.push(genesisBlock);
+            }
+            
+            calculateHash(index, timestamp, data, previousHash) {
+                const hashInput = index + timestamp + JSON.stringify(data) + previousHash;
+                return btoa(hashInput).substring(0, 16);
+            }
+            
+            addBlock(data) {
+                const previousBlock = this.chain[this.chain.length - 1];
+                const newBlock = {
+                    index: previousBlock.index + 1,
+                    timestamp: Date.now(),
+                    data: data,
+                    previousHash: previousBlock.hash,
+                    hash: ''
+                };
+                newBlock.hash = this.calculateHash(newBlock.index, newBlock.timestamp, newBlock.data, newBlock.previousHash);
+                this.chain.push(newBlock);
+                return newBlock;
+            }
+            
+            verifyChain() {
+                for (let i = 1; i < this.chain.length; i++) {
+                    const currentBlock = this.chain[i];
+                    const previousBlock = this.chain[i - 1];
+                    
+                    if (currentBlock.hash !== this.calculateHash(currentBlock.index, currentBlock.timestamp, currentBlock.data, currentBlock.previousHash)) {
+                        return false;
+                    }
+                    
+                    if (currentBlock.previousHash !== previousBlock.hash) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+        }
+        
+        const blockchain = new TouristBlockchain();
+        let currentQRData = null;
+        
+        function generateQR(event) {
+            event.preventDefault();
+            
+            const formData = new FormData(event.target);
+            const touristData = {
+                name: formData.get('touristName'),
+                touristId: formData.get('touristId') || 'DT' + Date.now(),
+                nationality: formData.get('nationality'),
+                visitState: formData.get('visitState'),
+                purpose: formData.get('purpose'),
+                issueDate: new Date().toISOString(),
+                expiryDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString()
+            };
+            
+            // Add to blockchain
+            const block = blockchain.addBlock(touristData);
+            
+            // Generate QR code data
+            const qrData = {
+                ...touristData,
+                blockHash: block.hash,
+                blockIndex: block.index,
+                verified: blockchain.verifyChain()
+            };
+            
+            currentQRData = qrData;
+            
+            // Display QR code
+            displayQRCode(qrData, block);
+        }
+        
+        function displayQRCode(qrData, block) {
+            const qrDisplay = document.getElementById('qrDisplay');
+            const qrVisual = document.getElementById('qrCodeVisual');
+            
+            // Generate visual QR pattern
+            const qrPattern = generateQRPattern(JSON.stringify(qrData));
+            qrVisual.innerHTML = qrPattern;
+            
+            // Update blockchain info
+            document.getElementById('blockHash').textContent = block.hash;
+            document.getElementById('timestamp').textContent = new Date(block.timestamp).toLocaleString();
+            document.getElementById('chainStatus').textContent = blockchain.verifyChain() ? '✅ Valid' : '❌ Invalid';
+            document.getElementById('generatedId').textContent = qrData.touristId;
+            
+            qrDisplay.style.display = 'block';
+        }
+        
+        function generateQRPattern(data) {\n            const hash = btoa(data).substring(0, 100);\n            let pattern = '';\n            for (let i = 0; i < hash.length; i += 10) {\n                pattern += hash.substring(i, i + 10) + '\\n';\n            }\n            return pattern;\n        }\n        \n        function downloadQR() {\n            if (!currentQRData) return;\n            \n            const dataStr = JSON.stringify(currentQRData, null, 2);\n            const dataBlob = new Blob([dataStr], {type: 'application/json'});\n            const url = URL.createObjectURL(dataBlob);\n            \n            const link = document.createElement('a');\n            link.href = url;\n            link.download = `tourist-qr-${currentQRData.touristId}.json`;\n            link.click();\n            \n            URL.revokeObjectURL(url);\n        }\n        \n        function shareQR() {\n            if (!currentQRData) return;\n            \n            if (navigator.share) {\n                navigator.share({\n                    title: 'Tourist QR Code',\n                    text: `Digital Tourist ID: ${currentQRData.touristId}`,\n                    url: window.location.href\n                });\n            } else {\n                navigator.clipboard.writeText(JSON.stringify(currentQRData));\n                alert('QR data copied to clipboard!');\n            }\n        }\n        \n        function verifyQR() {\n            if (!currentQRData) return;\n            \n            const isValid = blockchain.verifyChain();\n            const message = isValid ? \n                '✅ QR Code is valid and blockchain verified!' : \n                '❌ QR Code verification failed!';\n            \n            alert(message);\n        }\n    </script>\n    <!-- Universal Menu Script -->`n    <script src="universal-menu.js"></script>`n</body>\n</html>

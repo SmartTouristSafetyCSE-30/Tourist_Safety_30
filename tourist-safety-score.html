@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tourist Safety Score - Smart Tourist Safety System</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; background: linear-gradient(rgba(0,51,102,0.9), rgba(0,51,102,0.9)), url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><rect fill="%23e3f2fd" width="1200" height="800"/><g fill="%23bbdefb" opacity="0.3"><circle cx="200" cy="150" r="30"/><circle cx="400" cy="200" r="25"/><circle cx="600" cy="100" r="35"/><circle cx="800" cy="180" r="28"/><circle cx="1000" cy="120" r="32"/><path d="M100,300 Q200,250 300,300 T500,300" stroke="%2390caf9" stroke-width="3" fill="none"/><path d="M600,400 Q700,350 800,400 T1000,400" stroke="%2390caf9" stroke-width="3" fill="none"/><polygon points="150,500 170,480 190,500 170,520" fill="%2381c784"/><polygon points="350,450 370,430 390,450 370,470" fill="%2381c784"/><polygon points="750,520 770,500 790,520 770,540" fill="%2381c784"/><rect x="250" y="600" width="40" height="60" fill="%23a5d6a7"/><rect x="500" y="580" width="35" height="80" fill="%23a5d6a7"/><rect x="850" y="620" width="45" height="40" fill="%23a5d6a7"/></g></svg>') fixed; background-size: cover; }
+        .skip-link { position: absolute; top: -40px; left: 6px; background: #000; color: #fff; padding: 8px; text-decoration: none; z-index: 1000; }
+        .skip-link:focus { top: 6px; }
+        .gov-header { background: linear-gradient(135deg, #ff6600, #ff9933); color: white; padding: 10px 0; }
+        .header-top { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        .logo-section { display: flex; align-items: center; gap: 15px; }
+        .emblem { width: 60px; height: 60px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #ff6600; }
+        .site-title { font-size: 24px; font-weight: bold; }
+        .site-subtitle { font-size: 14px; opacity: 0.9; }
+        .main-nav { background: #003366; }
+        .nav-container { max-width: 1200px; margin: 0 auto; }
+        .nav-menu { display: flex; list-style: none; }
+        .nav-menu li a { display: block; padding: 15px 20px; color: white; text-decoration: none; }
+        .safety-container { max-width: 900px; margin: 30px auto; padding: 20px; }
+        .safety-card { background: white; border-radius: 15px; padding: 30px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .safety-header { text-align: center; margin-bottom: 30px; }
+        .safety-title { font-size: 28px; color: #003366; margin-bottom: 10px; }
+        .safety-subtitle { color: #666; }
+        .score-display { text-align: center; margin: 30px 0; }
+        .score-circle { width: 200px; height: 200px; border-radius: 50%; background: conic-gradient(#4caf50 0deg 342deg, #e0e0e0 342deg 360deg); display: flex; align-items: center; justify-content: center; margin: 0 auto; position: relative; }
+        .score-inner { width: 160px; height: 160px; border-radius: 50%; background: white; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .score-number { font-size: 48px; font-weight: bold; color: #4caf50; }
+        .score-text { font-size: 14px; color: #666; }
+        .score-factors { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin: 30px 0; }
+        .factor-card { background: #f8f9fa; border-radius: 10px; padding: 20px; }
+        .factor-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .factor-title { font-weight: bold; color: #003366; }
+        .factor-score { font-weight: bold; color: #4caf50; }
+        .factor-bar { width: 100%; height: 8px; background: #e0e0e0; border-radius: 4px; overflow: hidden; }
+        .factor-progress { height: 100%; background: #4caf50; transition: width 0.3s; }
+        .recommendations { background: #e8f5e8; border: 1px solid #4caf50; border-radius: 10px; padding: 20px; }
+        .recommendations-title { font-weight: bold; color: #2e7d32; margin-bottom: 15px; }
+        .recommendation-item { margin-bottom: 10px; color: #388e3c; }
+        .gov-footer { background: #003366; color: white; padding: 20px 0; margin-top: 50px; text-align: center; }
+    </style>
+</head>
+<body>    <script src="universal-menu.js"></script>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    
+    <header class="gov-header">
+        <div class="header-top">
+            <div class="logo-section">
+                <div class="emblem">🇮🇳</div>
+                <div>
+                    <div class="site-title">Smart Tourist Safety System</div>
+                    <div class="site-subtitle">Ministry of Development of North Eastern Region</div>
+                    <div style="font-size: 11px; opacity: 0.8; margin-top: 2px;">SDG-9: Industry, Innovation & Infrastructure</div>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <nav class="main-nav">
+        <div class="nav-container">
+            <ul class="nav-menu">
+                <li><a href="tourist-dashboard.html">Dashboard</a></li>
+                <li><a href="tourist-safety-score.html">Safety Score</a></li>
+                <li><a href="live-location.html">Location</a></li>
+                <li><a href="panic-button.html">Emergency</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <main id="main-content" class="safety-container">
+        <div class="safety-card">
+            <div class="safety-header">
+                <h1 class="safety-title">🛡️ Tourist Safety Score</h1>
+                <p class="safety-subtitle">Your comprehensive safety assessment</p>
+            </div>
+            
+            <div class="score-display">
+                <div class="score-circle">
+                    <div class="score-inner">
+                        <div class="score-number" id="safetyScore">95</div>
+                        <div class="score-text">out of 100</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="score-factors">
+                <div class="factor-card">
+                    <div class="factor-header">
+                        <span class="factor-title">📍 Location Safety</span>
+                        <span class="factor-score">98/100</span>
+                    </div>
+                    <div class="factor-bar">
+                        <div class="factor-progress" style="width: 98%;"></div>
+                    </div>
+                    <p style="font-size: 12px; color: #666; margin-top: 5px;">Currently in safe tourist zone</p>
+                </div>
+                
+                <div class="factor-card">
+                    <div class="factor-header">
+                        <span class="factor-title">🆔 ID Verification</span>
+                        <span class="factor-score">100/100</span>
+                    </div>
+                    <div class="factor-bar">
+                        <div class="factor-progress" style="width: 100%;"></div>
+                    </div>
+                    <p style="font-size: 12px; color: #666; margin-top: 5px;">Digital ID verified and active</p>
+                </div>
+                
+                <div class="factor-card">
+                    <div class="factor-header">
+                        <span class="factor-title">📱 Device Status</span>
+                        <span class="factor-score">92/100</span>
+                    </div>
+                    <div class="factor-bar">
+                        <div class="factor-progress" style="width: 92%;"></div>
+                    </div>
+                    <p style="font-size: 12px; color: #666; margin-top: 5px;">GPS active, battery good</p>
+                </div>
+                
+                <div class="factor-card">
+                    <div class="factor-header">
+                        <span class="factor-title">👥 Emergency Contacts</span>
+                        <span class="factor-score">95/100</span>
+                    </div>
+                    <div class="factor-bar">
+                        <div class="factor-progress" style="width: 95%;"></div>
+                    </div>
+                    <p style="font-size: 12px; color: #666; margin-top: 5px;">2 contacts configured</p>
+                </div>
+                
+                <div class="factor-card">
+                    <div class="factor-header">
+                        <span class="factor-title">🕒 Activity Pattern</span>
+                        <span class="factor-score">88/100</span>
+                    </div>
+                    <div class="factor-bar">
+                        <div class="factor-progress" style="width: 88%;"></div>
+                    </div>
+                    <p style="font-size: 12px; color: #666; margin-top: 5px;">Regular check-ins maintained</p>
+                </div>
+                
+                <div class="factor-card">
+                    <div class="factor-header">
+                        <span class="factor-title">🌐 Network Coverage</span>
+                        <span class="factor-score">94/100</span>
+                    </div>
+                    <div class="factor-bar">
+                        <div class="factor-progress" style="width: 94%;"></div>
+                    </div>
+                    <p style="font-size: 12px; color: #666; margin-top: 5px;">Strong network signal</p>
+                </div>
+            </div>
+            
+            <div class="recommendations">
+                <div class="recommendations-title">💡 Safety Recommendations</div>
+                <div class="recommendation-item">✅ Your safety score is excellent! Keep following safety protocols.</div>
+                <div class="recommendation-item">📱 Consider enabling family tracking for additional security.</div>
+                <div class="recommendation-item">🔋 Keep your device charged above 20% for emergency situations.</div>
+                <div class="recommendation-item">📍 Share your itinerary with emergency contacts before visiting remote areas.</div>
+            </div>
+        </div>
+    </main>
+    
+    <footer class="gov-footer">
+        <p>&copy; 2024 Ministry of Development of North Eastern Region, Government of India</p>
+    </footer>
+    
+    <script>
+        window.onload = function() {
+            const token = localStorage.getItem('authToken');
+            if (!token) {
+                window.location.href = 'tourist-login.html';
+            }
+            
+            // Animate score display
+            animateScore();
+        };
+        
+        function animateScore() {
+            const scoreElement = document.getElementById('safetyScore');
+            let currentScore = 0;
+            const targetScore = 95;
+            const increment = 2;
+            
+            const animation = setInterval(() => {
+                currentScore += increment;
+                scoreElement.textContent = currentScore;
+                
+                if (currentScore >= targetScore) {
+                    scoreElement.textContent = targetScore;
+                    clearInterval(animation);
+                }
+            }, 50);
+        }
+    </script>
+    <!-- Universal Menu Script -->`n    <script src="universal-menu.js"></script>`n</body>
+</html>

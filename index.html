@@ -1,0 +1,1253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Tourist Safety System | Ministry of Development of North Eastern Region | Government of India</title>
+    <style>
+        /* Official Government Design System */
+        :root {
+            --gov-blue: #003366;
+            --gov-orange: #FF6600;
+            --gov-white: #FFFFFF;
+            --gov-light-blue: #E6F2FF;
+            --gov-gray: #F5F5F5;
+            --gov-dark-gray: #333333;
+            --gov-border: #CCCCCC;
+            --gov-success: #2E7D32;
+            --gov-warning: #ED6C02;
+            --gov-error: #D32F2F;
+        }
+        
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
+        
+        body { 
+            font-family: 'Segoe UI', 'Roboto', 'Arial', sans-serif; 
+            line-height: 1.6; 
+            color: var(--gov-dark-gray); 
+            background-color: var(--gov-gray);
+            font-size: 16px;
+        }
+        
+        /* Official Header Styles */
+        .gov-header {
+            background: linear-gradient(135deg, var(--gov-blue) 0%, #004080 100%);
+            color: var(--gov-white);
+            border-bottom: 4px solid var(--gov-orange);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .gov-logo-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .ashoka-chakra {
+            width: 60px;
+            height: 60px;
+            background: var(--gov-white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: bold;
+            color: var(--gov-blue);
+            box-shadow: 0 0 0 2px var(--gov-orange);
+        }
+        
+        .site-titles {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .ministry-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--gov-white);
+            letter-spacing: 0.5px;
+        }
+        
+        .site-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--gov-white);
+            margin-top: 2px;
+        }
+        
+        .site-subtitle {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.9);
+            margin-top: 2px;
+        }
+        
+        .sdg-badge {
+            display: inline-block;
+            background: var(--gov-orange);
+            color: var(--gov-white);
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 500;
+            margin-top: 5px;
+        }
+        
+        /* Accessibility Controls */
+        .accessibility-panel {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+        
+        .accessibility-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: var(--gov-white);
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .accessibility-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        
+        .lang-selector {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: var(--gov-white);
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+        
+        .lang-selector option {
+            background: var(--gov-blue);
+            color: var(--gov-white);
+        }
+        
+        /* Main Navigation - Official Style */
+        .main-nav {
+            background: var(--gov-white);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .nav-menu {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-menu li {
+            position: relative;
+        }
+        
+        .nav-menu li a {
+            display: block;
+            padding: 18px 20px;
+            color: var(--gov-blue);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 15px;
+            transition: all 0.3s;
+            border-bottom: 3px solid transparent;
+        }
+        
+        .nav-menu li a:hover,
+        .nav-menu li a.active {
+            background: var(--gov-light-blue);
+            color: var(--gov-blue);
+            border-bottom: 3px solid var(--gov-orange);
+        }
+        
+        /* Main Content Area */
+        .main-content {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        
+        /* Hero Section */
+        .hero-section {
+            background: linear-gradient(135deg, var(--gov-blue) 0%, #004080 100%);
+            color: var(--gov-white);
+            padding: 60px 40px;
+            border-radius: 8px;
+            margin-bottom: 40px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        
+        .hero-title {
+            font-size: 36px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+        
+        .hero-subtitle {
+            font-size: 18px;
+            margin-bottom: 30px;
+            opacity: 0.95;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .hero-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        
+        /* Official Button Styles */
+        .gov-btn {
+            padding: 14px 28px;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        
+        .gov-btn-primary {
+            background: var(--gov-orange);
+            color: var(--gov-white);
+        }
+        
+        .gov-btn-primary:hover {
+            background: #E55A00;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 102, 0, 0.3);
+        }
+        
+        .gov-btn-secondary {
+            background: transparent;
+            color: var(--gov-white);
+            border: 2px solid var(--gov-white);
+        }
+        
+        .gov-btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateY(-2px);
+        }
+        
+        /* Services Grid */
+        .services-section {
+            margin: 50px 0;
+        }
+        
+        .section-title {
+            font-size: 28px;
+            color: var(--gov-blue);
+            margin-bottom: 10px;
+            font-weight: 700;
+            border-bottom: 3px solid var(--gov-orange);
+            padding-bottom: 10px;
+            display: inline-block;
+        }
+        
+        .section-subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 16px;
+        }
+        
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+            margin: 30px 0;
+        }
+        
+        .service-card {
+            background: var(--gov-white);
+            border: 1px solid var(--gov-border);
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border-color: var(--gov-orange);
+        }
+        
+        .service-icon {
+            font-size: 48px;
+            margin-bottom: 20px;
+            color: var(--gov-blue);
+        }
+        
+        .service-title {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--gov-blue);
+        }
+        
+        .service-desc {
+            color: #666;
+            margin-bottom: 20px;
+            line-height: 1.6;
+            flex-grow: 1;
+        }
+        
+        .service-btn {
+            align-self: flex-start;
+            margin-top: auto;
+        }
+        
+        /* Analytics Dashboard */
+        .analytics-section {
+            background: var(--gov-white);
+            border-radius: 8px;
+            padding: 40px;
+            margin: 50px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--gov-border);
+        }
+        
+        .analytics-title {
+            font-size: 24px;
+            color: var(--gov-blue);
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+        
+        .stat-card {
+            background: var(--gov-light-blue);
+            border-radius: 6px;
+            padding: 25px;
+            border-left: 4px solid var(--gov-orange);
+        }
+        
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--gov-blue);
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            color: #666;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        
+        /* Quick Access Panel */
+        .quick-access-panel {
+            position: fixed;
+            top: 50%;
+            right: 20px;
+            transform: translateY(-50%);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .quick-access-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: none;
+            color: var(--gov-white);
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .quick-access-btn.emergency {
+            background: #D32F2F;
+            animation: pulse 2s infinite;
+        }
+        
+        .quick-access-btn.ai {
+            background: var(--gov-blue);
+        }
+        
+        .quick-access-btn.location {
+            background: var(--gov-orange);
+        }
+        
+        .quick-access-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(211, 47, 47, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(211, 47, 47, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(211, 47, 47, 0); }
+        }
+        
+        /* Official Footer */
+        .gov-footer {
+            background: var(--gov-blue);
+            color: var(--gov-white);
+            padding: 60px 0 20px;
+            margin-top: 80px;
+            border-top: 4px solid var(--gov-orange);
+        }
+        
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        
+        .footer-section h3 {
+            color: var(--gov-orange);
+            font-size: 18px;
+            margin-bottom: 20px;
+            font-weight: 600;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .footer-links {
+            list-style: none;
+        }
+        
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+        
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: all 0.3s;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .footer-links a:hover {
+            color: var(--gov-white);
+            padding-left: 5px;
+        }
+        
+        .footer-bottom {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 20px;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 14px;
+        }
+        
+        .footer-bottom a {
+            color: var(--gov-orange);
+            text-decoration: none;
+        }
+        
+        .footer-bottom a:hover {
+            text-decoration: underline;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .hero-title {
+                font-size: 30px;
+            }
+            
+            .hero-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .gov-btn {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header-top {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            
+            .gov-logo-section {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .site-titles {
+                align-items: center;
+            }
+            
+            .nav-menu {
+                display: none;
+            }
+            
+            .hero-section {
+                padding: 40px 20px;
+            }
+            
+            .hero-title {
+                font-size: 26px;
+            }
+            
+            .hero-subtitle {
+                font-size: 16px;
+            }
+            
+            .section-title {
+                font-size: 24px;
+            }
+            
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .analytics-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .quick-access-panel {
+                right: 10px;
+            }
+            
+            .quick-access-btn {
+                width: 50px;
+                height: 50px;
+                font-size: 16px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 0 15px;
+            }
+            
+            .hero-title {
+                font-size: 22px;
+            }
+            
+            .section-title {
+                font-size: 20px;
+            }
+            
+            .service-card {
+                padding: 20px;
+            }
+            
+            .analytics-section {
+                padding: 20px;
+            }
+        }
+        
+        /* Accessibility Features */
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 10px;
+            background: var(--gov-orange);
+            color: var(--gov-white);
+            padding: 10px;
+            text-decoration: none;
+            z-index: 10000;
+            font-weight: 600;
+        }
+        
+        .skip-link:focus {
+            top: 10px;
+        }
+        
+        /* Focus Styles for Accessibility */
+        button:focus,
+        a:focus,
+        select:focus {
+            outline: 3px solid var(--gov-orange);
+            outline-offset: 2px;
+        }
+        
+        /* High Contrast Mode */
+        @media (prefers-contrast: high) {
+            body {
+                background: #000;
+                color: #FFF;
+            }
+            
+            .service-card {
+                background: #000;
+                border: 2px solid #FFF;
+            }
+        }
+        
+        /* Reduced Motion */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Skip to Main Content Link (Accessibility) -->
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    
+    <!-- Quick Access Panel -->
+    <div class="quick-access-panel">
+        <button class="quick-access-btn emergency" onclick="openEmergencyPanel()" title="Emergency Panic Button (Ctrl+E)">
+            🚨
+        </button>
+        <button class="quick-access-btn ai" onclick="openAIAssistant()" title="AI Assistant (Ctrl+A)">
+            🤖
+        </button>
+        <button class="quick-access-btn location" onclick="openLocationTracking()" title="Location Tracking (Ctrl+L)">
+            📍
+        </button>
+    </div>
+    
+    <!-- Official Government Header -->
+    <header class="gov-header" role="banner">
+        <div class="header-container">
+            <div class="header-top">
+                <div class="gov-logo-section">
+                    <div class="ashoka-chakra" role="img" aria-label="Government of India Ashoka Chakra">🇮🇳</div>
+                    <div class="site-titles">
+                        <div class="ministry-title">Ministry of Development of North Eastern Region</div>
+                        <div class="site-title">Smart Tourist Safety System</div>
+                        <div class="site-subtitle">Ensuring Safe and Secure Tourism in North Eastern India</div>
+                        <span class="sdg-badge">SDG-9: Industry, Innovation & Infrastructure</span>
+                    </div>
+                </div>
+                
+                <div class="accessibility-panel">
+                    <button class="accessibility-btn" onclick="changeFontSize(-1)" aria-label="Decrease text size">
+                        <span>A-</span>
+                    </button>
+                    <button class="accessibility-btn" onclick="changeFontSize(0)" aria-label="Reset text size">
+                        <span>A</span>
+                    </button>
+                    <button class="accessibility-btn" onclick="changeFontSize(1)" aria-label="Increase text size">
+                        <span>A+</span>
+                    </button>
+                    
+                    <select class="lang-selector" onchange="changeLanguage(this.value)" aria-label="Select language">
+                        <option value="en">English</option>
+                        <option value="hi">हिंदी</option>
+                        <option value="as">অসমীয়া</option>
+                        <option value="bn">বাংলা</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Main Navigation -->
+        <nav class="main-nav" role="navigation" aria-label="Primary navigation">
+            <div class="nav-container">
+                <ul class="nav-menu">
+                    <li><a href="index.html" class="active">Home</a></li>
+                    <li><a href="about-north-east.html">About North East</a></li>
+                    <li><a href="departments.html">Departments</a></li>
+                    <li><a href="services.html">Services</a></li>
+                    <li><a href="tourist-login.html">Tourist Portal</a></li>
+                    <li><a href="police-login.html">Police Portal</a></li>
+                    <li><a href="tourism-login.html">Tourism Dept</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+    
+    <!-- Main Content -->
+    <main id="main-content" class="main-content" role="main">
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <h1 class="hero-title">Ensuring Safe Tourism in India's North Eastern Region</h1>
+            <p class="hero-subtitle">
+                A comprehensive digital initiative by the Ministry of DoNER, Government of India, 
+                leveraging blockchain technology and real-time monitoring for enhanced tourist safety 
+                and security across all eight North Eastern states.
+            </p>
+            
+            <div class="hero-buttons">
+                <a href="tourist-login.html" class="gov-btn gov-btn-primary">
+                    🔐 Login to Tourist Portal
+                </a>
+                <a href="tourist-register.html" class="gov-btn gov-btn-secondary">
+                    📝 New User Registration
+                </a>
+            </div>
+        </section>
+        
+        <!-- Key Services Section -->
+        <section class="services-section">
+            <h2 class="section-title">Official Government Services</h2>
+            <p class="section-subtitle">Secure, reliable, and government-verified services for tourists</p>
+            
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon">🛡️</div>
+                    <h3 class="service-title">Digital Tourist Identification</h3>
+                    <p class="service-desc">
+                        Obtain your government-verified digital tourist ID with blockchain security. 
+                        Valid across all North Eastern states with instant verification capabilities.
+                    </p>
+                    <a href="tourist-login.html" class="gov-btn gov-btn-primary service-btn">Access Portal</a>
+                </div>
+                
+                <div class="service-card">
+                    <div class="service-icon">🚨</div>
+                    <h3 class="service-title">Emergency Response System</h3>
+                    <p class="service-desc">
+                        24/7 integrated emergency services with panic button, GPS tracking, 
+                        and direct police coordination for immediate assistance.
+                    </p>
+                    <a href="panic-button.html" class="gov-btn gov-btn-primary service-btn">Emergency Protocols</a>
+                </div>
+                
+                <div class="service-card">
+                    <div class="service-icon">🤖</div>
+                    <h3 class="service-title">AI-Powered Assistance</h3>
+                    <p class="service-desc">
+                        Government AI assistant providing real-time guidance, safety alerts, 
+                        and multilingual support for all tourist queries.
+                    </p>
+                    <a href="ask-india-gov-ai.html" class="gov-btn gov-btn-primary service-btn">Access AI Assistant</a>
+                </div>
+                
+                <div class="service-card">
+                    <div class="service-icon">📍</div>
+                    <h3 class="service-title">Live Location Monitoring</h3>
+                    <p class="service-desc">
+                        Real-time GPS tracking with geo-fencing alerts and authorized 
+                        access for emergency services and family members.
+                    </p>
+                    <a href="live-location.html" class="gov-btn gov-btn-primary service-btn">Safety Tracking</a>
+                </div>
+                
+                <div class="service-card">
+                    <div class="service-icon">📱</div>
+                    <h3 class="service-title">QR Verification System</h3>
+                    <p class="service-desc">
+                        Government-issued QR codes for instant identity verification, 
+                        blockchain authentication, and secure data exchange.
+                    </p>
+                    <a href="qr-generator.html" class="gov-btn gov-btn-primary service-btn">Generate QR</a>
+                </div>
+                
+                <div class="service-card">
+                    <div class="service-icon">⛓️</div>
+                    <h3 class="service-title">Blockchain Security</h3>
+                    <p class="service-desc">
+                        Tamper-proof digital records using blockchain technology ensuring 
+                        data integrity and transparent audit trails for all transactions.
+                    </p>
+                    <a href="digital-id-verification.html" class="gov-btn gov-btn-primary service-btn">Verify Security</a>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Analytics Dashboard -->
+        <section class="analytics-section">
+            <h2 class="analytics-title">
+                <span>📊</span> System Performance & Statistics
+            </h2>
+            
+            <div class="analytics-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="totalTourists">12,847</div>
+                    <div class="stat-label">Active Registered Tourists</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-value" id="safetyScore">94.7%</div>
+                    <div class="stat-label">Overall Safety Score</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-value" id="blockchainBlocks">8,429</div>
+                    <div class="stat-label">Blockchain Transactions</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-value" id="responseTime">2.3s</div>
+                    <div class="stat-label">Avg. Emergency Response Time</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-value" id="activeStates">8</div>
+                    <div class="stat-label">Active NE States</div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-value" id="policeStations">247</div>
+                    <div class="stat-label">Connected Police Stations</div>
+                </div>
+            </div>
+        </section>
+    </main>
+    
+    <!-- Official Government Footer -->
+    <footer class="gov-footer" role="contentinfo">
+        <div class="footer-container">
+            <div class="footer-grid">
+                <div class="footer-section">
+                    <h3>Government Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="about-north-east.html">📄 About North East India</a></li>
+                        <li><a href="departments.html">🏛️ Government Departments</a></li>
+                        <li><a href="ministers-officers.html">👥 Ministers & Officers</a></li>
+                        <li><a href="notices.html">📢 Official Notices</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Emergency Contacts</h3>
+                    <ul class="footer-links">
+                        <li><a href="tel:1363">📞 Tourist Helpline: 1363</a></li>
+                        <li><a href="tel:112">🚨 Emergency Services: 112</a></li>
+                        <li><a href="tel:100">👮 Police: 100</a></li>
+                        <li><a href="tel:108">🏥 Medical Emergency: 108</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Government Portals</h3>
+                    <ul class="footer-links">
+                        <li><a href="https://mdoner.gov.in" target="_blank">🌐 MoDoNER Official Portal</a></li>
+                        <li><a href="https://india.gov.in" target="_blank">🇮🇳 India.gov.in</a></li>
+                        <li><a href="https://digitalindia.gov.in" target="_blank">💻 Digital India</a></li>
+                        <li><a href="https://mygov.in" target="_blank">👥 MyGov Initiative</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Contact Information</h3>
+                    <ul class="footer-links">
+                        <li>🏛️ Ministry of DoNER</li>
+                        <li>📍 Vigyan Bhawan Annexe, New Delhi</li>
+                        <li><a href="mailto:info@modoner.gov.in">📧 info@modoner.gov.in</a></li>
+                        <li><a href="tel:+911123093000">📞 +91-11-23093000</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 Ministry of Development of North Eastern Region, Government of India. All rights reserved.</p>
+                <p>
+                    <a href="terms-privacy.html">Terms of Service</a> | 
+                    <a href="terms-privacy.html">Privacy Policy</a> | 
+                    <a href="help-support.html">Accessibility Statement</a> | 
+                    Last Updated: January 2024
+                </p>
+            </div>
+        </div>
+    </footer>
+    
+    <!-- Universal Menu Script -->
+    <script src="universal-menu.js"></script>
+    
+    <script>
+        // Enhanced Government System Functions
+        
+        // Blockchain System
+        class GovernmentBlockchainSystem {
+            constructor() {
+                this.chain = [];
+                this.transactionCount = 0;
+                this.createGenesisBlock();
+            }
+            
+            createGenesisBlock() {
+                const genesisBlock = {
+                    index: 0,
+                    timestamp: Date.now(),
+                    data: {
+                        type: 'GENESIS',
+                        system: 'MoDoNER Tourist Safety',
+                        version: '1.0',
+                        authority: 'Government of India'
+                    },
+                    previousHash: '0'.repeat(64),
+                    hash: this.calculateHash(0, Date.now(), 'GENESIS', '0'.repeat(64)),
+                    verified: true
+                };
+                this.chain.push(genesisBlock);
+            }
+            
+            calculateHash(index, timestamp, data, previousHash) {
+                const dataString = typeof data === 'object' ? JSON.stringify(data) : data;
+                const hashString = index + timestamp + dataString + previousHash;
+                return btoa(hashString).replace(/[+/=]/g, '').slice(0, 32);
+            }
+            
+            addGovernmentTransaction(data) {
+                const previousBlock = this.chain[this.chain.length - 1];
+                const newBlock = {
+                    index: previousBlock.index + 1,
+                    timestamp: Date.now(),
+                    data: {
+                        ...data,
+                        transactionId: `GOV-TX-${Date.now()}-${this.transactionCount++}`,
+                        verifiedBy: 'MoDoNER Security System'
+                    },
+                    previousHash: previousBlock.hash,
+                    hash: ''
+                };
+                
+                newBlock.hash = this.calculateHash(
+                    newBlock.index,
+                    newBlock.timestamp,
+                    newBlock.data,
+                    newBlock.previousHash
+                );
+                
+                this.chain.push(newBlock);
+                return newBlock;
+            }
+            
+            getStatistics() {
+                return {
+                    totalBlocks: this.chain.length,
+                    totalTransactions: this.transactionCount,
+                    lastBlockTime: this.chain[this.chain.length - 1].timestamp,
+                    chainVerified: true
+                };
+            }
+        }
+        
+        // Initialize Government Blockchain
+        const governmentBlockchain = new GovernmentBlockchainSystem();
+        
+        // Accessibility Functions
+        function changeFontSize(change) {
+            const body = document.body;
+            const currentSize = parseFloat(window.getComputedStyle(body).fontSize);
+            let newSize;
+            
+            if (change === 1) newSize = Math.min(currentSize + 2, 24);
+            else if (change === -1) newSize = Math.max(currentSize - 2, 14);
+            else newSize = 16;
+            
+            body.style.fontSize = `${newSize}px`;
+            localStorage.setItem('governmentFontSize', newSize);
+            
+            showAccessibilityFeedback(`Font size set to ${newSize}px`);
+        }
+        
+        function changeLanguage(lang) {
+            localStorage.setItem('governmentLanguage', lang);
+            showAccessibilityFeedback(`Language changed to ${getLanguageName(lang)}`);
+        }
+        
+        function getLanguageName(code) {
+            const languages = {
+                'en': 'English',
+                'hi': 'Hindi',
+                'as': 'Assamese',
+                'bn': 'Bengali'
+            };
+            return languages[code] || 'English';
+        }
+        
+        function showAccessibilityFeedback(message) {
+            const feedback = document.createElement('div');
+            feedback.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: var(--gov-orange);
+                color: white;
+                padding: 15px 20px;
+                border-radius: 4px;
+                z-index: 10000;
+                font-weight: 500;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                animation: slideIn 0.3s ease;
+            `;
+            feedback.textContent = message;
+            document.body.appendChild(feedback);
+            
+            setTimeout(() => {
+                feedback.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => feedback.remove(), 300);
+            }, 3000);
+        }
+        
+        // Quick Access Functions
+        function openEmergencyPanel() {
+            window.open('panic-button.html', '_blank');
+        }
+        
+        function openAIAssistant() {
+            window.open('ask-india-gov-ai.html', '_blank');
+        }
+        
+        function openLocationTracking() {
+            window.open('live-location.html', '_blank');
+        }
+        
+        // Statistics Update
+        function updateStatistics() {
+            const stats = governmentBlockchain.getStatistics();
+            
+            document.getElementById('blockchainBlocks').textContent = 
+                stats.totalBlocks.toLocaleString('en-IN');
+            
+            // Simulate live data updates
+            setInterval(() => {
+                const tourists = document.getElementById('totalTourists');
+                const current = parseInt(tourists.textContent.replace(/,/g, ''));
+                const newCount = current + Math.floor(Math.random() * 10);
+                tourists.textContent = newCount.toLocaleString('en-IN');
+            }, 5000);
+            
+            setInterval(() => {
+                const response = document.getElementById('responseTime');
+                const current = parseFloat(response.textContent);
+                const variation = (Math.random() - 0.5) * 0.2;
+                const newTime = Math.max(1.5, Math.min(3.0, current + variation));
+                response.textContent = newTime.toLocaleString('en-IN', { 
+                    minimumFractionDigits: 1, 
+                    maximumFractionDigits: 1 
+                }) + 's';
+            }, 8000);
+        }
+        
+        // Emergency hotkeys
+        document.addEventListener('keydown', function(event) {
+            // Ctrl + E for Emergency
+            if (event.ctrlKey && event.key === 'e') {
+                event.preventDefault();
+                openEmergencyPanel();
+            }
+            
+            // Ctrl + A for AI Assistant
+            if (event.ctrlKey && event.key === 'a') {
+                event.preventDefault();
+                openAIAssistant();
+            }
+            
+            // Ctrl + L for Location
+            if (event.ctrlKey && event.key === 'l') {
+                event.preventDefault();
+                openLocationTracking();
+            }
+        });
+        
+        // Check Authentication Status
+        function checkAuthStatus() {
+            const isLoggedIn = localStorage.getItem('touristLoggedIn');
+            const userType = localStorage.getItem('userType');
+            
+            if (isLoggedIn === 'true') {
+                // Redirect to appropriate dashboard based on user type
+                switch(userType) {
+                    case 'tourist':
+                        window.location.href = 'tourist-dashboard.html';
+                        break;
+                    case 'police':
+                        window.location.href = 'police-dashboard.html';
+                        break;
+                    case 'tourism':
+                        window.location.href = 'tourism-dashboard.html';
+                        break;
+                    case 'admin':
+                        window.location.href = 'admin-dashboard.html';
+                        break;
+                    default:
+                        window.location.href = 'tourist-dashboard.html';
+                }
+            }
+        }
+        
+        // Initialize on Load
+        window.addEventListener('load', function() {
+            // Check if user is already logged in
+            checkAuthStatus();
+            // Load saved preferences
+            const savedFontSize = localStorage.getItem('governmentFontSize');
+            if (savedFontSize) {
+                document.body.style.fontSize = `${savedFontSize}px`;
+            }
+            
+            const savedLang = localStorage.getItem('governmentLanguage');
+            if (savedLang) {
+                const selector = document.querySelector('.lang-selector');
+                if (selector) selector.value = savedLang;
+            }
+            
+            // Add initial government transactions
+            governmentBlockchain.addGovernmentTransaction({
+                type: 'SYSTEM_INIT',
+                description: 'Tourist Safety System Activated',
+                location: 'All North Eastern States'
+            });
+            
+            governmentBlockchain.addGovernmentTransaction({
+                type: 'SECURITY_UPDATE',
+                description: 'Blockchain Security Enhanced',
+                version: '2.1'
+            });
+            
+            // Update statistics
+            updateStatistics();
+            
+            // Show welcome message for first-time visitors
+            if (!localStorage.getItem('hasVisited')) {
+                setTimeout(() => {
+                    showWelcomeMessage();
+                    localStorage.setItem('hasVisited', 'true');
+                }, 2000);
+            }
+            
+            // Add animation styles
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes slideIn {
+                    from { transform: translateX(100%); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+                @keyframes slideOut {
+                    from { transform: translateX(0); opacity: 1; }
+                    to { transform: translateX(100%); opacity: 0; }
+                }
+            `;
+            document.head.appendChild(style);
+        });
+        
+        // Show Welcome Message
+        function showWelcomeMessage() {
+            const welcomeModal = document.createElement('div');
+            welcomeModal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100vw;
+                height: 100vh;
+                background: rgba(0, 0, 0, 0.8);
+                z-index: 10000;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                backdrop-filter: blur(5px);
+            `;
+            
+            welcomeModal.innerHTML = `
+                <div style="
+                    background: var(--gov-white);
+                    padding: 40px;
+                    border-radius: 12px;
+                    max-width: 500px;
+                    text-align: center;
+                    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+                    border: 3px solid var(--gov-orange);
+                ">
+                    <div style="font-size: 48px; margin-bottom: 20px;">🇮🇳</div>
+                    <h2 style="color: var(--gov-blue); margin-bottom: 15px; font-size: 24px;">Welcome to Smart Tourist Safety System</h2>
+                    <p style="color: #666; margin-bottom: 25px; line-height: 1.6;">Ministry of DoNER, Government of India<br>Ensuring safe and secure tourism in North Eastern states</p>
+                    <div style="display: flex; gap: 15px; justify-content: center;">
+                        <button onclick="closeWelcome(); window.location.href='tourist-login.html'" style="
+                            background: var(--gov-blue);
+                            color: white;
+                            border: none;
+                            padding: 12px 24px;
+                            border-radius: 6px;
+                            cursor: pointer;
+                            font-weight: 600;
+                        ">🔐 Login</button>
+                        <button onclick="closeWelcome(); window.location.href='tourist-register.html'" style="
+                            background: var(--gov-orange);
+                            color: white;
+                            border: none;
+                            padding: 12px 24px;
+                            border-radius: 6px;
+                            cursor: pointer;
+                            font-weight: 600;
+                        ">📝 Register</button>
+                        <button onclick="closeWelcome()" style="
+                            background: #ccc;
+                            color: #333;
+                            border: none;
+                            padding: 12px 24px;
+                            border-radius: 6px;
+                            cursor: pointer;
+                            font-weight: 600;
+                        ">Browse</button>
+                    </div>
+                </div>
+            `;
+            
+            document.body.appendChild(welcomeModal);
+            
+            window.closeWelcome = function() {
+                welcomeModal.remove();
+            };
+        }
+    </script>
+</body>
+</html>

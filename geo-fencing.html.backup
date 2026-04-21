@@ -1,0 +1,2288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Geo-Fencing Control System | National Tourist Safety Authority</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Exo+2:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0a1929;
+            --primary-dark: #05101f;
+            --primary-light: #1a2d45;
+            --secondary: #00b4d8;
+            --secondary-glow: #00b4d880;
+            --accent: #ff0055;
+            --accent-glow: #ff005580;
+            --warning: #ffaa00;
+            --success: #00ff88;
+            --success-glow: #00ff8880;
+            --cyber-blue: #00eeff;
+            --cyber-green: #00ffaa;
+            --cyber-purple: #aa00ff;
+            --grid-color: rgba(0, 180, 216, 0.1);
+            --panel-bg: rgba(10, 25, 41, 0.85);
+            --panel-border: rgba(0, 180, 216, 0.3);
+            --text-primary: #ffffff;
+            --text-secondary: #a0c8e0;
+            --text-dim: #6688aa;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Exo 2', sans-serif;
+            background-color: var(--primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(0, 180, 216, 0.05) 0%, transparent 20%),
+                radial-gradient(circle at 80% 70%, rgba(0, 255, 136, 0.05) 0%, transparent 20%),
+                linear-gradient(to bottom, rgba(5, 16, 31, 0.9), rgba(10, 25, 41, 0.9)),
+                url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%2300b4d8' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+        
+        /* Cyber Grid Background */
+        .cyber-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(var(--grid-color) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -1;
+            opacity: 0.3;
+        }
+        
+        .scan-line {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(to right, transparent, var(--secondary), transparent);
+            box-shadow: 0 0 10px var(--secondary);
+            z-index: 999;
+            animation: scan 3s linear infinite;
+        }
+        
+        @keyframes scan {
+            0% { top: 0%; opacity: 0.7; }
+            50% { opacity: 1; }
+            100% { top: 100%; opacity: 0.7; }
+        }
+        
+        .container {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            grid-template-rows: auto 1fr auto;
+            grid-template-areas:
+                "header header"
+                "sidebar main"
+                "footer footer";
+            min-height: 100vh;
+            max-width: 1800px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+        
+        /* Header Styles - Cyber Theme */
+        header {
+            grid-area: header;
+            background: linear-gradient(135deg, rgba(5, 16, 31, 0.95), rgba(10, 25, 41, 0.95));
+            color: var(--text-primary);
+            padding: 1.2rem 2rem;
+            border-bottom: 2px solid var(--secondary);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(0, 180, 216, 0.2);
+            backdrop-filter: blur(10px);
+            border-left: 4px solid var(--accent);
+            border-right: 4px solid var(--accent);
+        }
+        
+        .header-glow {
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, var(--secondary-glow) 0%, transparent 70%);
+            opacity: 0.1;
+            z-index: -1;
+        }
+        
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            position: relative;
+        }
+        
+        .system-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .geo-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.2rem;
+            color: var(--cyber-blue);
+            border: 2px solid var(--secondary);
+            box-shadow: 
+                0 0 20px var(--secondary-glow),
+                inset 0 0 20px rgba(0, 180, 216, 0.2);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .geo-icon::before {
+            content: '';
+            position: absolute;
+            width: 150%;
+            height: 150%;
+            background: conic-gradient(transparent, var(--cyber-blue), transparent 30%);
+            animation: rotate 3s linear infinite;
+        }
+        
+        .geo-icon i {
+            position: relative;
+            z-index: 1;
+            background: var(--primary-dark);
+            padding: 10px;
+            border-radius: 50%;
+        }
+        
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .title-text h1 {
+            font-family: 'Orbitron', monospace;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            letter-spacing: 1px;
+            text-shadow: 0 0 10px var(--secondary-glow);
+            background: linear-gradient(to right, var(--cyber-blue), var(--cyber-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .title-text .tagline {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            font-weight: 300;
+            letter-spacing: 0.5px;
+        }
+        
+        .system-status {
+            text-align: right;
+            font-family: 'Orbitron', monospace;
+        }
+        
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(0, 255, 136, 0.1);
+            padding: 8px 20px;
+            border-radius: 4px;
+            border: 1px solid var(--success);
+            box-shadow: 0 0 15px var(--success-glow);
+            margin-bottom: 8px;
+        }
+        
+        .pulse-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: var(--success);
+            box-shadow: 0 0 10px var(--success);
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.1); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        
+        .header-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(0, 180, 216, 0.2);
+        }
+        
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.9rem;
+            color: var(--text-dim);
+        }
+        
+        .breadcrumb .active {
+            color: var(--cyber-blue);
+            font-weight: 600;
+        }
+        
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .live-badge {
+            background: linear-gradient(135deg, var(--accent), #ff3366);
+            color: white;
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 0 15px var(--accent-glow);
+            animation: live-pulse 2s infinite;
+        }
+        
+        @keyframes live-pulse {
+            0% { box-shadow: 0 0 10px var(--accent-glow); }
+            50% { box-shadow: 0 0 20px var(--accent-glow); }
+            100% { box-shadow: 0 0 10px var(--accent-glow); }
+        }
+        
+        /* Sidebar Styles */
+        .sidebar {
+            grid-area: sidebar;
+            background: var(--panel-bg);
+            padding: 2rem 0;
+            border-right: 1px solid var(--panel-border);
+            backdrop-filter: blur(5px);
+            border-top: 1px solid var(--panel-border);
+            box-shadow: 5px 0 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .sidebar-header {
+            padding: 0 1.5rem 1.5rem;
+            border-bottom: 1px solid var(--panel-border);
+            margin-bottom: 1.5rem;
+        }
+        
+        .sidebar-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            color: var(--cyber-blue);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .zone-counter {
+            background: rgba(0, 180, 216, 0.1);
+            padding: 10px 15px;
+            border-radius: 6px;
+            border: 1px solid var(--secondary);
+            text-align: center;
+        }
+        
+        .zone-counter .count {
+            font-family: 'Orbitron', monospace;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--cyber-blue);
+            text-shadow: 0 0 10px var(--secondary-glow);
+            line-height: 1;
+        }
+        
+        .zone-counter .label {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            margin-top: 5px;
+        }
+        
+        .nav-menu {
+            list-style: none;
+        }
+        
+        .nav-item {
+            padding: 1rem 1.5rem;
+            border-left: 4px solid transparent;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            font-weight: 500;
+            border-bottom: 1px solid rgba(0, 180, 216, 0.05);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .nav-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 180, 216, 0.1), transparent);
+            transition: left 0.5s;
+        }
+        
+        .nav-item:hover::before {
+            left: 100%;
+        }
+        
+        .nav-item:hover, .nav-item.active {
+            background: linear-gradient(90deg, rgba(0, 180, 216, 0.1), transparent);
+            color: var(--cyber-blue);
+            border-left: 4px solid var(--cyber-blue);
+            text-shadow: 0 0 5px var(--secondary-glow);
+        }
+        
+        .nav-item i {
+            width: 25px;
+            text-align: center;
+            font-size: 1.2rem;
+        }
+        
+        .nav-badge {
+            margin-left: auto;
+            background: var(--accent);
+            color: white;
+            font-size: 0.7rem;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+        
+        /* Main Content Styles */
+        .main-content {
+            grid-area: main;
+            padding: 2rem;
+            background: rgba(5, 16, 31, 0.7);
+            overflow-y: auto;
+            border-top: 1px solid var(--panel-border);
+        }
+        
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--panel-border);
+        }
+        
+        .dashboard-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .dashboard-title i {
+            color: var(--cyber-green);
+            font-size: 2rem;
+        }
+        
+        .control-panel {
+            display: flex;
+            gap: 15px;
+        }
+        
+        /* Geo-Fencing Map */
+        .geo-map-container {
+            background: var(--panel-bg);
+            border-radius: 10px;
+            padding: 0;
+            margin-bottom: 2rem;
+            border: 1px solid var(--panel-border);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+            min-height: 500px;
+        }
+        
+        .map-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--panel-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.3);
+        }
+        
+        .map-header h3 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.4rem;
+            color: var(--cyber-blue);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .map-controls {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .map-body {
+            position: relative;
+            height: 500px;
+            background: linear-gradient(135deg, #0a1929, #1a2d45);
+            overflow: hidden;
+        }
+        
+        .map-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 180, 216, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 180, 216, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+            opacity: 0.5;
+        }
+        
+        .map-coordinates {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px 15px;
+            border-radius: 6px;
+            border: 1px solid var(--secondary);
+            font-family: 'Orbitron', monospace;
+            font-size: 0.9rem;
+            color: var(--cyber-blue);
+            backdrop-filter: blur(5px);
+        }
+        
+        .geo-zone {
+            position: absolute;
+            border: 2px solid;
+            border-radius: 8px;
+            background: rgba(0, 180, 216, 0.1);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            cursor: move;
+            transition: all 0.3s;
+            overflow: hidden;
+        }
+        
+        .geo-zone::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 10px,
+                rgba(255, 255, 255, 0.05) 10px,
+                rgba(255, 255, 255, 0.05) 20px
+            );
+        }
+        
+        .geo-zone:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 30px currentColor;
+            z-index: 10;
+        }
+        
+        .zone-safe {
+            border-color: var(--success);
+            color: var(--success);
+            box-shadow: 0 0 20px var(--success-glow);
+        }
+        
+        .zone-warning {
+            border-color: var(--warning);
+            color: var(--warning);
+            box-shadow: 0 0 20px rgba(255, 170, 0, 0.3);
+        }
+        
+        .zone-restricted {
+            border-color: var(--accent);
+            color: var(--accent);
+            box-shadow: 0 0 20px var(--accent-glow);
+        }
+        
+        .zone-info {
+            padding: 10px;
+            text-align: center;
+            background: rgba(0, 0, 0, 0.7);
+            width: 100%;
+            font-size: 0.9rem;
+        }
+        
+        .zone-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+            font-family: 'Orbitron', sans-serif;
+        }
+        
+        .zone-status {
+            font-size: 0.8rem;
+            opacity: 0.9;
+        }
+        
+        .zone-controls {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            display: flex;
+            gap: 5px;
+            z-index: 11;
+        }
+        
+        .zone-btn {
+            width: 25px;
+            height: 25px;
+            border-radius: 4px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid currentColor;
+            color: inherit;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.2s;
+        }
+        
+        .zone-btn:hover {
+            background: currentColor;
+            color: black;
+        }
+        
+        /* Zone Management Panel */
+        .zone-panel {
+            background: var(--panel-bg);
+            border-radius: 10px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--panel-border);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--panel-border);
+        }
+        
+        .panel-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.3rem;
+            color: var(--cyber-blue);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .zone-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .zone-card {
+            background: rgba(20, 35, 60, 0.5);
+            border-radius: 8px;
+            padding: 1.5rem;
+            border: 1px solid var(--panel-border);
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .zone-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: var(--secondary);
+        }
+        
+        .zone-card.safe::before { background: var(--success); }
+        .zone-card.warning::before { background: var(--warning); }
+        .zone-card.restricted::before { background: var(--accent); }
+        
+        .zone-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 180, 216, 0.2);
+            border-color: var(--secondary);
+        }
+        
+        .zone-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        
+        .zone-card-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .zone-card-type {
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        
+        .zone-card-type.safe {
+            background: rgba(0, 255, 136, 0.1);
+            color: var(--success);
+            border: 1px solid var(--success);
+        }
+        
+        .zone-card-type.warning {
+            background: rgba(255, 170, 0, 0.1);
+            color: var(--warning);
+            border: 1px solid var(--warning);
+        }
+        
+        .zone-card-type.restricted {
+            background: rgba(255, 0, 85, 0.1);
+            color: var(--accent);
+            border: 1px solid var(--accent);
+        }
+        
+        .zone-card-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--cyber-blue);
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+        }
+        
+        .zone-card-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        /* Zone Creation Panel */
+        .creation-panel {
+            background: var(--panel-bg);
+            border-radius: 10px;
+            padding: 2rem;
+            border: 1px solid var(--panel-border);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            margin-top: 2rem;
+        }
+        
+        .creation-form {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+        
+        .form-label {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            color: var(--cyber-blue);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .form-input, .form-select, .form-textarea {
+            background: rgba(20, 35, 60, 0.7);
+            border: 1px solid var(--panel-border);
+            border-radius: 6px;
+            padding: 12px 15px;
+            color: var(--text-primary);
+            font-family: 'Exo 2', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--secondary);
+            box-shadow: 0 0 15px var(--secondary-glow);
+        }
+        
+        .form-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        
+        .form-actions {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 1rem;
+        }
+        
+        /* Button Styles */
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s;
+            font-family: 'Exo 2', sans-serif;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .btn:hover::before {
+            left: 100%;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--secondary), #0088cc);
+            color: white;
+            border: 1px solid var(--secondary);
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #0088cc, var(--secondary));
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px var(--secondary-glow);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, var(--success), #00cc66);
+            color: white;
+            border: 1px solid var(--success);
+        }
+        
+        .btn-success:hover {
+            background: linear-gradient(135deg, #00cc66, var(--success));
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px var(--success-glow);
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, var(--accent), #cc0044);
+            color: white;
+            border: 1px solid var(--accent);
+        }
+        
+        .btn-danger:hover {
+            background: linear-gradient(135deg, #cc0044, var(--accent));
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px var(--accent-glow);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            color: var(--secondary);
+            border: 1px solid var(--secondary);
+        }
+        
+        .btn-outline:hover {
+            background: rgba(0, 180, 216, 0.1);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px var(--secondary-glow);
+        }
+        
+        .btn-sm {
+            padding: 8px 15px;
+            font-size: 0.9rem;
+        }
+        
+        /* Footer Styles */
+        footer {
+            grid-area: footer;
+            background: linear-gradient(135deg, rgba(5, 16, 31, 0.95), rgba(10, 25, 41, 0.95));
+            color: var(--text-primary);
+            padding: 1.5rem 2rem;
+            border-top: 2px solid var(--secondary);
+            backdrop-filter: blur(10px);
+            border-left: 4px solid var(--accent);
+            border-right: 4px solid var(--accent);
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .system-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            color: var(--text-dim);
+        }
+        
+        .info-item i {
+            color: var(--cyber-blue);
+        }
+        
+        .copyright {
+            font-size: 0.85rem;
+            opacity: 0.8;
+            text-align: right;
+        }
+        
+        /* Modal Styles */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(5, 16, 31, 0.9);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            backdrop-filter: blur(10px);
+        }
+        
+        .modal.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .modal-content {
+            background: var(--panel-bg);
+            border-radius: 15px;
+            width: 90%;
+            max-width: 600px;
+            border: 2px solid var(--secondary);
+            box-shadow: 0 20px 50px rgba(0, 180, 216, 0.3);
+            overflow: hidden;
+            transform: translateY(-20px);
+            transition: transform 0.3s;
+        }
+        
+        .modal.active .modal-content {
+            transform: translateY(0);
+        }
+        
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--panel-border);
+            background: linear-gradient(90deg, var(--primary-dark), var(--primary));
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            color: var(--cyber-blue);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .modal-body {
+            padding: 2rem;
+        }
+        
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 2rem;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .zone-list {
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            }
+            
+            .creation-form {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .container {
+                grid-template-columns: 1fr;
+                grid-template-areas:
+                    "header"
+                    "main"
+                    "footer";
+            }
+            
+            .sidebar {
+                display: none;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+                gap: 1.5rem;
+                text-align: center;
+            }
+            
+            .system-info {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header-top {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .system-status {
+                text-align: left;
+                width: 100%;
+            }
+            
+            .header-bottom {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .header-controls {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .zone-list {
+                grid-template-columns: 1fr;
+            }
+            
+            .map-controls {
+                flex-wrap: wrap;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .main-content {
+                padding: 1.5rem;
+            }
+            
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .control-panel {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .zone-card-actions {
+                flex-wrap: wrap;
+            }
+            
+            .modal-content {
+                width: 95%;
+                padding: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Cyber Grid Background -->
+    <div class="cyber-grid"></div>
+    <div class="scan-line"></div>
+    
+    <!-- Modal for Zone Details -->
+    <div class="modal" id="zone-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <span id="modal-zone-name">Zone Details</span>
+                </h3>
+                <button class="btn btn-outline btn-sm" id="close-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="modal-content">
+                    <!-- Content will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <div class="header-glow"></div>
+            <div class="header-top">
+                <div class="system-title">
+                    <div class="geo-icon">
+                        <i class="fas fa-satellite"></i>
+                    </div>
+                    <div class="title-text">
+                        <h1>GEO-FENCING CONTROL SYSTEM</h1>
+                        <div class="tagline">National Tourist Safety Authority • Secure Perimeter Management</div>
+                    </div>
+                </div>
+                <div class="system-status">
+                    <div class="status-indicator">
+                        <div class="pulse-dot"></div>
+                        <span>SYSTEM STATUS: <strong>OPERATIONAL</strong></span>
+                    </div>
+                    <div style="font-size: 0.9rem; color: var(--text-dim);">
+                        Last Sync: <span id="last-sync">Just now</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="header-bottom">
+                <div class="breadcrumb">
+                    <span><i class="fas fa-home"></i> Main Dashboard</span>
+                    <span><i class="fas fa-chevron-right"></i></span>
+                    <span class="active"><i class="fas fa-map-marked-alt"></i> Geo-Fencing Control</span>
+                </div>
+                <div class="header-controls">
+                    <div class="live-badge">
+                        <i class="fas fa-circle"></i>
+                        LIVE MONITORING
+                    </div>
+                    <button class="btn btn-primary" id="sync-zones">
+                        <i class="fas fa-sync-alt"></i>
+                        Sync Zones
+                    </button>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-title">
+                    <i class="fas fa-layer-group"></i>
+                    ZONE MANAGEMENT
+                </div>
+                <div class="zone-counter">
+                    <div class="count" id="zone-count">24</div>
+                    <div class="label">Active Geo-Fences</div>
+                </div>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item active">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Control Dashboard</span>
+                </li>
+                <li class="nav-item">
+                    <i class="fas fa-plus-circle"></i>
+                    <span>Create New Zone</span>
+                    <span class="nav-badge">NEW</span>
+                </li>
+                <li class="nav-item">
+                    <i class="fas fa-history"></i>
+                    <span>Zone History</span>
+                </li>
+                <li class="nav-item">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span>Alert Zones</span>
+                    <span class="nav-badge">3</span>
+                </li>
+                <li class="nav-item">
+                    <i class="fas fa-shield-alt"></i>
+                    <span>Secure Zones</span>
+                </li>
+                <li class="nav-item">
+                    <i class="fas fa-users"></i>
+                    <span>Public Zones</span>
+                </li>
+                <li class="nav-item">
+                    <i class="fas fa-cog"></i>
+                    <span>System Settings</span>
+                </li>
+                <li class="nav-item">
+                    <i class="fas fa-file-export"></i>
+                    <span>Export Data</span>
+                </li>
+            </ul>
+        </nav>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="dashboard-header">
+                <h2 class="dashboard-title">
+                    <i class="fas fa-satellite-dish"></i>
+                    GEO-FENCING CONTROL PANEL
+                </h2>
+                <div class="control-panel">
+                    <button class="btn btn-success" id="add-zone">
+                        <i class="fas fa-plus"></i>
+                        Add Zone
+                    </button>
+                    <button class="btn btn-outline" id="simulate-alert">
+                        <i class="fas fa-bell"></i>
+                        Test Alert
+                    </button>
+                    <button class="btn btn-outline" id="export-map">
+                        <i class="fas fa-download"></i>
+                        Export Map
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Interactive Map -->
+            <div class="geo-map-container">
+                <div class="map-header">
+                    <h3>
+                        <i class="fas fa-map"></i>
+                        INTERACTIVE GEO-FENCING MAP
+                    </h3>
+                    <div class="map-controls">
+                        <button class="btn btn-outline btn-sm" id="zoom-in">
+                            <i class="fas fa-search-plus"></i>
+                        </button>
+                        <button class="btn btn-outline btn-sm" id="zoom-out">
+                            <i class="fas fa-search-minus"></i>
+                        </button>
+                        <button class="btn btn-outline btn-sm" id="reset-view">
+                            <i class="fas fa-crosshairs"></i>
+                            Reset
+                        </button>
+                        <button class="btn btn-primary btn-sm" id="draw-mode">
+                            <i class="fas fa-draw-polygon"></i>
+                            Draw Zone
+                        </button>
+                    </div>
+                </div>
+                <div class="map-body" id="map-container">
+                    <div class="map-grid"></div>
+                    <div class="map-coordinates">
+                        Coordinates: <span id="map-coords">X: 0, Y: 0</span>
+                    </div>
+                    
+                    <!-- Geo-Zones will be dynamically added here -->
+                    <div class="geo-zone zone-safe" style="top: 20%; left: 25%; width: 200px; height: 150px;">
+                        <div class="zone-controls">
+                            <button class="zone-btn" title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="zone-btn" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                        <div class="zone-info">
+                            <div class="zone-name">CITY CENTER</div>
+                            <div class="zone-status">Safe Zone</div>
+                            <div style="font-size: 0.8rem; opacity: 0.7;">42 Tourists Inside</div>
+                        </div>
+                    </div>
+                    
+                    <div class="geo-zone zone-warning" style="top: 60%; left: 60%; width: 180px; height: 120px;">
+                        <div class="zone-controls">
+                            <button class="zone-btn" title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="zone-btn" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                        <div class="zone-info">
+                            <div class="zone-name">BEACH FRONT</div>
+                            <div class="zone-status">Warning Zone</div>
+                            <div style="font-size: 0.8rem; opacity: 0.7;">High Tide Alert</div>
+                        </div>
+                    </div>
+                    
+                    <div class="geo-zone zone-restricted" style="top: 30%; left: 65%; width: 150px; height: 180px;">
+                        <div class="zone-controls">
+                            <button class="zone-btn" title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="zone-btn" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                        <div class="zone-info">
+                            <div class="zone-name">MILITARY ZONE</div>
+                            <div class="zone-status">Restricted</div>
+                            <div style="font-size: 0.8rem; opacity: 0.7;">No Entry</div>
+                        </div>
+                    </div>
+                    
+                    <div class="geo-zone zone-safe" style="top: 50%; left: 15%; width: 220px; height: 140px;">
+                        <div class="zone-controls">
+                            <button class="zone-btn" title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="zone-btn" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                        <div class="zone-info">
+                            <div class="zone-name">HOTEL DISTRICT</div>
+                            <div class="zone-status">Safe Zone</div>
+                            <div style="font-size: 0.8rem; opacity: 0.7;">128 Tourists Inside</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Zone Management Panel -->
+            <div class="zone-panel">
+                <div class="panel-header">
+                    <h3 class="panel-title">
+                        <i class="fas fa-list-alt"></i>
+                        ACTIVE GEO-FENCES
+                    </h3>
+                    <div class="control-panel">
+                        <button class="btn btn-outline btn-sm" id="filter-safe">
+                            <i class="fas fa-shield-alt"></i> Safe
+                        </button>
+                        <button class="btn btn-outline btn-sm" id="filter-warning">
+                            <i class="fas fa-exclamation-triangle"></i> Warning
+                        </button>
+                        <button class="btn btn-outline btn-sm" id="filter-restricted">
+                            <i class="fas fa-ban"></i> Restricted
+                        </button>
+                        <button class="btn btn-outline btn-sm" id="filter-all">
+                            <i class="fas fa-globe"></i> All
+                        </button>
+                    </div>
+                </div>
+                <div class="zone-list" id="zone-list">
+                    <!-- Zone cards will be dynamically added here -->
+                </div>
+            </div>
+            
+            <!-- Zone Creation Panel -->
+            <div class="creation-panel">
+                <div class="panel-header">
+                    <h3 class="panel-title">
+                        <i class="fas fa-plus-circle"></i>
+                        CREATE NEW GEO-FENCE
+                    </h3>
+                </div>
+                <form class="creation-form" id="zone-form">
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i class="fas fa-tag"></i>
+                            Zone Name
+                        </label>
+                        <input type="text" class="form-input" placeholder="Enter zone name" id="zone-name" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i class="fas fa-map-pin"></i>
+                            Zone Type
+                        </label>
+                        <select class="form-select" id="zone-type" required>
+                            <option value="">Select zone type</option>
+                            <option value="safe">Safe Zone (Public Access)</option>
+                            <option value="warning">Warning Zone (Restricted Access)</option>
+                            <option value="restricted">Restricted Zone (No Access)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i class="fas fa-ruler-combined"></i>
+                            Dimensions (meters)
+                        </label>
+                        <input type="text" class="form-input" placeholder="Width x Height" id="zone-dimensions" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">
+                            <i class="fas fa-bell"></i>
+                            Alert Level
+                        </label>
+                        <select class="form-select" id="zone-alert">
+                            <option value="low">Low Priority</option>
+                            <option value="medium">Medium Priority</option>
+                            <option value="high">High Priority</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label class="form-label">
+                            <i class="fas fa-align-left"></i>
+                            Description
+                        </label>
+                        <textarea class="form-textarea" placeholder="Describe the purpose and rules of this geo-fence zone" id="zone-description" rows="3"></textarea>
+                    </div>
+                    
+                    <div class="form-group full-width">
+                        <label class="form-label">
+                            <i class="fas fa-map-marked-alt"></i>
+                            Zone Coordinates
+                        </label>
+                        <div style="display: flex; gap: 15px;">
+                            <input type="text" class="form-input" placeholder="Latitude" id="zone-lat" required>
+                            <input type="text" class="form-input" placeholder="Longitude" id="zone-lng" required>
+                            <button type="button" class="btn btn-outline" id="get-location">
+                                <i class="fas fa-location-arrow"></i>
+                                Current Location
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-outline" id="reset-form">
+                            <i class="fas fa-redo"></i>
+                            Reset
+                        </button>
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-save"></i>
+                            Create Geo-Fence
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </main>
+        
+        <!-- Footer -->
+        <footer>
+            <div class="footer-content">
+                <div class="system-info">
+                    <div class="info-item">
+                        <i class="fas fa-server"></i>
+                        <span>Zones Active: <strong id="footer-zone-count">24</strong></span>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-users"></i>
+                        <span>Tourists Tracked: <strong>1,247</strong></span>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-shield-alt"></i>
+                        <span>System Uptime: <strong>99.8%</strong></span>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-clock"></i>
+                        <span>Last Update: <strong id="footer-last-update">Just now</strong></span>
+                    </div>
+                </div>
+                <div class="copyright">
+                    &copy; 2023 National Tourist Safety Authority • Geo-Fencing Control System v3.5<br>
+                    All geographical data is classified and protected under National Security Act.
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // ============================================
+        // GEO-FENCING CONTROL SYSTEM
+        // ============================================
+        
+        // System Configuration
+        const GEO_SYSTEM = {
+            zones: [
+                {
+                    id: 1,
+                    name: "City Center",
+                    type: "safe",
+                    description: "Main tourist area with high security monitoring",
+                    coordinates: { lat: 40.7128, lng: -74.0060 },
+                    dimensions: "200x150m",
+                    alertLevel: "low",
+                    tourists: 42,
+                    alerts: 0,
+                    status: "active",
+                    created: "2023-10-15"
+                },
+                {
+                    id: 2,
+                    name: "Beach Front",
+                    type: "warning",
+                    description: "Coastal area with tide warnings and lifeguard supervision",
+                    coordinates: { lat: 40.7589, lng: -73.9851 },
+                    dimensions: "180x120m",
+                    alertLevel: "medium",
+                    tourists: 28,
+                    alerts: 3,
+                    status: "active",
+                    created: "2023-10-10"
+                },
+                {
+                    id: 3,
+                    name: "Military Zone",
+                    type: "restricted",
+                    description: "Restricted government area - No entry permitted",
+                    coordinates: { lat: 40.6892, lng: -74.0445 },
+                    dimensions: "150x180m",
+                    alertLevel: "high",
+                    tourists: 0,
+                    alerts: 12,
+                    status: "active",
+                    created: "2023-10-05"
+                },
+                {
+                    id: 4,
+                    name: "Hotel District",
+                    type: "safe",
+                    description: "Accommodation area with 24/7 security patrol",
+                    coordinates: { lat: 40.7505, lng: -73.9934 },
+                    dimensions: "220x140m",
+                    alertLevel: "low",
+                    tourists: 128,
+                    alerts: 0,
+                    status: "active",
+                    created: "2023-10-12"
+                },
+                {
+                    id: 5,
+                    name: "Mountain Trail",
+                    type: "warning",
+                    description: "Hiking area with weather warnings and rescue points",
+                    coordinates: { lat: 40.6635, lng: -73.9387 },
+                    dimensions: "300x200m",
+                    alertLevel: "medium",
+                    tourists: 15,
+                    alerts: 2,
+                    status: "active",
+                    created: "2023-10-08"
+                },
+                {
+                    id: 6,
+                    name: "Airport Perimeter",
+                    type: "restricted",
+                    description: "Secure airport area with limited access",
+                    coordinates: { lat: 40.6413, lng: -73.7781 },
+                    dimensions: "250x180m",
+                    alertLevel: "high",
+                    tourists: 0,
+                    alerts: 8,
+                    status: "active",
+                    created: "2023-10-03"
+                }
+            ],
+            nextId: 7,
+            activeFilter: "all",
+            isDrawing: false,
+            mapZoom: 1.0
+        };
+        
+        // DOM Elements
+        const elements = {
+            zoneCount: document.getElementById('zone-count'),
+            footerZoneCount: document.getElementById('footer-zone-count'),
+            lastSync: document.getElementById('last-sync'),
+            footerLastUpdate: document.getElementById('footer-last-update'),
+            mapContainer: document.getElementById('map-container'),
+            mapCoords: document.getElementById('map-coords'),
+            zoneList: document.getElementById('zone-list'),
+            zoneForm: document.getElementById('zone-form'),
+            zoneModal: document.getElementById('zone-modal'),
+            closeModal: document.getElementById('close-modal'),
+            modalZoneName: document.getElementById('modal-zone-name'),
+            modalContent: document.getElementById('modal-content')
+        };
+        
+        // Initialize System
+        function initGeoSystem() {
+            console.log('🌍 Initializing Geo-Fencing Control System...');
+            
+            // Render initial zones
+            renderZoneList();
+            updateZoneCount();
+            updateLastSync();
+            
+            // Setup event listeners
+            setupEventListeners();
+            
+            // Setup map interactions
+            setupMapInteractions();
+            
+            // Simulate live updates
+            startLiveUpdates();
+            
+            // Show welcome message
+            showNotification(
+                "Geo-Fencing System Active",
+                "All 6 geo-fence zones are operational and monitoring tourist activity.",
+                "success"
+            );
+            
+            console.log('✅ Geo-fencing system initialized successfully');
+        }
+        
+        // Render Zone List
+        function renderZoneList(filter = GEO_SYSTEM.activeFilter) {
+            elements.zoneList.innerHTML = '';
+            
+            const filteredZones = filter === "all" 
+                ? GEO_SYSTEM.zones 
+                : GEO_SYSTEM.zones.filter(zone => zone.type === filter);
+            
+            filteredZones.forEach(zone => {
+                const zoneCard = createZoneCard(zone);
+                elements.zoneList.appendChild(zoneCard);
+            });
+        }
+        
+        // Create Zone Card
+        function createZoneCard(zone) {
+            const card = document.createElement('div');
+            card.className = `zone-card ${zone.type}`;
+            card.dataset.id = zone.id;
+            
+            const typeLabels = {
+                safe: "Safe Zone",
+                warning: "Warning Zone",
+                restricted: "Restricted Zone"
+            };
+            
+            const typeColors = {
+                safe: "var(--success)",
+                warning: "var(--warning)",
+                restricted: "var(--accent)"
+            };
+            
+            card.innerHTML = `
+                <div class="zone-card-header">
+                    <div class="zone-card-title">
+                        <i class="fas fa-map-marker-alt"></i>
+                        ${zone.name}
+                    </div>
+                    <div class="zone-card-type ${zone.type}">
+                        ${typeLabels[zone.type]}
+                    </div>
+                </div>
+                
+                <div class="zone-card-stats">
+                    <div class="stat-item">
+                        <div class="stat-value" style="color: ${typeColors[zone.type]}">
+                            ${zone.tourists}
+                        </div>
+                        <div class="stat-label">Tourists</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" style="color: ${zone.alerts > 0 ? 'var(--accent)' : 'var(--success)'}">
+                            ${zone.alerts}
+                        </div>
+                        <div class="stat-label">Alerts</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" style="color: var(--cyber-blue)">
+                            ${zone.dimensions}
+                        </div>
+                        <div class="stat-label">Size</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" style="color: var(--text-secondary)">
+                            ${zone.alertLevel.toUpperCase()}
+                        </div>
+                        <div class="stat-label">Priority</div>
+                    </div>
+                </div>
+                
+                <p style="color: var(--text-dim); font-size: 0.9rem; margin-bottom: 1.5rem;">
+                    ${zone.description}
+                </p>
+                
+                <div class="zone-card-actions">
+                    <button class="btn btn-outline btn-sm view-zone" data-id="${zone.id}">
+                        <i class="fas fa-eye"></i> View
+                    </button>
+                    <button class="btn btn-outline btn-sm edit-zone" data-id="${zone.id}">
+                        <i class="fas fa-edit"></i> Edit
+                    </button>
+                    <button class="btn btn-outline btn-sm monitor-zone" data-id="${zone.id}">
+                        <i class="fas fa-desktop"></i> Monitor
+                    </button>
+                    <button class="btn btn-outline btn-sm delete-zone" data-id="${zone.id}">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+            `;
+            
+            return card;
+        }
+        
+        // Update Zone Count
+        function updateZoneCount() {
+            const totalZones = GEO_SYSTEM.zones.length;
+            elements.zoneCount.textContent = totalZones;
+            elements.footerZoneCount.textContent = totalZones;
+        }
+        
+        // Update Last Sync
+        function updateLastSync() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('en-US', { 
+                hour: '2-digit', 
+                minute: '2-digit',
+                second: '2-digit'
+            });
+            
+            elements.lastSync.textContent = timeString;
+            elements.footerLastUpdate.textContent = timeString;
+        }
+        
+        // Setup Event Listeners
+        function setupEventListeners() {
+            // Form submission
+            elements.zoneForm.addEventListener('submit', handleZoneCreation);
+            
+            // Modal close
+            elements.closeModal.addEventListener('click', () => {
+                elements.zoneModal.classList.remove('active');
+            });
+            
+            // Filter buttons
+            document.getElementById('filter-all').addEventListener('click', () => {
+                GEO_SYSTEM.activeFilter = "all";
+                renderZoneList("all");
+            });
+            
+            document.getElementById('filter-safe').addEventListener('click', () => {
+                GEO_SYSTEM.activeFilter = "safe";
+                renderZoneList("safe");
+            });
+            
+            document.getElementById('filter-warning').addEventListener('click', () => {
+                GEO_SYSTEM.activeFilter = "warning";
+                renderZoneList("warning");
+            });
+            
+            document.getElementById('filter-restricted').addEventListener('click', () => {
+                GEO_SYSTEM.activeFilter = "restricted";
+                renderZoneList("restricted");
+            });
+            
+            // Map controls
+            document.getElementById('zoom-in').addEventListener('click', zoomIn);
+            document.getElementById('zoom-out').addEventListener('click', zoomOut);
+            document.getElementById('reset-view').addEventListener('click', resetView);
+            document.getElementById('draw-mode').addEventListener('click', toggleDrawMode);
+            
+            // Action buttons
+            document.getElementById('add-zone').addEventListener('click', () => {
+                document.getElementById('zone-form').scrollIntoView({ behavior: 'smooth' });
+            });
+            
+            document.getElementById('simulate-alert').addEventListener('click', simulateAlert);
+            document.getElementById('export-map').addEventListener('click', exportMap);
+            document.getElementById('sync-zones').addEventListener('click', syncZones);
+            document.getElementById('get-location').addEventListener('click', getCurrentLocation);
+            document.getElementById('reset-form').addEventListener('click', resetForm);
+            
+            // Map coordinate tracking
+            elements.mapContainer.addEventListener('mousemove', updateMapCoordinates);
+            
+            // Close modal on outside click
+            elements.zoneModal.addEventListener('click', (e) => {
+                if (e.target === elements.zoneModal) {
+                    elements.zoneModal.classList.remove('active');
+                }
+            });
+        }
+        
+        // Setup Map Interactions
+        function setupMapInteractions() {
+            // Make zones draggable
+            const zones = document.querySelectorAll('.geo-zone');
+            zones.forEach(zone => {
+                makeDraggable(zone);
+                
+                // Add click event to zones
+                zone.addEventListener('click', (e) => {
+                    if (!e.target.closest('.zone-controls')) {
+                        const zoneName = zone.querySelector('.zone-name').textContent;
+                        showZoneDetails(zoneName);
+                    }
+                });
+            });
+        }
+        
+        // Make Element Draggable
+        function makeDraggable(element) {
+            let isDragging = false;
+            let currentX;
+            let currentY;
+            let initialX;
+            let initialY;
+            let xOffset = 0;
+            let yOffset = 0;
+            
+            element.addEventListener('mousedown', dragStart);
+            element.addEventListener('touchstart', dragStart);
+            
+            function dragStart(e) {
+                if (e.type === 'touchstart') {
+                    initialX = e.touches[0].clientX - xOffset;
+                    initialY = e.touches[0].clientY - yOffset;
+                } else {
+                    initialX = e.clientX - xOffset;
+                    initialY = e.clientY - yOffset;
+                }
+                
+                if (e.target.closest('.zone-controls')) {
+                    return;
+                }
+                
+                isDragging = true;
+                
+                document.addEventListener('mousemove', drag);
+                document.addEventListener('touchmove', drag);
+                document.addEventListener('mouseup', dragEnd);
+                document.addEventListener('touchend', dragEnd);
+            }
+            
+            function drag(e) {
+                if (isDragging) {
+                    e.preventDefault();
+                    
+                    if (e.type === 'touchmove') {
+                        currentX = e.touches[0].clientX - initialX;
+                        currentY = e.touches[0].clientY - initialY;
+                    } else {
+                        currentX = e.clientX - initialX;
+                        currentY = e.clientY - initialY;
+                    }
+                    
+                    xOffset = currentX;
+                    yOffset = currentY;
+                    
+                    setTranslate(currentX, currentY, element);
+                }
+            }
+            
+            function dragEnd() {
+                initialX = currentX;
+                initialY = currentY;
+                isDragging = false;
+                
+                document.removeEventListener('mousemove', drag);
+                document.removeEventListener('touchmove', drag);
+                document.removeEventListener('mouseup', dragEnd);
+                document.removeEventListener('touchend', dragEnd);
+            }
+            
+            function setTranslate(xPos, yPos, el) {
+                el.style.transform = `translate(${xPos}px, ${yPos}px)`;
+            }
+        }
+        
+        // Handle Zone Creation
+        function handleZoneCreation(e) {
+            e.preventDefault();
+            
+            const zoneData = {
+                id: GEO_SYSTEM.nextId++,
+                name: document.getElementById('zone-name').value,
+                type: document.getElementById('zone-type').value,
+                description: document.getElementById('zone-description').value,
+                coordinates: {
+                    lat: document.getElementById('zone-lat').value,
+                    lng: document.getElementById('zone-lng').value
+                },
+                dimensions: document.getElementById('zone-dimensions').value,
+                alertLevel: document.getElementById('zone-alert').value,
+                tourists: Math.floor(Math.random() * 150),
+                alerts: 0,
+                status: "active",
+                created: new Date().toISOString().split('T')[0]
+            };
+            
+            // Add to system
+            GEO_SYSTEM.zones.push(zoneData);
+            
+            // Update UI
+            renderZoneList(GEO_SYSTEM.activeFilter);
+            updateZoneCount();
+            
+            // Add zone to map
+            addZoneToMap(zoneData);
+            
+            // Reset form
+            resetForm();
+            
+            // Show success message
+            showNotification(
+                "Geo-Fence Created",
+                `Zone "${zoneData.name}" has been successfully created and activated.`,
+                "success"
+            );
+        }
+        
+        // Add Zone to Map
+        function addZoneToMap(zone) {
+            const zoneColors = {
+                safe: "zone-safe",
+                warning: "zone-warning",
+                restricted: "zone-restricted"
+            };
+            
+            const zoneElement = document.createElement('div');
+            zoneElement.className = `geo-zone ${zoneColors[zone.type]}`;
+            
+            // Random position on map
+            const top = 10 + Math.random() * 70;
+            const left = 10 + Math.random() * 70;
+            const width = 150 + Math.random() * 100;
+            const height = 100 + Math.random() * 80;
+            
+            zoneElement.style.top = `${top}%`;
+            zoneElement.style.left = `${left}%`;
+            zoneElement.style.width = `${width}px`;
+            zoneElement.style.height = `${height}px`;
+            
+            zoneElement.innerHTML = `
+                <div class="zone-controls">
+                    <button class="zone-btn" title="Edit">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="zone-btn" title="Delete">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+                <div class="zone-info">
+                    <div class="zone-name">${zone.name}</div>
+                    <div class="zone-status">${zone.type === 'safe' ? 'Safe Zone' : zone.type === 'warning' ? 'Warning Zone' : 'Restricted Zone'}</div>
+                    <div style="font-size: 0.8rem; opacity: 0.7;">${zone.tourists} Tourists Inside</div>
+                </div>
+            `;
+            
+            elements.mapContainer.appendChild(zoneElement);
+            makeDraggable(zoneElement);
+            
+            // Add click event
+            zoneElement.addEventListener('click', (e) => {
+                if (!e.target.closest('.zone-controls')) {
+                    showZoneDetails(zone.name);
+                }
+            });
+        }
+        
+        // Show Zone Details
+        function showZoneDetails(zoneName) {
+            const zone = GEO_SYSTEM.zones.find(z => z.name === zoneName);
+            if (!zone) return;
+            
+            elements.modalZoneName.textContent = zoneName;
+            
+            const typeLabels = {
+                safe: "Safe Zone",
+                warning: "Warning Zone",
+                restricted: "Restricted Zone"
+            };
+            
+            const alertColors = {
+                low: "var(--success)",
+                medium: "var(--warning)",
+                high: "var(--accent)"
+            };
+            
+            elements.modalContent.innerHTML = `
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-bottom: 2rem;">
+                    <div>
+                        <div style="color: var(--text-dim); font-size: 0.9rem; margin-bottom: 5px;">Zone Type</div>
+                        <div style="font-size: 1.2rem; font-weight: 600; color: ${zone.type === 'safe' ? 'var(--success)' : zone.type === 'warning' ? 'var(--warning)' : 'var(--accent)'}">
+                            <i class="fas fa-${zone.type === 'safe' ? 'shield-alt' : zone.type === 'warning' ? 'exclamation-triangle' : 'ban'}"></i>
+                            ${typeLabels[zone.type]}
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div style="color: var(--text-dim); font-size: 0.9rem; margin-bottom: 5px;">Alert Level</div>
+                        <div style="font-size: 1.2rem; font-weight: 600; color: ${alertColors[zone.alertLevel]}">
+                            ${zone.alertLevel.toUpperCase()} PRIORITY
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div style="color: var(--text-dim); font-size: 0.9rem; margin-bottom: 5px;">Tourists Inside</div>
+                        <div style="font-size: 1.2rem; font-weight: 600; color: var(--cyber-blue)">
+                            <i class="fas fa-users"></i> ${zone.tourists}
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div style="color: var(--text-dim); font-size: 0.9rem; margin-bottom: 5px;">Active Alerts</div>
+                        <div style="font-size: 1.2rem; font-weight: 600; color: ${zone.alerts > 0 ? 'var(--accent)' : 'var(--success)'}">
+                            <i class="fas fa-bell"></i> ${zone.alerts}
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="margin-bottom: 1.5rem;">
+                    <div style="color: var(--text-dim); font-size: 0.9rem; margin-bottom: 5px;">Description</div>
+                    <p>${zone.description}</p>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 2rem;">
+                    <div>
+                        <div style="color: var(--text-dim); font-size: 0.9rem;">Dimensions</div>
+                        <div style="font-weight: 600;">${zone.dimensions}</div>
+                    </div>
+                    <div>
+                        <div style="color: var(--text-dim); font-size: 0.9rem;">Coordinates</div>
+                        <div style="font-weight: 600;">${zone.coordinates.lat}, ${zone.coordinates.lng}</div>
+                    </div>
+                    <div>
+                        <div style="color: var(--text-dim); font-size: 0.9rem;">Created</div>
+                        <div style="font-weight: 600;">${zone.created}</div>
+                    </div>
+                </div>
+                
+                <div class="modal-actions">
+                    <button class="btn btn-outline" id="close-zone-modal">
+                        <i class="fas fa-times"></i> Close
+                    </button>
+                    <button class="btn btn-primary" id="monitor-live">
+                        <i class="fas fa-desktop"></i> Live Monitor
+                    </button>
+                </div>
+            `;
+            
+            elements.zoneModal.classList.add('active');
+            
+            // Add event listeners to modal buttons
+            document.getElementById('close-zone-modal').addEventListener('click', () => {
+                elements.zoneModal.classList.remove('active');
+            });
+            
+            document.getElementById('monitor-live').addEventListener('click', () => {
+                showNotification(
+                    "Live Monitoring Activated",
+                    `Now monitoring ${zoneName} in real-time.`,
+                    "success"
+                );
+                elements.zoneModal.classList.remove('active');
+            });
+        }
+        
+        // Map Control Functions
+        function zoomIn() {
+            GEO_SYSTEM.mapZoom = Math.min(GEO_SYSTEM.mapZoom + 0.1, 2.0);
+            updateMapZoom();
+        }
+        
+        function zoomOut() {
+            GEO_SYSTEM.mapZoom = Math.max(GEO_SYSTEM.mapZoom - 0.1, 0.5);
+            updateMapZoom();
+        }
+        
+        function resetView() {
+            GEO_SYSTEM.mapZoom = 1.0;
+            updateMapZoom();
+        }
+        
+        function toggleDrawMode() {
+            GEO_SYSTEM.isDrawing = !GEO_SYSTEM.isDrawing;
+            const button = document.getElementById('draw-mode');
+            
+            if (GEO_SYSTEM.isDrawing) {
+                button.innerHTML = '<i class="fas fa-times"></i> Cancel Drawing';
+                button.classList.remove('btn-outline');
+                button.classList.add('btn-danger');
+                showNotification(
+                    "Drawing Mode Active",
+                    "Click and drag on the map to draw a new geo-fence zone.",
+                    "info"
+                );
+            } else {
+                button.innerHTML = '<i class="fas fa-draw-polygon"></i> Draw Zone';
+                button.classList.remove('btn-danger');
+                button.classList.add('btn-outline');
+            }
+        }
+        
+        function updateMapZoom() {
+            // In a real application, this would update the map visualization
+            showNotification(
+                "Map Zoom Updated",
+                `Zoom level: ${(GEO_SYSTEM.mapZoom * 100).toFixed(0)}%`,
+                "info"
+            );
+        }
+        
+        function updateMapCoordinates(e) {
+            const rect = elements.mapContainer.getBoundingClientRect();
+            const x = ((e.clientX - rect.left) / rect.width * 100).toFixed(1);
+            const y = ((e.clientY - rect.top) / rect.height * 100).toFixed(1);
+            
+            elements.mapCoords.textContent = `X: ${x}%, Y: ${y}%`;
+        }
+        
+        // Action Functions
+        function simulateAlert() {
+            // Pick a random zone
+            const randomZone = GEO_SYSTEM.zones[Math.floor(Math.random() * GEO_SYSTEM.zones.length)];
+            randomZone.alerts++;
+            
+            // Update UI
+            renderZoneList(GEO_SYSTEM.activeFilter);
+            
+            // Show notification
+            showNotification(
+                "Security Alert Simulation",
+                `Test alert generated for ${randomZone.name}. System response verified.`,
+                "warning"
+            );
+        }
+        
+        function exportMap() {
+            showNotification(
+                "Map Export Initiated",
+                "Downloading geo-fencing map data as encrypted PDF...",
+                "success"
+            );
+            
+            // Simulate download
+            setTimeout(() => {
+                showNotification(
+                    "Export Complete",
+                    "Map data has been exported and saved to secure server.",
+                    "success"
+                );
+            }, 2000);
+        }
+        
+        function syncZones() {
+            showNotification(
+                "Zone Synchronization",
+                "Syncing all geo-fence zones with central database...",
+                "info"
+            );
+            
+            // Simulate sync
+            setTimeout(() => {
+                updateLastSync();
+                showNotification(
+                    "Synchronization Complete",
+                    "All zones synchronized successfully with central database.",
+                    "success"
+                );
+            }, 1500);
+        }
+        
+        function getCurrentLocation() {
+            // Simulate getting current location
+            const lat = (40 + Math.random() * 0.5).toFixed(4);
+            const lng = (-74 + Math.random() * 0.5).toFixed(4);
+            
+            document.getElementById('zone-lat').value = lat;
+            document.getElementById('zone-lng').value = lng;
+            
+            showNotification(
+                "Location Acquired",
+                `Current coordinates set to: ${lat}, ${lng}`,
+                "success"
+            );
+        }
+        
+        function resetForm() {
+            elements.zoneForm.reset();
+            document.getElementById('zone-alert').value = "low";
+        }
+        
+        // Show Notification
+        function showNotification(title, message, type = "info") {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: var(--panel-bg);
+                color: var(--text-primary);
+                padding: 15px 20px;
+                border-radius: 8px;
+                border-left: 4px solid ${type === 'success' ? 'var(--success)' : type === 'warning' ? 'var(--warning)' : type === 'danger' ? 'var(--accent)' : 'var(--secondary)'};
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+                z-index: 1000;
+                min-width: 300px;
+                max-width: 400px;
+                border: 1px solid var(--panel-border);
+                backdrop-filter: blur(10px);
+                animation: slideInRight 0.5s ease-out;
+                transform-origin: top right;
+            `;
+            
+            notification.innerHTML = `
+                <div style="display: flex; align-items: flex-start; gap: 15px;">
+                    <div style="font-size: 1.5rem; color: ${type === 'success' ? 'var(--success)' : type === 'warning' ? 'var(--warning)' : type === 'danger' ? 'var(--accent)' : 'var(--secondary)'}">
+                        <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'warning' ? 'exclamation-triangle' : type === 'danger' ? 'exclamation-circle' : 'info-circle'}"></i>
+                    </div>
+                    <div style="flex: 1;">
+                        <div style="font-weight: 600; margin-bottom: 5px; font-size: 1.1rem;">${title}</div>
+                        <div style="font-size: 0.9rem; opacity: 0.9;">${message}</div>
+                    </div>
+                    <button class="close-notification" style="background: none; border: none; color: var(--text-dim); cursor: pointer; font-size: 1rem;">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Close button
+            notification.querySelector('.close-notification').addEventListener('click', () => {
+                notification.style.animation = 'slideOutRight 0.5s ease-out forwards';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 500);
+            });
+            
+            // Auto-remove after 5 seconds
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.style.animation = 'slideOutRight 0.5s ease-out forwards';
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            notification.parentNode.removeChild(notification);
+                        }
+                    }, 500);
+                }
+            }, 5000);
+            
+            // Add CSS for animations
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes slideInRight {
+                    from { opacity: 0; transform: translateX(100px); }
+                    to { opacity: 1; transform: translateX(0); }
+                }
+                @keyframes slideOutRight {
+                    from { opacity: 1; transform: translateX(0); }
+                    to { opacity: 0; transform: translateX(100px); }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+        
+        // Start Live Updates
+        function startLiveUpdates() {
+            setInterval(() => {
+                // Randomly update tourist counts
+                GEO_SYSTEM.zones.forEach(zone => {
+                    if (zone.type !== 'restricted') {
+                        const change = Math.floor(Math.random() * 5) - 2;
+                        zone.tourists = Math.max(0, zone.tourists + change);
+                    }
+                });
+                
+                // Occasionally add alerts
+                if (Math.random() > 0.7) {
+                    const randomZone = GEO_SYSTEM.zones[Math.floor(Math.random() * GEO_SYSTEM.zones.length)];
+                    randomZone.alerts++;
+                    
+                    if (randomZone.alerts === 1) {
+                        showNotification(
+                            "New Alert",
+                            `${randomZone.name} has a new security alert.`,
+                            "warning"
+                        );
+                    }
+                }
+                
+                // Update UI
+                renderZoneList(GEO_SYSTEM.activeFilter);
+                
+            }, 10000); // Update every 10 seconds
+        }
+        
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', initGeoSystem);
+        
+    </script>
+</body>
+</html>

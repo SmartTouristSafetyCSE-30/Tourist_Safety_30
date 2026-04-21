@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Tourist ID - Smart Tourist Safety System</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; background: linear-gradient(rgba(0,51,102,0.9), rgba(0,51,102,0.9)), url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><rect fill="%23e3f2fd" width="1200" height="800"/><g fill="%23bbdefb" opacity="0.3"><circle cx="200" cy="150" r="30"/><circle cx="400" cy="200" r="25"/><circle cx="600" cy="100" r="35"/><circle cx="800" cy="180" r="28"/><circle cx="1000" cy="120" r="32"/><path d="M100,300 Q200,250 300,300 T500,300" stroke="%2390caf9" stroke-width="3" fill="none"/><path d="M600,400 Q700,350 800,400 T1000,400" stroke="%2390caf9" stroke-width="3" fill="none"/><polygon points="150,500 170,480 190,500 170,520" fill="%2381c784"/><polygon points="350,450 370,430 390,450 370,470" fill="%2381c784"/><polygon points="750,520 770,500 790,520 770,540" fill="%2381c784"/><rect x="250" y="600" width="40" height="60" fill="%23a5d6a7"/><rect x="500" y="580" width="35" height="80" fill="%23a5d6a7"/><rect x="850" y="620" width="45" height="40" fill="%23a5d6a7"/></g></svg>') fixed; background-size: cover; }
+        .skip-link { position: absolute; top: -40px; left: 6px; background: #000; color: #fff; padding: 8px; text-decoration: none; z-index: 1000; }
+        .skip-link:focus { top: 6px; }
+        .gov-header { background: linear-gradient(135deg, #ff6600, #ff9933); color: white; padding: 10px 0; }
+        .header-top { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        .logo-section { display: flex; align-items: center; gap: 15px; }
+        .emblem { width: 60px; height: 60px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #ff6600; }
+        .site-title { font-size: 24px; font-weight: bold; }
+        .site-subtitle { font-size: 14px; opacity: 0.9; }
+        .main-nav { background: #003366; }
+        .nav-container { max-width: 1200px; margin: 0 auto; }
+        .nav-menu { display: flex; list-style: none; }
+        .nav-menu li a { display: block; padding: 15px 20px; color: white; text-decoration: none; }
+        .id-container { max-width: 900px; margin: 30px auto; padding: 20px; }
+        .id-card { background: linear-gradient(135deg, #1e3c72, #2a5298); color: white; border-radius: 15px; padding: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); margin-bottom: 30px; position: relative; overflow: hidden; }
+        .id-card::before { content: ''; position: absolute; top: -50%; right: -50%; width: 200%; height: 200%; background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%); }
+        .id-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; position: relative; z-index: 1; }
+        .id-logo { display: flex; align-items: center; gap: 15px; }
+        .id-emblem { width: 50px; height: 50px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #ff6600; font-weight: bold; }
+        .id-title { font-size: 18px; font-weight: bold; }
+        .id-subtitle { font-size: 12px; opacity: 0.9; }
+        .id-status { background: #4caf50; padding: 5px 15px; border-radius: 20px; font-size: 12px; font-weight: bold; }
+        .id-content { display: grid; grid-template-columns: 1fr auto; gap: 30px; position: relative; z-index: 1; }
+        .id-info { }
+        .info-row { display: flex; margin-bottom: 10px; }
+        .info-label { width: 120px; opacity: 0.8; font-size: 14px; }
+        .info-value { font-weight: bold; font-size: 14px; }
+        .id-qr { text-align: center; }
+        .qr-code { width: 120px; height: 120px; background: white; border-radius: 10px; display: flex; align-items: center; justify-content: center; margin-bottom: 10px; }
+        .qr-text { font-size: 12px; opacity: 0.8; }
+        .id-footer { margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.2); display: flex; justify-content: space-between; align-items: center; position: relative; z-index: 1; }
+        .id-number { font-family: monospace; font-size: 16px; font-weight: bold; }
+        .id-expiry { font-size: 12px; opacity: 0.8; }
+        .actions-section { background: white; border-radius: 10px; padding: 30px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .actions-title { font-size: 24px; color: #003366; margin-bottom: 20px; }
+        .actions-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+        .action-card { border: 1px solid #ddd; border-radius: 8px; padding: 20px; text-align: center; transition: transform 0.3s; }
+        .action-card:hover { transform: translateY(-5px); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .action-icon { font-size: 48px; margin-bottom: 15px; }
+        .action-title { font-size: 18px; font-weight: bold; color: #003366; margin-bottom: 10px; }
+        .action-desc { color: #666; margin-bottom: 15px; }
+        .action-btn { background: #ff6600; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; text-decoration: none; display: inline-block; }
+        .action-btn:hover { background: #e55a00; }
+        .gov-footer { background: #003366; color: white; padding: 20px 0; margin-top: 50px; text-align: center; }
+    </style>
+</head>
+<body>    <script src="universal-menu.js"></script>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    
+    <header class="gov-header">
+        <div class="header-top">
+            <div class="logo-section">
+                <div class="emblem">🇮🇳</div>
+                <div>
+                    <div class="site-title">Smart Tourist Safety System</div>
+                    <div class="site-subtitle">Ministry of Development of North Eastern Region</div>
+                    <div style="font-size: 11px; opacity: 0.8; margin-top: 2px;">SDG-9: Industry, Innovation & Infrastructure</div>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <nav class="main-nav">
+        <div class="nav-container">
+            <ul class="nav-menu">
+                <li><a href="tourist-dashboard.html">Dashboard</a></li>
+                <li><a href="digital-tourist-id.html">Digital ID</a></li>
+                <li><a href="qr-tourist-id.html">QR Code</a></li>
+                <li><a href="panic-button.html">Emergency</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <main id="main-content" class="id-container">
+        <div class="id-card">
+            <div class="id-header">
+                <div class="id-logo">
+                    <div class="id-emblem">🇮🇳</div>
+                    <div>
+                        <div class="id-title">Digital Tourist ID</div>
+                        <div class="id-subtitle">Government of India</div>
+                    </div>
+                </div>
+                <div class="id-status">VERIFIED</div>
+            </div>
+            
+            <div class="id-content">
+                <div class="id-info">
+                    <div class="info-row">
+                        <div class="info-label">Name:</div>
+                        <div class="info-value" id="touristName">Loading...</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Nationality:</div>
+                        <div class="info-value" id="nationality">Loading...</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">ID Number:</div>
+                        <div class="info-value" id="idNumber">Loading...</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Issue Date:</div>
+                        <div class="info-value" id="issueDate">Loading...</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Valid Until:</div>
+                        <div class="info-value" id="expiryDate">Loading...</div>
+                    </div>
+                </div>
+                
+                <div class="id-qr">
+                    <div class="qr-code" id="qrCode">
+                        <div style="font-size: 48px;">📱</div>
+                    </div>
+                    <div class="qr-text">Scan for verification</div>
+                </div>
+            </div>
+            
+            <div class="id-footer">
+                <div class="id-number">ID: <span id="digitalIdHash">Loading...</span></div>
+                <div class="id-expiry">Issued by MoDoNER</div>
+            </div>
+        </div>
+        
+        <div class="actions-section">
+            <h2 class="actions-title">Digital ID Actions</h2>
+            <div class="actions-grid">
+                <div class="action-card">
+                    <div class="action-icon">📱</div>
+                    <div class="action-title">View QR Code</div>
+                    <div class="action-desc">Display QR code for quick verification by authorities</div>
+                    <a href="qr-tourist-id.html" class="action-btn">View QR</a>
+                </div>
+                
+                <div class="action-card">
+                    <div class="action-icon">📄</div>
+                    <div class="action-title">Download PDF</div>
+                    <div class="action-desc">Download printable version of your Digital Tourist ID</div>
+                    <button onclick="downloadPDF()" class="action-btn">Download</button>
+                </div>
+                
+                <div class="action-card">
+                    <div class="action-icon">📧</div>
+                    <div class="action-title">Email ID</div>
+                    <div class="action-desc">Send Digital ID to your email for backup</div>
+                    <button onclick="emailID()" class="action-btn">Email</button>
+                </div>
+                
+                <div class="action-card">
+                    <div class="action-icon">🔄</div>
+                    <div class="action-title">Renew ID</div>
+                    <div class="action-desc">Extend validity period of your Digital Tourist ID</div>
+                    <button onclick="renewID()" class="action-btn">Renew</button>
+                </div>
+                
+                <div class="action-card">
+                    <div class="action-icon">🚨</div>
+                    <div class="action-title">Report Lost</div>
+                    <div class="action-desc">Report lost or stolen Digital Tourist ID</div>
+                    <button onclick="reportLost()" class="action-btn">Report</button>
+                </div>
+                
+                <div class="action-card">
+                    <div class="action-icon">🔍</div>
+                    <div class="action-title">Verify Status</div>
+                    <div class="action-desc">Check current verification status and validity</div>
+                    <button onclick="verifyStatus()" class="action-btn">Verify</button>
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <footer class="gov-footer">
+        <p>&copy; 2024 Ministry of Development of North Eastern Region, Government of India</p>
+    </footer>
+    
+    <script>
+        // Load tourist data
+        window.onload = function() {
+            const token = localStorage.getItem('authToken');
+            if (!token) {
+                window.location.href = 'tourist-login.html';
+                return;
+            }
+            
+            loadTouristData();
+            generateQRCode();
+        };
+        
+        function loadTouristData() {
+            // In production, fetch from API
+            const mockData = {
+                name: 'John Doe',
+                nationality: 'Indian',
+                idNumber: 'DT2024001234',
+                issueDate: '2024-01-15',
+                expiryDate: '2024-02-14',
+                digitalIdHash: 'DT24ABC123XYZ789'
+            };
+            
+            document.getElementById('touristName').textContent = mockData.name;
+            document.getElementById('nationality').textContent = mockData.nationality;
+            document.getElementById('idNumber').textContent = mockData.idNumber;
+            document.getElementById('issueDate').textContent = mockData.issueDate;
+            document.getElementById('expiryDate').textContent = mockData.expiryDate;
+            document.getElementById('digitalIdHash').textContent = mockData.digitalIdHash;
+        }
+        
+        function generateQRCode() {
+            // In production, generate actual QR code
+            const qrData = {
+                id: 'DT24ABC123XYZ789',
+                name: 'John Doe',
+                expiry: '2024-02-14',
+                issued: '2024-01-15'
+            };
+            
+            // Simulate QR code generation
+            document.getElementById('qrCode').innerHTML = `
+                <div style="width: 100px; height: 100px; background: #000; color: white; display: flex; align-items: center; justify-content: center; font-size: 12px; text-align: center;">
+                    QR CODE<br>PLACEHOLDER
+                </div>
+            `;
+        }
+        
+        function downloadPDF() {
+            alert('PDF download functionality will be implemented with backend integration.');
+        }
+        
+        function emailID() {
+            const email = prompt('Enter email address to send Digital ID:');
+            if (email) {
+                alert(`Digital ID will be sent to ${email}`);
+            }
+        }
+        
+        function renewID() {
+            if (confirm('Do you want to renew your Digital Tourist ID for another 30 days?')) {
+                alert('ID renewal request submitted. You will receive confirmation shortly.');
+            }
+        }
+        
+        function reportLost() {
+            if (confirm('Are you sure you want to report your Digital Tourist ID as lost? This will deactivate the current ID.')) {
+                alert('Lost ID report submitted. A new ID will be issued after verification.');
+            }
+        }
+        
+        function verifyStatus() {
+            alert('Digital Tourist ID Status: ACTIVE\nValid until: 2024-02-14\nVerification: COMPLETED');
+        }
+    </script>
+    <!-- Universal Menu Script -->`n    <script src="universal-menu.js"></script>`n</body>
+</html>

@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tourist Lookup - Police Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #f5f5f5; }
+        .header { background: linear-gradient(135deg, #1e3c72, #2a5298); color: white; padding: 1rem; text-align: center; }
+        .container { max-width: 1000px; margin: 2rem auto; padding: 0 1rem; }
+        .search-card { background: white; border-radius: 10px; padding: 2rem; margin: 1rem 0; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .form-group { margin: 1rem 0; }
+        .form-group label { display: block; margin-bottom: 0.5rem; font-weight: bold; }
+        .form-group input, .form-group select { width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 5px; }
+        .search-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; }
+        .btn { padding: 0.8rem 1.5rem; border: none; border-radius: 5px; cursor: pointer; margin: 0.5rem; }
+        .btn-primary { background: #007bff; color: white; }
+        .btn-success { background: #28a745; color: white; }
+        .btn-danger { background: #dc3545; color: white; }
+        .tourist-result { background: white; border: 1px solid #ddd; border-radius: 10px; padding: 1.5rem; margin: 1rem 0; }
+        .status-safe { border-left: 5px solid #28a745; }
+        .status-alert { border-left: 5px solid #ffc107; }
+        .status-danger { border-left: 5px solid #dc3545; }
+        .tourist-photo { width: 80px; height: 80px; border-radius: 50%; background: #ddd; margin-right: 1rem; }
+        .tourist-info { display: flex; align-items: center; }
+    </style>
+</head>
+<body>    <script src="universal-menu.js"></script>
+    <div class="header">
+        <h1><i class="fas fa-search"></i> Tourist Lookup System</h1>
+        <p>Search and verify tourist information</p>
+    </div>
+
+    <div class="container">
+        <div class="search-card">
+            <h3><i class="fas fa-filter"></i> Search Tourists</h3>
+            <div class="search-grid">
+                <div class="form-group">
+                    <label for="touristId">Tourist ID</label>
+                    <input type="text" id="touristId" placeholder="TID-2024-XXXXXX">
+                </div>
+                <div class="form-group">
+                    <label for="touristName">Name</label>
+                    <input type="text" id="touristName" placeholder="Enter tourist name">
+                </div>
+                <div class="form-group">
+                    <label for="phoneNumber">Phone Number</label>
+                    <input type="text" id="phoneNumber" placeholder="+91 XXXXXXXXXX">
+                </div>
+                <div class="form-group">
+                    <label for="passportNumber">Passport/ID Number</label>
+                    <input type="text" id="passportNumber" placeholder="Passport or Aadhaar">
+                </div>
+                <div class="form-group">
+                    <label for="location">Current Location</label>
+                    <select id="location">
+                        <option value="">All Locations</option>
+                        <option value="kaziranga">Kaziranga National Park</option>
+                        <option value="guwahati">Guwahati</option>
+                        <option value="shillong">Shillong</option>
+                        <option value="imphal">Imphal</option>
+                        <option value="aizawl">Aizawl</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="status">Status</label>
+                    <select id="status">
+                        <option value="">All Status</option>
+                        <option value="safe">Safe</option>
+                        <option value="alert">Alert</option>
+                        <option value="emergency">Emergency</option>
+                        <option value="missing">Missing</option>
+                    </select>
+                </div>
+            </div>
+            <button class="btn btn-primary" onclick="searchTourists()">Search Tourists</button>
+            <button class="btn btn-success" onclick="scanQR()">Scan QR Code</button>
+        </div>
+
+        <div id="searchResults">
+            <div class="tourist-result status-safe">
+                <div class="tourist-info">
+                    <div class="tourist-photo"></div>
+                    <div style="flex: 1;">
+                        <h4>John Doe <span style="color: #28a745;"><i class="fas fa-check-circle"></i> Verified</span></h4>
+                        <p><strong>Tourist ID:</strong> TID-2024-001234</p>
+                        <p><strong>Phone:</strong> +91 98765 43210</p>
+                        <p><strong>Current Location:</strong> Kaziranga National Park</p>
+                        <p><strong>Last Update:</strong> 2 minutes ago</p>
+                        <p><strong>Status:</strong> <span style="color: #28a745;">Safe</span></p>
+                    </div>
+                    <div>
+                        <button class="btn btn-primary" onclick="viewDetails('TID-2024-001234')">View Details</button>
+                        <button class="btn btn-success" onclick="contactTourist('TID-2024-001234')">Contact</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tourist-result status-alert">
+                <div class="tourist-info">
+                    <div class="tourist-photo"></div>
+                    <div style="flex: 1;">
+                        <h4>Sarah Smith <span style="color: #ffc107;"><i class="fas fa-exclamation-triangle"></i> Alert</span></h4>
+                        <p><strong>Tourist ID:</strong> TID-2024-001235</p>
+                        <p><strong>Phone:</strong> +91 98765 43211</p>
+                        <p><strong>Current Location:</strong> Shillong Peak</p>
+                        <p><strong>Last Update:</strong> 45 minutes ago</p>
+                        <p><strong>Status:</strong> <span style="color: #ffc107;">Route Deviation</span></p>
+                    </div>
+                    <div>
+                        <button class="btn btn-primary" onclick="viewDetails('TID-2024-001235')">View Details</button>
+                        <button class="btn btn-danger" onclick="sendAlert('TID-2024-001235')">Send Alert</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tourist-result status-danger">
+                <div class="tourist-info">
+                    <div class="tourist-photo"></div>
+                    <div style="flex: 1;">
+                        <h4>Mike Johnson <span style="color: #dc3545;"><i class="fas fa-exclamation-circle"></i> Emergency</span></h4>
+                        <p><strong>Tourist ID:</strong> TID-2024-001236</p>
+                        <p><strong>Phone:</strong> +91 98765 43212</p>
+                        <p><strong>Current Location:</strong> Unknown</p>
+                        <p><strong>Last Update:</strong> 2 hours ago</p>
+                        <p><strong>Status:</strong> <span style="color: #dc3545;">Missing</span></p>
+                    </div>
+                    <div>
+                        <button class="btn btn-danger" onclick="initiateSearch('TID-2024-001236')">Initiate Search</button>
+                        <button class="btn btn-primary" onclick="contactFamily('TID-2024-001236')">Contact Family</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="search-card">
+            <h3><i class="fas fa-qrcode"></i> Quick Actions</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                <button class="btn btn-primary" onclick="bulkVerification()">Bulk Verification</button>
+                <button class="btn btn-success" onclick="exportData()">Export Search Results</button>
+                <button class="btn btn-primary" onclick="advancedSearch()">Advanced Search</button>
+                <button class="btn btn-danger" onclick="emergencyLookup()">Emergency Lookup</button>
+            </div>
+        </div>
+
+        <div class="search-card">
+            <h3><i class="fas fa-chart-bar"></i> Search Statistics</h3>
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; text-align: center;">
+                <div>
+                    <h2 style="color: #28a745;">1,247</h2>
+                    <p>Total Tourists</p>
+                </div>
+                <div>
+                    <h2 style="color: #007bff;">892</h2>
+                    <p>Currently Safe</p>
+                </div>
+                <div>
+                    <h2 style="color: #ffc107;">23</h2>
+                    <p>Alerts Active</p>
+                </div>
+                <div>
+                    <h2 style="color: #dc3545;">2</h2>
+                    <p>Emergency Cases</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function searchTourists() {
+            const touristId = document.getElementById('touristId').value;
+            const name = document.getElementById('touristName').value;
+            const phone = document.getElementById('phoneNumber').value;
+            
+            if (!touristId && !name && !phone) {
+                alert('Please enter at least one search criteria');
+                return;
+            }
+            
+            alert('Searching tourists...');
+            // In real app, this would make an API call
+        }
+
+        function scanQR() {
+            alert('Opening QR scanner...');
+            // In real app, this would open camera for QR scanning
+        }
+
+        function viewDetails(touristId) {
+            alert(`Opening detailed view for ${touristId}`);
+            // In real app, redirect to detailed tourist profile
+        }
+
+        function contactTourist(touristId) {
+            alert(`Contacting tourist ${touristId}...`);
+        }
+
+        function sendAlert(touristId) {
+            alert(`Sending alert to tourist ${touristId}`);
+        }
+
+        function initiateSearch(touristId) {
+            alert(`Initiating search operation for ${touristId}`);
+        }
+
+        function contactFamily(touristId) {
+            alert(`Contacting family members of ${touristId}`);
+        }
+
+        function bulkVerification() {
+            alert('Opening bulk verification tool...');
+        }
+
+        function exportData() {
+            alert('Exporting search results...');
+        }
+
+        function advancedSearch() {
+            alert('Opening advanced search filters...');
+        }
+
+        function emergencyLookup() {
+            alert('Opening emergency lookup interface...');
+        }
+    </script>
+    <!-- Universal Menu Script -->`n    <script src="universal-menu.js"></script>`n</body>
+</html>

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WhatsApp Chatbot - Tourist Safety System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #f5f5f5; }
+        .header { background: linear-gradient(135deg, #FF6B35, #F7931E); color: white; padding: 1rem; text-align: center; }
+        .container { max-width: 600px; margin: 2rem auto; padding: 0 1rem; }
+        .whatsapp-card { background: white; border-radius: 10px; padding: 2rem; margin: 1rem 0; box-shadow: 0 4px 6px rgba(0,0,0,0.1); text-align: center; }
+        .whatsapp-btn { background: #25D366; color: white; padding: 1rem 2rem; border: none; border-radius: 25px; font-size: 1.2rem; cursor: pointer; margin: 1rem; text-decoration: none; display: inline-block; transition: all 0.3s; }
+        .whatsapp-btn:hover { background: #128C7E; transform: scale(1.05); }
+        .qr-code { width: 200px; height: 200px; background: #f0f0f0; border: 2px dashed #ccc; margin: 1rem auto; display: flex; align-items: center; justify-content: center; }
+        .feature-list { text-align: left; margin: 1rem 0; }
+        .feature-list li { margin: 0.5rem 0; }
+        .chat-preview { background: #e5ddd5; border-radius: 10px; padding: 1rem; margin: 1rem 0; }
+        .message { background: white; border-radius: 10px; padding: 0.5rem 1rem; margin: 0.5rem 0; }
+        .message.bot { background: #dcf8c6; }
+    </style>
+</head>
+<body>    <script src="universal-menu.js"></script>
+    <div class="header">
+        <h1><i class="fab fa-whatsapp"></i> WhatsApp Chatbot</h1>
+        <p>24/7 Tourist Safety Assistant</p>
+    </div>
+
+    <div class="container">
+        <div class="whatsapp-card">
+            <h2><i class="fab fa-whatsapp" style="color: #25D366;"></i> Connect with Tourist Safety Bot</h2>
+            <p>Get instant help, emergency assistance, and tourist information through WhatsApp</p>
+            
+            <a href="https://wa.me/919731906705?text=Hello%20Tourist%20Safety%20Bot" class="whatsapp-btn" target="_blank">
+                <i class="fab fa-whatsapp"></i> Start WhatsApp Chat
+            </a>
+            
+            <p><strong>Phone:</strong> +91 97319 06705</p>
+        </div>
+
+        <div class="whatsapp-card">
+            <h3><i class="fas fa-qrcode"></i> Scan QR Code</h3>
+            <div class="qr-code">
+                <div>
+                    <i class="fas fa-qrcode" style="font-size: 3rem; color: #ccc;"></i>
+                    <p>QR Code</p>
+                </div>
+            </div>
+            <p>Scan with your phone's camera to open WhatsApp chat</p>
+        </div>
+
+        <div class="whatsapp-card">
+            <h3><i class="fas fa-robot"></i> Bot Features</h3>
+            <ul class="feature-list">
+                <li>🚨 Emergency SOS activation</li>
+                <li>📍 Location sharing and tracking</li>
+                <li>🗺️ Tourist information and guides</li>
+                <li>🌤️ Weather and safety alerts</li>
+                <li>🏥 Nearest hospital/police station</li>
+                <li>📞 Emergency contact numbers</li>
+                <li>🎫 Digital tourist ID verification</li>
+                <li>🗣️ Multilingual support</li>
+                <li>📋 Incident reporting</li>
+                <li>👨‍👩‍👧‍👦 Family notification system</li>
+            </ul>
+        </div>
+
+        <div class="whatsapp-card">
+            <h3><i class="fas fa-comments"></i> Chat Preview</h3>
+            <div class="chat-preview">
+                <div class="message">Hi, I need help with tourist information</div>
+                <div class="message bot">Hello! I'm your Tourist Safety Assistant. How can I help you today? 
+                
+Type:
+• "SOS" for emergency
+• "Location" for nearby services  
+• "Weather" for alerts
+• "Guide" for tourist info</div>
+                <div class="message">Weather alerts for Kaziranga</div>
+                <div class="message bot">🌧️ Weather Alert for Kaziranga:
+- Heavy rainfall expected today
+- Avoid low-lying areas
+- Safari timings: 6 AM - 11 AM only
+- Emergency contact: 112
+
+Stay safe! 🛡️</div>
+            </div>
+        </div>
+
+        <div class="whatsapp-card">
+            <h3><i class="fas fa-language"></i> Supported Languages</h3>
+            <p>The bot supports all major North Eastern languages:</p>
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 0.5rem; margin: 1rem 0;">
+                <span>🇮🇳 English</span>
+                <span>🇮🇳 हिंदी</span>
+                <span>🇮🇳 অসমীয়া</span>
+                <span>🇮🇳 বাংলা</span>
+                <span>🇮🇳 মৈতৈলোন্</span>
+                <span>🇮🇳 नेपाली</span>
+            </div>
+        </div>
+
+        <div class="whatsapp-card">
+            <h3><i class="fas fa-shield-alt"></i> Privacy & Security</h3>
+            <p>✅ End-to-end encrypted messages</p>
+            <p>✅ No personal data stored</p>
+            <p>✅ Government verified bot</p>
+            <p>✅ 24/7 availability</p>
+            <p>✅ Instant emergency response</p>
+        </div>
+    </div>
+
+    <script>
+        // Add click tracking for analytics
+        document.querySelector('.whatsapp-btn').addEventListener('click', function() {
+            console.log('WhatsApp chat initiated');
+            // In real app, track this event
+        });
+    </script>
+    <!-- Universal Menu Script -->`n    <script src="universal-menu.js"></script>`n</body>
+</html>

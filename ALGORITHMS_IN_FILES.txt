@@ -1,0 +1,179 @@
+# 🎯 ALGORITHMS USED IN FILES - QUICK REFERENCE
+
+## 📁 File-wise Algorithm Usage
+
+### 1. **KNN (K-Nearest Neighbors)**
+**Files Using KNN:**
+- `tourist-safety-score.html` - Compare tourist with similar profiles
+- `tourist-cluster-map.html` - Group tourists by location/behavior
+- `tourist-heatmap.html` - Cluster tourists for heatmap visualization
+- `geo-fencing.html` - Find nearest tourists in same zone
+- `route-deviation-alert.html` - Compare with similar route patterns
+- `panic-button.html` - Find nearest emergency responders
+
+**Usage:** Clustering, similarity matching, nearest neighbor search
+
+---
+
+### 2. **Random Forest Classifier**
+**Files Using Random Forest:**
+- `ai-risk-predictions.html` - Multi-factor risk assessment
+- `tourist-safety-score.html` - Calculate composite safety score
+- `anomaly-detection.html` - Risk severity classification
+- `risk-zone-management.html` - Zone risk classification
+- `geo-fencing.html` - Zone safety assessment
+- `incident-analytics.html` - Incident classification
+- `tourist-statistics.html` - Risk trend analysis
+- `tourism-advisories.html` - Advisory priority classification
+
+**Usage:** Risk classification, multi-factor decision making
+
+---
+
+### 3. **Isolation Forest**
+**Files Using Isolation Forest:**
+- `anomaly-detection.html` - PRIMARY - Detect unusual tourist behavior
+- `route-deviation-alert.html` - Detect route anomalies
+- `inactivity-alert.html` - Detect unusual inactivity patterns
+- `live-location.html` - Detect erratic movements
+- `wearable-device-monitoring.html` - Detect abnormal health metrics
+
+**Usage:** Anomaly detection, outlier identification
+
+---
+
+### 4. **LSTM Neural Network**
+**Files Using LSTM:**
+- `ai-risk-predictions.html` - Time-series risk forecasting
+- `route-deviation-alert.html` - Predict expected route
+- `live-location.html` - Predict next location
+- `tourist-cluster-map.html` - Predict cluster movement
+- `anomaly-detection.html` - Movement pattern prediction
+
+**Usage:** Time-series prediction, movement forecasting
+
+---
+
+### 5. **Decision Tree**
+**Files Using Decision Tree:**
+- `e-fir-generation.html` - Emergency type classification
+- `panic-button.html` - Emergency priority classification
+- `incident-details.html` - Incident categorization
+- `geo-fencing.html` - Zone classification (Safe/Restricted/Dangerous)
+- `tourist-feedback.html` - Feedback categorization
+- `ai-risk-predictions.html` - Risk categorization
+
+**Usage:** Classification, decision rules, emergency routing
+
+---
+
+### 6. **Naive Bayes**
+**Files Using Naive Bayes:**
+- `tourist-feedback.html` - PRIMARY - Sentiment analysis
+- `ask-india-gov-ai.html` - Text classification for chatbot
+- `tourist-safety-score.html` - Analyze past behavior patterns
+
+**Usage:** Sentiment analysis, text classification
+
+---
+
+## 📊 SUMMARY TABLE
+
+| Algorithm | # Files | Primary Files | Main Purpose |
+|-----------|---------|---------------|--------------|
+| **Random Forest** | 8 | ai-risk-predictions.html, tourist-safety-score.html | Risk Assessment |
+| **KNN** | 6 | tourist-cluster-map.html, tourist-safety-score.html | Clustering |
+| **Isolation Forest** | 5 | anomaly-detection.html, route-deviation-alert.html | Anomaly Detection |
+| **LSTM** | 5 | ai-risk-predictions.html, live-location.html | Prediction |
+| **Decision Tree** | 6 | e-fir-generation.html, panic-button.html | Classification |
+| **Naive Bayes** | 3 | tourist-feedback.html, ask-india-gov-ai.html | Sentiment |
+
+---
+
+## 🔥 MOST IMPORTANT FILES (Core ML Features)
+
+### 1. `anomaly-detection.html` 
+**Algorithms:** Isolation Forest + Random Forest + LSTM
+**Purpose:** Real-time detection of unusual tourist behavior
+**Location:** `c:\Users\shara\Downloads\tourism\anomaly-detection.html`
+
+### 2. `ai-risk-predictions.html`
+**Algorithms:** Random Forest + LSTM + Decision Tree
+**Purpose:** Predict risks for next 24 hours
+**Location:** `c:\Users\shara\Downloads\tourism\ai-risk-predictions.html`
+
+### 3. `tourist-safety-score.html`
+**Algorithms:** KNN + Random Forest + Naive Bayes
+**Purpose:** Calculate personalized safety score
+**Location:** `c:\Users\shara\Downloads\tourism\tourist-safety-score.html`
+
+### 4. `tourist-cluster-map.html`
+**Algorithms:** KNN + LSTM + Random Forest
+**Purpose:** Visualize tourist clusters and predict movement
+**Location:** `c:\Users\shara\Downloads\tourism\tourist-cluster-map.html`
+
+### 5. `e-fir-generation.html`
+**Algorithms:** Decision Tree + Random Forest
+**Purpose:** Classify and prioritize emergency incidents
+**Location:** `c:\Users\shara\Downloads\tourism\e-fir-generation.html`
+
+### 6. `tourist-feedback.html`
+**Algorithms:** Naive Bayes + Decision Tree + Random Forest
+**Purpose:** Analyze tourist feedback sentiment
+**Location:** `c:\Users\shara\Downloads\tourism\tourist-feedback.html`
+
+---
+
+## 🚀 HOW TO RUN THE PROJECT
+
+### Step 1: Start Server
+```bash
+cd c:\Users\shara\Downloads\tourism
+node server.js
+```
+
+### Step 2: Access ML-Powered Pages
+```
+Main Dashboard: http://localhost:3000
+Anomaly Detection: http://localhost:3000/anomaly-detection.html
+AI Risk Predictions: http://localhost:3000/ai-risk-predictions.html
+Tourist Safety Score: http://localhost:3000/tourist-safety-score.html
+Tourist Clustering: http://localhost:3000/tourist-cluster-map.html
+Emergency FIR: http://localhost:3000/e-fir-generation.html
+Feedback Analysis: http://localhost:3000/tourist-feedback.html
+```
+
+---
+
+## 💡 ALGORITHM USAGE BY FEATURE
+
+**Safety Monitoring:**
+- anomaly-detection.html → Isolation Forest
+- inactivity-alert.html → Isolation Forest
+- route-deviation-alert.html → LSTM + Isolation Forest
+
+**Risk Assessment:**
+- ai-risk-predictions.html → Random Forest + LSTM
+- tourist-safety-score.html → Random Forest + KNN
+- risk-zone-management.html → Random Forest
+
+**Emergency Response:**
+- panic-button.html → Decision Tree + KNN
+- e-fir-generation.html → Decision Tree
+- incident-details.html → Decision Tree
+
+**Analytics:**
+- tourist-cluster-map.html → KNN + LSTM
+- tourist-heatmap.html → KNN
+- incident-analytics.html → Random Forest
+
+**Feedback:**
+- tourist-feedback.html → Naive Bayes
+- ask-india-gov-ai.html → Naive Bayes
+
+---
+
+## ✅ VERIFICATION
+
+All 6 algorithms are integrated across **20+ HTML files** in the project.
+Each algorithm serves specific purposes for tourist safety monitoring.

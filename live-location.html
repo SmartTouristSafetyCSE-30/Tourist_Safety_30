@@ -1,0 +1,1629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Tourist Safety Monitoring | MoDoNER</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/MarkerCluster.Default.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.markercluster/1.5.3/leaflet.markercluster.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f0f5ff;
+            color: #333;
+            display: flex;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+        
+        .sidebar {
+            width: 380px;
+            background: linear-gradient(to bottom, #0d2842, #1a3a5f);
+            color: white;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 3px 0 15px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            overflow-y: auto;
+        }
+        
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(to right, #0d2842, #1a3a5f);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+            z-index: 500;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo {
+            height: 45px;
+            width: 45px;
+            background: linear-gradient(135deg, #4dabf7, #1a3a5f);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .title-container {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .title {
+            font-size: 20px;
+            font-weight: 700;
+            color: white;
+            line-height: 1.2;
+        }
+        
+        .subtitle {
+            font-size: 12px;
+            color: #a3c4e0;
+            margin-top: 3px;
+        }
+        
+        .map-container {
+            flex: 1;
+            position: relative;
+            padding: 0;
+        }
+        
+        #map {
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        
+        .panel-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #2d4d76;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .panel-title i {
+            color: #4dabf7;
+        }
+        
+        .location-info {
+            background-color: rgba(255, 255, 255, 0.08);
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .location-info h3 {
+            font-size: 15px;
+            margin-bottom: 10px;
+            color: #a3c4e0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .location-data {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+        
+        .location-item {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .location-label {
+            font-size: 11px;
+            color: #8aacc8;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .location-value {
+            font-size: 13px;
+            font-weight: 600;
+            color: white;
+        }
+        
+        .location-accuracy {
+            color: #4dabf7;
+        }
+        
+        .tourist-list {
+            flex: 1;
+            overflow-y: auto;
+            margin-bottom: 20px;
+        }
+        
+        .tourist-item {
+            background-color: rgba(255, 255, 255, 0.08);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-left: 4px solid #4dabf7;
+            transition: all 0.2s;
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .tourist-item:hover {
+            background-color: rgba(255, 255, 255, 0.12);
+            transform: translateX(3px);
+            border-color: rgba(77, 171, 247, 0.3);
+        }
+        
+        .tourist-item.active {
+            background-color: rgba(77, 171, 247, 0.15);
+            border-left-color: #ff6b6b;
+        }
+        
+        .tourist-name {
+            font-weight: 600;
+            margin-bottom: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .tourist-id {
+            font-size: 11px;
+            color: #8aacc8;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+        
+        .tourist-details {
+            font-size: 13px;
+            color: #b8d4f0;
+            margin-bottom: 8px;
+        }
+        
+        .tourist-status {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        
+        .status-safe {
+            background-color: rgba(76, 209, 96, 0.15);
+            color: #4cd160;
+        }
+        
+        .status-warning {
+            background-color: rgba(255, 159, 10, 0.15);
+            color: #ff9f0a;
+        }
+        
+        .status-danger {
+            background-color: rgba(255, 69, 58, 0.15);
+            color: #ff453a;
+        }
+        
+        .incident-panel {
+            background-color: rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            padding: 18px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .incident-panel h3 {
+            font-size: 15px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #a3c4e0;
+        }
+        
+        .incident-types {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        .incident-type {
+            background-color: rgba(255, 69, 58, 0.1);
+            border: 1px solid rgba(255, 69, 58, 0.2);
+            color: #ff8a8a;
+            padding: 10px;
+            border-radius: 6px;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .incident-type:hover {
+            background-color: rgba(255, 69, 58, 0.2);
+            transform: translateY(-2px);
+        }
+        
+        .emergency-btn {
+            width: 100%;
+            background: linear-gradient(to right, #ff3b30, #ff6b6b);
+            color: white;
+            border: none;
+            padding: 14px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 10px rgba(255, 59, 48, 0.3);
+        }
+        
+        .emergency-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 7px 15px rgba(255, 59, 48, 0.4);
+        }
+        
+        .map-controls {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 1000;
+        }
+        
+        .map-control-btn {
+            background-color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 6px;
+            font-weight: 600;
+            color: #1a3a5f;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
+            transition: all 0.2s;
+            font-size: 13px;
+            min-width: 120px;
+            justify-content: center;
+        }
+        
+        .map-control-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+        
+        .map-control-btn.active {
+            background-color: #1a3a5f;
+            color: white;
+        }
+        
+        /* Live Location Button */
+        .live-location-btn {
+            background-color: #4dabf7;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 6px;
+            font-weight: 600;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 3px 10px rgba(77, 171, 247, 0.3);
+            transition: all 0.2s;
+            font-size: 13px;
+            min-width: 140px;
+            justify-content: center;
+        }
+        
+        .live-location-btn:hover {
+            background-color: #3b9ae1;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(77, 171, 247, 0.4);
+        }
+        
+        .live-location-btn.active {
+            background-color: #2e8b57;
+            animation: pulse 2s infinite;
+        }
+        
+        .live-location-btn.error {
+            background-color: #ff453a;
+        }
+        
+        .stats-panel {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+            padding: 15px 30px;
+            background-color: white;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            z-index: 500;
+        }
+        
+        .stat-box {
+            background-color: #f8fbff;
+            border-radius: 8px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            border: 1px solid #e1e8f0;
+        }
+        
+        .stat-value {
+            font-size: 24px;
+            font-weight: 800;
+            color: #1a3a5f;
+            margin-bottom: 5px;
+        }
+        
+        .stat-label {
+            font-size: 12px;
+            color: #5a7ea3;
+            text-align: center;
+        }
+        
+        .map-legend {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background-color: rgba(255, 255, 255, 0.95);
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+            z-index: 1000;
+            max-width: 220px;
+            backdrop-filter: blur(5px);
+        }
+        
+        .legend-title {
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: #1a3a5f;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .legend-items {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+        }
+        
+        .legend-color {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            margin-right: 10px;
+            flex-shrink: 0;
+            border: 2px solid white;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .legend-text {
+            font-size: 12px;
+            color: #333;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+        }
+        
+        .modal-title {
+            font-size: 20px;
+            color: #1a3a5f;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .modal-input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            margin-bottom: 15px;
+            font-size: 14px;
+            transition: border 0.3s;
+        }
+        
+        .modal-input:focus {
+            outline: none;
+            border-color: #4dabf7;
+            box-shadow: 0 0 0 2px rgba(77, 171, 247, 0.2);
+        }
+        
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .modal-btn {
+            flex: 1;
+            padding: 12px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+        }
+        
+        .modal-btn.primary {
+            background-color: #1a3a5f;
+            color: white;
+        }
+        
+        .modal-btn.primary:hover {
+            background-color: #0d2842;
+        }
+        
+        .modal-btn.secondary {
+            background-color: #f0f5ff;
+            color: #1a3a5f;
+        }
+        
+        .modal-btn.secondary:hover {
+            background-color: #e1e8f0;
+        }
+        
+        .location-update {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background-color: rgba(26, 58, 95, 0.9);
+            color: white;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 12px;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Live location marker */
+        .live-location-marker {
+            background-color: #4dabf7;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            border: 3px solid white;
+            box-shadow: 0 0 20px rgba(77, 171, 247, 0.8);
+            animation: liveLocationPulse 2s infinite;
+        }
+        
+        /* Live location accuracy circle */
+        .live-location-accuracy {
+            border-radius: 50%;
+            border: 2px solid rgba(77, 171, 247, 0.3);
+            background-color: rgba(77, 171, 247, 0.1);
+        }
+        
+        @media (max-width: 1200px) {
+            .sidebar {
+                width: 320px;
+            }
+            
+            .stats-panel {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                max-height: 50vh;
+            }
+            
+            .map-controls {
+                top: 10px;
+                right: 10px;
+            }
+            
+            .map-control-btn, .live-location-btn {
+                min-width: 100px;
+                padding: 8px 12px;
+                font-size: 12px;
+            }
+            
+            .live-location-btn {
+                min-width: 120px;
+            }
+        }
+        
+        /* Custom leaflet styles */
+        .leaflet-control-zoom {
+            margin-top: 70px !important;
+            margin-left: 20px !important;
+        }
+        
+        .leaflet-popup-content {
+            font-size: 13px !important;
+        }
+        
+        .cluster-marker {
+            background-color: rgba(26, 58, 95, 0.8);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            border: 3px solid white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+        }
+        
+        /* Animations */
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes liveLocationPulse {
+            0% { box-shadow: 0 0 0 0 rgba(77, 171, 247, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(77, 171, 247, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(77, 171, 247, 0); }
+        }
+    </style>
+</head>
+<body>    <script src="universal-menu.js"></script>
+    <!-- Sidebar Panel -->
+    <div class="sidebar">
+        <div class="panel-title">
+            <i class="fas fa-users"></i>
+            Tourist Monitoring
+        </div>
+        
+        <div class="location-info">
+            <h3><i class="fas fa-map-marker-alt"></i> Control Center Location</h3>
+            <div class="location-data">
+                <div class="location-item">
+                    <span class="location-label">Latitude</span>
+                    <span class="location-value" id="current-lat">26.144520</span>
+                </div>
+                <div class="location-item">
+                    <span class="location-label">Longitude</span>
+                    <span class="location-value" id="current-lon">91.736237</span>
+                </div>
+                <div class="location-item">
+                    <span class="location-label">Accuracy</span>
+                    <span class="location-value location-accuracy" id="current-accuracy">±12m</span>
+                </div>
+                <div class="location-item">
+                    <span class="location-label">Last Update</span>
+                    <span class="location-value" id="current-time">14:28 PM</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="tourist-list">
+            <div class="tourist-item active">
+                <div class="tourist-name">
+                    <span>Group #A12</span>
+                    <span class="tourist-id">ID: 4512</span>
+                </div>
+                <div class="tourist-details">5 tourists • Guide: Rajesh • Kaziranga National Park</div>
+                <div class="tourist-status status-warning">
+                    <i class="fas fa-exclamation-circle"></i>
+                    Moving slowly
+                </div>
+            </div>
+            
+            <div class="tourist-item">
+                <div class="tourist-name">
+                    <span>Family #F08</span>
+                    <span class="tourist-id">ID: 3809</span>
+                </div>
+                <div class="tourist-details">4 tourists (2 children) • Tawang Monastery</div>
+                <div class="tourist-status status-safe">
+                    <i class="fas fa-check-circle"></i>
+                    Normal
+                </div>
+            </div>
+            
+            <div class="tourist-item">
+                <div class="tourist-name">
+                    <span>Backpackers #B15</span>
+                    <span class="tourist-id">ID: 5217</span>
+                </div>
+                <div class="tourist-details">3 tourists • Adventure trek • Dzukou Valley</div>
+                <div class="tourist-status status-safe">
+                    <i class="fas fa-check-circle"></i>
+                    Normal
+                </div>
+            </div>
+            
+            <div class="tourist-item">
+                <div class="tourist-name">
+                    <span>Couple #C03</span>
+                    <span class="tourist-id">ID: 2914</span>
+                </div>
+                <div class="tourist-details">2 tourists • Honeymoon • Cherrapunji</div>
+                <div class="tourist-status status-danger">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    No movement for 2h
+                </div>
+            </div>
+            
+            <div class="tourist-item">
+                <div class="tourist-name">
+                    <span>Senior Group #S07</span>
+                    <span class="tourist-id">ID: 6712</span>
+                </div>
+                <div class="tourist-details">6 tourists (Age 60+) • Shillong</div>
+                <div class="tourist-status status-safe">
+                    <i class="fas fa-check-circle"></i>
+                    Normal
+                </div>
+            </div>
+        </div>
+        
+        <div class="incident-panel">
+            <h3><i class="fas fa-exclamation-triangle"></i> Incident Reporting</h3>
+            <div class="incident-types">
+                <div class="incident-type">Medical Emergency</div>
+                <div class="incident-type">Lost Tourist</div>
+                <div class="incident-type">Natural Hazard</div>
+                <div class="incident-type">Security Issue</div>
+            </div>
+            <button class="emergency-btn" id="emergency-btn">
+                <i class="fas fa-bell"></i>
+                SOS Emergency Alert
+            </button>
+        </div>
+    </div>
+    
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="header">
+            <div class="logo-container">
+                <div class="logo">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <div class="title-container">
+                    <div class="title">Smart Tourist Safety Monitoring & Response</div>
+                    <div class="subtitle">Ministry of Development of North Eastern Region (MoDoNER)</div>
+                </div>
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <button class="map-control-btn" id="refresh-btn" style="background-color: #4dabf7; color: white;">
+                    <i class="fas fa-sync-alt"></i>
+                    Refresh
+                </button>
+            </div>
+        </div>
+        
+        <div class="stats-panel">
+            <div class="stat-box">
+                <div class="stat-value" id="total-tourists">24</div>
+                <div class="stat-label">Tourists Monitored</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value" id="active-incidents">2</div>
+                <div class="stat-label">Active Incidents</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value" id="response-time">7 min</div>
+                <div class="stat-label">Avg. Response Time</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value" id="safe-percent">92%</div>
+                <div class="stat-label">Tourists Safe</div>
+            </div>
+        </div>
+        
+        <div class="map-container">
+            <div id="map"></div>
+            
+            <!-- Map Controls -->
+            <div class="map-controls">
+                <button class="live-location-btn" id="live-location-btn">
+                    <i class="fas fa-crosshairs"></i>
+                    Live Location
+                </button>
+                <button class="map-control-btn active" id="satellite-btn">
+                    <i class="fas fa-satellite"></i>
+                    Satellite
+                </button>
+                <button class="map-control-btn" id="terrain-btn">
+                    <i class="fas fa-mountain"></i>
+                    Terrain
+                </button>
+                <button class="map-control-btn" id="street-btn">
+                    <i class="fas fa-road"></i>
+                    Street
+                </button>
+                <button class="map-control-btn" id="incidents-btn">
+                    <i class="fas fa-map-marked-alt"></i>
+                    Incidents
+                </button>
+            </div>
+            
+            <!-- Map Legend -->
+            <div class="map-legend">
+                <div class="legend-title">
+                    <i class="fas fa-key"></i>
+                    Map Legend
+                </div>
+                <div class="legend-items">
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #4cd160;"></div>
+                        <div class="legend-text">Tourist (Safe)</div>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #ff9f0a;"></div>
+                        <div class="legend-text">Tourist (Warning)</div>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #ff453a;"></div>
+                        <div class="legend-text">Tourist (Danger)</div>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #1a3a5f;"></div>
+                        <div class="legend-text">Emergency Team</div>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #9c27b0;"></div>
+                        <div class="legend-text">Incident Location</div>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #4dabf7;"></div>
+                        <div class="legend-text">Your Live Location</div>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color" style="background-color: #2ecc71; border-radius: 3px;"></div>
+                        <div class="legend-text">Safe Zone</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Location Update Indicator -->
+            <div class="location-update" id="location-update">
+                <i class="fas fa-sync fa-spin"></i>
+                Updating locations...
+            </div>
+        </div>
+    </div>
+    
+    <!-- Emergency Modal -->
+    <div class="modal" id="emergency-modal">
+        <div class="modal-content">
+            <div class="modal-title">
+                <i class="fas fa-exclamation-circle" style="color: #ff453a;"></i>
+                Emergency Alert
+            </div>
+            <p>You are about to send an emergency alert to all response teams and nearby authorities. Please provide details:</p>
+            
+            <select class="modal-input" id="emergency-type">
+                <option value="medical">Medical Emergency</option>
+                <option value="lost">Lost Tourist</option>
+                <option value="natural">Natural Hazard (Landslide, Flood)</option>
+                <option value="security">Security Issue</option>
+                <option value="other">Other Emergency</option>
+            </select>
+            
+            <input type="text" class="modal-input" id="emergency-location" placeholder="Emergency Location (auto-detected)">
+            
+            <textarea class="modal-input" id="emergency-details" placeholder="Additional details..." rows="3"></textarea>
+            
+            <div class="modal-buttons">
+                <button class="modal-btn secondary" id="cancel-emergency">Cancel</button>
+                <button class="modal-btn primary" id="confirm-emergency">Send Emergency Alert</button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Incident Report Modal -->
+    <div class="modal" id="incident-modal">
+        <div class="modal-content">
+            <div class="modal-title">
+                <i class="fas fa-map-marker-alt" style="color: #1a3a5f;"></i>
+                Report Incident
+            </div>
+            
+            <select class="modal-input" id="incident-type">
+                <option value="medical">Medical Emergency</option>
+                <option value="lost">Lost Tourist</option>
+                <option value="natural">Natural Hazard</option>
+                <option value="security">Security Issue</option>
+                <option value="transport">Transport Problem</option>
+                <option value="accommodation">Accommodation Issue</option>
+            </select>
+            
+            <input type="text" class="modal-input" id="incident-location" placeholder="Click on map to set location">
+            
+            <textarea class="modal-input" id="incident-details" placeholder="Incident details..." rows="3"></textarea>
+            
+            <div class="modal-buttons">
+                <button class="modal-btn secondary" id="cancel-incident">Cancel</button>
+                <button class="modal-btn primary" id="confirm-incident">Report Incident</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Initialize map with better default view
+        const map = L.map('map', {
+            center: [26.1445, 91.7362],
+            zoom: 12,
+            zoomControl: true,
+            preferCanvas: true // Better performance
+        });
+        
+        // Map layers with better styling
+        const satelliteLayer = L.tileLayer('https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}', {
+            maxZoom: 20,
+            subdomains: ['mt0','mt1','mt2','mt3'],
+            attribution: 'Map data © Google',
+            detectRetina: true
+        });
+        
+        const terrainLayer = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
+            maxZoom: 17,
+            attribution: 'Map data: © OpenTopoMap (CC-BY-SA)',
+            detectRetina: true
+        });
+        
+        const streetLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '© OpenStreetMap contributors',
+            detectRetina: true
+        });
+        
+        // Add default layer
+        satelliteLayer.addTo(map);
+        
+        // Create marker clusters for better organization
+        const touristCluster = L.markerClusterGroup({
+            iconCreateFunction: function (cluster) {
+                const count = cluster.getChildCount();
+                return L.divIcon({
+                    html: `<div class="cluster-marker" style="width: ${40 + (count > 9 ? 10 : 0)}px; height: ${40 + (count > 9 ? 10 : 0)}px; font-size: ${count > 9 ? '14px' : '16px'}">${count}</div>`,
+                    className: 'cluster-icon',
+                    iconSize: L.point(40, 40)
+                });
+            },
+            maxClusterRadius: 80
+        });
+        
+        const incidentCluster = L.markerClusterGroup({
+            iconCreateFunction: function (cluster) {
+                return L.divIcon({
+                    html: `<div class="cluster-marker" style="background-color: rgba(156, 39, 176, 0.9); width: 45px; height: 45px; font-size: 16px">${cluster.getChildCount()}</div>`,
+                    className: 'cluster-icon',
+                    iconSize: L.point(45, 45)
+                });
+            }
+        });
+        
+        // Tourist data with realistic NE India locations
+        const touristGroups = [
+            {id: 1, name: "Group #A12", lat: 26.5800, lng: 93.1700, status: "warning", count: 5, guide: "Rajesh", location: "Kaziranga National Park"},
+            {id: 2, name: "Family #F08", lat: 27.5883, lng: 91.8615, status: "safe", count: 4, children: 2, location: "Tawang Monastery"},
+            {id: 3, name: "Backpackers #B15", lat: 25.5500, lng: 94.0833, status: "safe", count: 3, activity: "Adventure trek", location: "Dzukou Valley"},
+            {id: 4, name: "Couple #C03", lat: 25.2667, lng: 91.7333, status: "danger", count: 2, note: "No movement for 2h", location: "Cherrapunji"},
+            {id: 5, name: "Senior Group #S07", lat: 25.5788, lng: 91.8933, status: "safe", count: 6, age: "60+", location: "Shillong"},
+            {id: 6, name: "Students #ST21", lat: 26.1500, lng: 91.7700, status: "safe", count: 8, location: "Guwahati"},
+            {id: 7, name: "Foreigners #FR09", lat: 26.1200, lng: 91.7100, status: "safe", count: 3, location: "Assam"},
+            {id: 8, name: "Family #F12", lat: 26.1800, lng: 91.7500, status: "warning", count: 7, children: 3, location: "Near Brahmaputra"}
+        ];
+        
+        // Incident data
+        const incidents = [
+            {id: 1, type: "medical", lat: 26.1450, lng: 91.7350, reported: "30 min ago", status: "active", description: "Tourist with altitude sickness"},
+            {id: 2, type: "lost", lat: 26.1550, lng: 91.7450, reported: "1 hour ago", status: "active", description: "Lost hiker in forest area"}
+        ];
+        
+        // Emergency teams
+        const emergencyTeams = [
+            {id: 1, name: "Team Alpha", lat: 26.1480, lng: 91.7320, status: "available"},
+            {id: 2, name: "Team Beta", lat: 26.1420, lng: 91.7400, status: "on-mission"},
+            {id: 3, name: "Team Gamma", lat: 26.1380, lng: 91.7280, status: "available"}
+        ];
+        
+        // Status colors and icons
+        const statusColors = {
+            safe: "#4cd160",
+            warning: "#ff9f0a",
+            danger: "#ff453a"
+        };
+        
+        // Live location variables
+        let liveLocationMarker = null;
+        let liveLocationAccuracyCircle = null;
+        let isLiveLocationActive = false;
+        let liveLocationWatchId = null;
+        
+        // Add safe zones (polygons)
+        const safeZones = [
+            L.polygon([
+                [26.1300, 91.7200],
+                [26.1400, 91.7300],
+                [26.1300, 91.7400],
+                [26.1200, 91.7300]
+            ], {
+                color: '#2ecc71',
+                weight: 2,
+                fillColor: '#2ecc71',
+                fillOpacity: 0.1,
+                className: 'safe-zone'
+            }).addTo(map).bindPopup("<b>Safe Zone</b><br>Guwahati Tourist Center<br>Emergency services available"),
+            
+            L.polygon([
+                [26.1600, 91.7600],
+                [26.1700, 91.7700],
+                [26.1600, 91.7800],
+                [26.1500, 91.7700]
+            ], {
+                color: '#2ecc71',
+                weight: 2,
+                fillColor: '#2ecc71',
+                fillOpacity: 0.1,
+                className: 'safe-zone'
+            }).addTo(map).bindPopup("<b>Safe Zone</b><br>Khanapara Area<br>Police station nearby")
+        ];
+        
+        // Initialize markers on the map with better organization
+        function initializeMarkers() {
+            // Clear existing clusters
+            map.removeLayer(touristCluster);
+            map.removeLayer(incidentCluster);
+            
+            // Add tourist markers to cluster
+            touristGroups.forEach(tourist => {
+                const icon = L.divIcon({
+                    html: `
+                        <div style="
+                            background-color: ${statusColors[tourist.status]}; 
+                            width: ${tourist.count > 5 ? '28px' : '24px'}; 
+                            height: ${tourist.count > 5 ? '28px' : '24px'}; 
+                            border-radius: 50%; 
+                            border: 3px solid white; 
+                            box-shadow: 0 0 10px rgba(0,0,0,0.4); 
+                            display: flex; 
+                            align-items: center; 
+                            justify-content: center; 
+                            color: white; 
+                            font-weight: bold;
+                            font-size: ${tourist.count > 9 ? '10px' : '12px'};
+                        ">
+                            ${tourist.count}
+                        </div>`,
+                    className: 'tourist-marker',
+                    iconSize: [30, 30],
+                    iconAnchor: [15, 15]
+                });
+                
+                const marker = L.marker([tourist.lat, tourist.lng], {icon: icon});
+                
+                marker.bindPopup(`
+                    <div style="min-width: 200px;">
+                        <div style="font-weight: bold; font-size: 14px; margin-bottom: 5px; color: #1a3a5f;">${tourist.name}</div>
+                        <div style="margin-bottom: 5px;"><strong>Status:</strong> <span style="color: ${statusColors[tourist.status]}">${tourist.status.toUpperCase()}</span></div>
+                        <div style="margin-bottom: 5px;"><strong>Tourists:</strong> ${tourist.count}</div>
+                        <div style="margin-bottom: 5px;"><strong>Location:</strong> ${tourist.location}</div>
+                        ${tourist.guide ? `<div style="margin-bottom: 5px;"><strong>Guide:</strong> ${tourist.guide}</div>` : ''}
+                        ${tourist.children ? `<div style="margin-bottom: 5px;"><strong>Children:</strong> ${tourist.children}</div>` : ''}
+                        ${tourist.note ? `<div style="margin-bottom: 5px; color: #ff453a;"><strong>Note:</strong> ${tourist.note}</div>` : ''}
+                        <div style="margin-top: 10px; font-size: 11px; color: #666;">Click for more options</div>
+                    </div>
+                `);
+                
+                touristCluster.addLayer(marker);
+            });
+            
+            // Add incident markers to cluster
+            incidents.forEach(incident => {
+                const icon = L.divIcon({
+                    html: `<div style="
+                        background-color: #9c27b0; 
+                        width: 22px; 
+                        height: 22px; 
+                        border-radius: 50%; 
+                        border: 3px solid white; 
+                        box-shadow: 0 0 10px rgba(156,39,176,0.6);
+                        animation: pulse 2s infinite;
+                    "></div>`,
+                    className: 'incident-marker',
+                    iconSize: [28, 28],
+                    iconAnchor: [14, 14]
+                });
+                
+                const marker = L.marker([incident.lat, incident.lng], {icon: icon});
+                
+                marker.bindPopup(`
+                    <div style="min-width: 200px;">
+                        <div style="font-weight: bold; font-size: 14px; margin-bottom: 5px; color: #9c27b0;">Incident #${incident.id}</div>
+                        <div style="margin-bottom: 5px;"><strong>Type:</strong> ${incident.type.charAt(0).toUpperCase() + incident.type.slice(1)}</div>
+                        <div style="margin-bottom: 5px;"><strong>Reported:</strong> ${incident.reported}</div>
+                        <div style="margin-bottom: 5px;"><strong>Status:</strong> <span style="color: #ff453a">${incident.status.toUpperCase()}</span></div>
+                        ${incident.description ? `<div style="margin-bottom: 5px;"><strong>Description:</strong> ${incident.description}</div>` : ''}
+                        <button onclick="dispatchTeam(${incident.lat}, ${incident.lng})" style="background-color: #1a3a5f; color: white; border: none; padding: 5px 10px; border-radius: 4px; margin-top: 5px; cursor: pointer;">Dispatch Team</button>
+                    </div>
+                `);
+                
+                incidentCluster.addLayer(marker);
+            });
+            
+            // Add emergency team markers (not clustered)
+            emergencyTeams.forEach(team => {
+                const icon = L.divIcon({
+                    html: `<div style="
+                        background-color: #1a3a5f; 
+                        width: 24px; 
+                        height: 24px; 
+                        border-radius: 50%; 
+                        border: 3px solid white; 
+                        box-shadow: 0 0 10px rgba(26,58,95,0.6); 
+                        display: flex; 
+                        align-items: center; 
+                        justify-content: center; 
+                        color: white; 
+                        font-size: 12px;
+                    "><i class="fas fa-ambulance"></i></div>`,
+                    className: 'team-marker',
+                    iconSize: [30, 30],
+                    iconAnchor: [15, 15]
+                });
+                
+                const marker = L.marker([team.lat, team.lng], {icon: icon})
+                    .addTo(map)
+                    .bindPopup(`
+                        <div style="min-width: 180px;">
+                            <div style="font-weight: bold; font-size: 14px; margin-bottom: 5px; color: #1a3a5f;">${team.name}</div>
+                            <div style="margin-bottom: 5px;"><strong>Status:</strong> <span style="color: ${team.status === 'available' ? '#4cd160' : '#ff9f0a'}">${team.status.toUpperCase()}</span></div>
+                            <div style="margin-bottom: 5px;"><strong>Location:</strong> ${team.lat.toFixed(4)}, ${team.lng.toFixed(4)}</div>
+                            <button onclick="contactTeam('${team.name}')" style="background-color: #4dabf7; color: white; border: none; padding: 5px 10px; border-radius: 4px; margin-top: 5px; cursor: pointer;">Contact Team</button>
+                        </div>
+                    `);
+            });
+            
+            // Add clusters to map
+            map.addLayer(touristCluster);
+            map.addLayer(incidentCluster);
+            
+            // Fit map to show all markers
+            if (touristGroups.length > 0) {
+                const group = new L.featureGroup([
+                    touristCluster,
+                    incidentCluster
+                ]);
+                map.fitBounds(group.getBounds().pad(0.1));
+            }
+        }
+        
+        // Update location information
+        function updateLocation() {
+            const now = new Date();
+            const timeString = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            
+            document.getElementById('current-time').textContent = timeString;
+            
+            // Simulate slight location variation
+            const lat = 26.1445 + (Math.random() - 0.5) * 0.005;
+            const lng = 91.7362 + (Math.random() - 0.5) * 0.005;
+            const accuracy = Math.floor(Math.random() * 20) + 5;
+            
+            document.getElementById('current-lat').textContent = lat.toFixed(6);
+            document.getElementById('current-lon').textContent = lng.toFixed(6);
+            document.getElementById('current-accuracy').textContent = `±${accuracy}m`;
+            
+            // Show update indicator briefly
+            const updateIndicator = document.getElementById('location-update');
+            updateIndicator.style.display = 'flex';
+            
+            setTimeout(() => {
+                updateIndicator.style.display = 'none';
+            }, 1500);
+        }
+        
+        // Live Location Functions
+        function startLiveLocation() {
+            const liveLocationBtn = document.getElementById('live-location-btn');
+            
+            if (!navigator.geolocation) {
+                liveLocationBtn.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Not Supported';
+                liveLocationBtn.classList.add('error');
+                alert("Geolocation is not supported by your browser");
+                return;
+            }
+            
+            // Show loading state
+            liveLocationBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Locating...';
+            
+            // Start watching position
+            liveLocationWatchId = navigator.geolocation.watchPosition(
+                // Success callback
+                function(position) {
+                    const lat = position.coords.latitude;
+                    const lng = position.coords.longitude;
+                    const accuracy = position.coords.accuracy;
+                    
+                    // Update button
+                    liveLocationBtn.innerHTML = '<i class="fas fa-crosshairs"></i> Live Location ON';
+                    liveLocationBtn.classList.add('active');
+                    isLiveLocationActive = true;
+                    
+                    // Update sidebar location info
+                    document.getElementById('current-lat').textContent = lat.toFixed(6);
+                    document.getElementById('current-lon').textContent = lng.toFixed(6);
+                    document.getElementById('current-accuracy').textContent = `±${Math.round(accuracy)}m`;
+                    
+                    // Center map on live location
+                    map.setView([lat, lng], 14);
+                    
+                    // Create or update live location marker
+                    if (liveLocationMarker) {
+                        liveLocationMarker.setLatLng([lat, lng]);
+                        if (liveLocationAccuracyCircle) {
+                            liveLocationAccuracyCircle.setLatLng([lat, lng]);
+                            liveLocationAccuracyCircle.setRadius(accuracy);
+                        }
+                    } else {
+                        // Create live location marker
+                        liveLocationMarker = L.marker([lat, lng], {
+                            icon: L.divIcon({
+                                html: '<div class="live-location-marker"></div>',
+                                className: 'live-location-icon',
+                                iconSize: [26, 26],
+                                iconAnchor: [13, 13]
+                            })
+                        }).addTo(map).bindPopup("<b>Your Live Location</b><br>Real-time GPS tracking active");
+                        
+                        // Create accuracy circle
+                        liveLocationAccuracyCircle = L.circle([lat, lng], {
+                            radius: accuracy,
+                            className: 'live-location-accuracy'
+                        }).addTo(map);
+                    }
+                    
+                    // Show notification
+                    showNotification("Live location tracking started", "success");
+                },
+                
+                // Error callback
+                function(error) {
+                    console.error("Geolocation error:", error);
+                    liveLocationBtn.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Location Error';
+                    liveLocationBtn.classList.remove('active');
+                    liveLocationBtn.classList.add('error');
+                    isLiveLocationActive = false;
+                    
+                    let errorMessage = "Unable to get your location: ";
+                    switch(error.code) {
+                        case error.PERMISSION_DENIED:
+                            errorMessage += "Permission denied. Please enable location access.";
+                            break;
+                        case error.POSITION_UNAVAILABLE:
+                            errorMessage += "Location information unavailable.";
+                            break;
+                        case error.TIMEOUT:
+                            errorMessage += "Location request timed out.";
+                            break;
+                        default:
+                            errorMessage += "Unknown error.";
+                    }
+                    
+                    showNotification(errorMessage, "error");
+                },
+                
+                // Options
+                {
+                    enableHighAccuracy: true,
+                    timeout: 10000,
+                    maximumAge: 0
+                }
+            );
+        }
+        
+        function stopLiveLocation() {
+            const liveLocationBtn = document.getElementById('live-location-btn');
+            
+            if (liveLocationWatchId) {
+                navigator.geolocation.clearWatch(liveLocationWatchId);
+                liveLocationWatchId = null;
+            }
+            
+            // Remove markers from map
+            if (liveLocationMarker) {
+                map.removeLayer(liveLocationMarker);
+                liveLocationMarker = null;
+            }
+            
+            if (liveLocationAccuracyCircle) {
+                map.removeLayer(liveLocationAccuracyCircle);
+                liveLocationAccuracyCircle = null;
+            }
+            
+            // Update button
+            liveLocationBtn.innerHTML = '<i class="fas fa-crosshairs"></i> Live Location';
+            liveLocationBtn.classList.remove('active');
+            liveLocationBtn.classList.remove('error');
+            isLiveLocationActive = false;
+            
+            showNotification("Live location tracking stopped", "info");
+        }
+        
+        function toggleLiveLocation() {
+            const liveLocationBtn = document.getElementById('live-location-btn');
+            
+            if (isLiveLocationActive) {
+                stopLiveLocation();
+            } else {
+                // Request permission first
+                if (navigator.permissions && navigator.permissions.query) {
+                    navigator.permissions.query({name: 'geolocation'}).then(function(result) {
+                        if (result.state === 'granted') {
+                            startLiveLocation();
+                        } else if (result.state === 'prompt') {
+                            // Ask for permission
+                            startLiveLocation();
+                        } else {
+                            liveLocationBtn.innerHTML = '<i class="fas fa-ban"></i> Permission Denied';
+                            liveLocationBtn.classList.add('error');
+                            alert("Location permission is denied. Please enable it in your browser settings.");
+                        }
+                    });
+                } else {
+                    // Fallback for browsers that don't support permissions API
+                    startLiveLocation();
+                }
+            }
+        }
+        
+        // Show notification
+        function showNotification(message, type) {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background-color: ${type === 'error' ? '#ff453a' : type === 'success' ? '#4cd160' : '#4dabf7'};
+                color: white;
+                padding: 15px 20px;
+                border-radius: 8px;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+                z-index: 3000;
+                max-width: 300px;
+                animation: slideIn 0.3s ease-out;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            `;
+            
+            const icon = type === 'error' ? 'fa-exclamation-circle' : 
+                         type === 'success' ? 'fa-check-circle' : 'fa-info-circle';
+            
+            notification.innerHTML = `
+                <i class="fas ${icon}"></i>
+                <div>${message}</div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease-out';
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+        
+        // Initialize the application
+        function initApp() {
+            // Initialize map markers
+            initializeMarkers();
+            
+            // Update location every 30 seconds
+            updateLocation();
+            setInterval(updateLocation, 30000);
+            
+            // Set up map click for incident reporting
+            map.on('click', function(e) {
+                document.getElementById('incident-location').value = `${e.latlng.lat.toFixed(6)}, ${e.latlng.lng.toFixed(6)}`;
+            });
+            
+            // Set up map control buttons
+            document.getElementById('satellite-btn').addEventListener('click', function() {
+                map.removeLayer(terrainLayer);
+                map.removeLayer(streetLayer);
+                satelliteLayer.addTo(map);
+                setActiveButton(this);
+            });
+            
+            document.getElementById('terrain-btn').addEventListener('click', function() {
+                map.removeLayer(satelliteLayer);
+                map.removeLayer(streetLayer);
+                terrainLayer.addTo(map);
+                setActiveButton(this);
+            });
+            
+            document.getElementById('street-btn').addEventListener('click', function() {
+                map.removeLayer(satelliteLayer);
+                map.removeLayer(terrainLayer);
+                streetLayer.addTo(map);
+                setActiveButton(this);
+            });
+            
+            document.getElementById('incidents-btn').addEventListener('click', function() {
+                if (map.hasLayer(incidentCluster)) {
+                    map.removeLayer(incidentCluster);
+                    this.innerHTML = '<i class="fas fa-map-marked-alt"></i> Show Incidents';
+                } else {
+                    map.addLayer(incidentCluster);
+                    this.innerHTML = '<i class="fas fa-eye-slash"></i> Hide Incidents';
+                }
+                setActiveButton(this);
+            });
+            
+            // Set up refresh button
+            document.getElementById('refresh-btn').addEventListener('click', function() {
+                updateLocation();
+                initializeMarkers();
+                
+                // Show refresh animation
+                this.innerHTML = '<i class="fas fa-sync-alt fa-spin"></i> Refreshing...';
+                setTimeout(() => {
+                    this.innerHTML = '<i class="fas fa-sync-alt"></i> Refresh';
+                }, 1000);
+            });
+            
+            // Set up live location button
+            document.getElementById('live-location-btn').addEventListener('click', toggleLiveLocation);
+            
+            // Set up emergency button
+            document.getElementById('emergency-btn').addEventListener('click', function() {
+                const modal = document.getElementById('emergency-modal');
+                modal.style.display = 'flex';
+                
+                // Auto-fill location with current location (live or control center)
+                const lat = document.getElementById('current-lat').textContent;
+                const lng = document.getElementById('current-lon').textContent;
+                document.getElementById('emergency-location').value = `${lat}, ${lng}`;
+            });
+            
+            // Set up incident type buttons
+            document.querySelectorAll('.incident-type').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const incidentType = this.textContent.trim();
+                    const modal = document.getElementById('incident-modal');
+                    
+                    // Set the incident type in the modal
+                    const typeMap = {
+                        'Medical Emergency': 'medical',
+                        'Lost Tourist': 'lost',
+                        'Natural Hazard': 'natural',
+                        'Security Issue': 'security'
+                    };
+                    
+                    document.getElementById('incident-type').value = typeMap[incidentType] || 'other';
+                    
+                    modal.style.display = 'flex';
+                });
+            });
+            
+            // Set up modal buttons
+            document.getElementById('cancel-emergency').addEventListener('click', function() {
+                document.getElementById('emergency-modal').style.display = 'none';
+            });
+            
+            document.getElementById('confirm-emergency').addEventListener('click', function() {
+                const type = document.getElementById('emergency-type').value;
+                const location = document.getElementById('emergency-location').value;
+                const details = document.getElementById('emergency-details').value;
+                
+                alert(`🚨 Emergency alert sent to all response teams!\n\nType: ${type}\nLocation: ${location}\nDetails: ${details}`);
+                document.getElementById('emergency-modal').style.display = 'none';
+                
+                // Update active incidents count
+                const incidentCount = parseInt(document.getElementById('active-incidents').textContent);
+                document.getElementById('active-incidents').textContent = incidentCount + 1;
+                
+                // Add new incident to map
+                const coords = location.split(',').map(coord => parseFloat(coord.trim()));
+                if (coords.length === 2) {
+                    const newIncident = {
+                        id: incidents.length + 1,
+                        type: type,
+                        lat: coords[0],
+                        lng: coords[1],
+                        reported: "Just now",
+                        status: "active",
+                        description: details
+                    };
+                    
+                    incidents.push(newIncident);
+                    initializeMarkers();
+                }
+            });
+            
+            document.getElementById('cancel-incident').addEventListener('click', function() {
+                document.getElementById('incident-modal').style.display = 'none';
+            });
+            
+            document.getElementById('confirm-incident').addEventListener('click', function() {
+                const type = document.getElementById('incident-type').value;
+                const location = document.getElementById('incident-location').value;
+                const details = document.getElementById('incident-details').value;
+                
+                alert(`Incident reported to local authorities!\n\nType: ${type}\nLocation: ${location}\nDetails: ${details}`);
+                document.getElementById('incident-modal').style.display = 'none';
+                
+                // Update active incidents count
+                const incidentCount = parseInt(document.getElementById('active-incidents').textContent);
+                document.getElementById('active-incidents').textContent = incidentCount + 1;
+                
+                // Add new incident to map if location provided
+                if (location && location.includes(',')) {
+                    const coords = location.split(',').map(coord => parseFloat(coord.trim()));
+                    if (coords.length === 2) {
+                        const newIncident = {
+                            id: incidents.length + 1,
+                            type: type,
+                            lat: coords[0],
+                            lng: coords[1],
+                            reported: "Just now",
+                            status: "active",
+                            description: details
+                        };
+                        
+                        incidents.push(newIncident);
+                        initializeMarkers();
+                    }
+                }
+            });
+            
+            // Set up tourist list items
+            document.querySelectorAll('.tourist-item').forEach((item, index) => {
+                item.addEventListener('click', function() {
+                    // Remove active class from all items
+                    document.querySelectorAll('.tourist-item').forEach(el => {
+                        el.classList.remove('active');
+                    });
+                    
+                    // Add active class to clicked item
+                    this.classList.add('active');
+                    
+                    // Center map on the selected tourist group
+                    if (touristGroups[index]) {
+                        map.setView([touristGroups[index].lat, touristGroups[index].lng], 14);
+                    }
+                });
+            });
+            
+            // Add CSS animations
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes pulse {
+                    0% { transform: scale(1); }
+                    50% { transform: scale(1.05); }
+                    100% { transform: scale(1); }
+                }
+                
+                @keyframes liveLocationPulse {
+                    0% { box-shadow: 0 0 0 0 rgba(77, 171, 247, 0.7); }
+                    70% { box-shadow: 0 0 0 10px rgba(77, 171, 247, 0); }
+                    100% { box-shadow: 0 0 0 0 rgba(77, 171, 247, 0); }
+                }
+                
+                @keyframes slideIn {
+                    from { transform: translateX(100%); opacity: 0; }
+                    to { transform: translateX(0); opacity: 1; }
+                }
+                
+                @keyframes slideOut {
+                    from { transform: translateX(0); opacity: 1; }
+                    to { transform: translateX(100%); opacity: 0; }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+        
+        // Helper function to set active button
+        function setActiveButton(activeBtn) {
+            const buttons = document.querySelectorAll('.map-control-btn');
+            buttons.forEach(btn => {
+                if (btn !== document.getElementById('incidents-btn') || activeBtn === document.getElementById('incidents-btn')) {
+                    btn.classList.remove('active');
+                }
+            });
+            activeBtn.classList.add('active');
+        }
+        
+        // Helper functions for popup buttons
+        window.dispatchTeam = function(lat, lng) {
+            alert(`Dispatching nearest emergency team to:\nLatitude: ${lat}\nLongitude: ${lng}`);
+            // In a real app, this would send a request to the server
+        };
+        
+        window.contactTeam = function(teamName) {
+            alert(`Contacting ${teamName} via radio...`);
+            // In a real app, this would initiate communication
+        };
+        
+        // Initialize the app when the page loads
+        window.onload = initApp;
+    </script>
+    <!-- Universal Menu Script -->`n    <script src="universal-menu.js"></script>`n</body>
+</html>

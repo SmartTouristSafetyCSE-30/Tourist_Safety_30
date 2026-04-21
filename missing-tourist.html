@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Missing Tourist Alert | Police Module | Tourist Safety System</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f8f9fa; }
+        .header { background: linear-gradient(135deg, #dc3545, #c82333); color: white; padding: 20px 0; }
+        .header-content { max-width: 1400px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 30px 20px; }
+        .alert-banner { background: linear-gradient(135deg, #dc3545, #c82333); color: white; border-radius: 10px; padding: 20px; margin-bottom: 30px; text-align: center; }
+        .search-section { background: white; border-radius: 10px; padding: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); margin-bottom: 30px; }
+        .search-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; align-items: end; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 600; }
+        .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; }
+        .btn { padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: 600; }
+        .btn-primary { background: #1e3c72; color: white; }
+        .btn-danger { background: #dc3545; color: white; }
+        .btn-success { background: #28a745; color: white; }
+        .btn-warning { background: #ffc107; color: #212529; }
+        .missing-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 20px; }
+        .missing-card { background: white; border-radius: 10px; padding: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); border-left: 4px solid #dc3545; }
+        .missing-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .missing-status { padding: 4px 8px; border-radius: 12px; font-size: 12px; font-weight: bold; }
+        .status-critical { background: #dc3545; color: white; }
+        .status-active { background: #ffc107; color: #212529; }
+        .status-resolved { background: #28a745; color: white; }
+        .tourist-info { display: grid; grid-template-columns: auto 1fr; gap: 15px; margin-bottom: 15px; }
+        .tourist-photo { width: 80px; height: 80px; background: #e9ecef; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 32px; }
+        .missing-details { font-size: 14px; color: #666; margin-bottom: 15px; }
+        .missing-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+        .btn-sm { padding: 6px 12px; font-size: 12px; }
+        .timeline { border-left: 3px solid #dc3545; padding-left: 15px; margin-top: 15px; }
+        .timeline-item { margin-bottom: 10px; }
+        .timeline-time { font-size: 12px; color: #666; }
+        .timeline-event { font-weight: 600; }
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; margin-bottom: 30px; }
+        .stat-card { background: white; border-radius: 10px; padding: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); text-align: center; }
+        .stat-value { font-size: 24px; font-weight: bold; margin-bottom: 5px; }
+        .stat-critical { color: #dc3545; }
+        .stat-warning { color: #ffc107; }
+        .stat-success { color: #28a745; }
+    </style>
+</head>
+<body>    <script src="universal-menu.js"></script>
+    <header class="header">
+        <div class="header-content">
+            <div style="display: flex; align-items: center;">
+                <div style="width: 50px; height: 50px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #dc3545; margin-right: 15px;">🚨</div>
+                <div>
+                    <div style="font-size: 24px; font-weight: bold;">Missing Tourist Alert System</div>
+                    <div style="font-size: 14px; opacity: 0.9;">Emergency Response & Search Operations</div>
+                </div>
+            </div>
+            <button class="btn btn-primary" onclick="window.location.href='police-dashboard.html'">← Back to Dashboard</button>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Alert Banner -->
+        <div class="alert-banner">
+            <h2 style="margin-bottom: 10px;">🚨 MISSING TOURIST ALERT SYSTEM ACTIVE</h2>
+            <p>Immediate response required for all missing tourist cases. Contact emergency services: 112</p>
+        </div>
+
+        <!-- Statistics -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value stat-critical">3</div>
+                <div>Critical Cases</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value stat-warning">7</div>
+                <div>Active Searches</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value stat-success">15</div>
+                <div>Resolved Today</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">2.3h</div>
+                <div>Avg Resolution Time</div>
+            </div>
+        </div>
+
+        <!-- Search & Filters -->
+        <div class="search-section">
+            <h3 style="margin-bottom: 20px;">🔍 Search Missing Tourists</h3>
+            <div class="search-grid">
+                <div class="form-group">
+                    <label for="touristId">Tourist ID</label>
+                    <input type="text" id="touristId" placeholder="e.g., DT-2024-AS-001">
+                </div>
+                <div class="form-group">
+                    <label for="touristName">Tourist Name</label>
+                    <input type="text" id="touristName" placeholder="Enter name">
+                </div>
+                <div class="form-group">
+                    <label for="missingDuration">Missing Duration</label>
+                    <select id="missingDuration">
+                        <option value="">All Durations</option>
+                        <option value="1h">Last 1 Hour</option>
+                        <option value="6h">Last 6 Hours</option>
+                        <option value="24h">Last 24 Hours</option>
+                        <option value="48h">Last 48 Hours</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="location">Last Known Location</label>
+                    <input type="text" id="location" placeholder="Enter location">
+                </div>
+                <button class="btn btn-primary" onclick="searchMissing()">Search</button>
+                <button class="btn btn-danger" onclick="reportMissing()">📢 Report Missing</button>
+            </div>
+        </div>
+
+        <!-- Missing Tourist Cases -->
+        <div class="missing-grid" id="missingGrid">
+            <!-- Critical Case -->
+            <div class="missing-card">
+                <div class="missing-header">
+                    <span class="missing-status status-critical">CRITICAL - 6 HOURS</span>
+                    <span style="font-size: 12px; color: #666;">MT-2024-001</span>
+                </div>
+                <div class="tourist-info">
+                    <div class="tourist-photo">👤</div>
+                    <div>
+                        <h4>Sarah Johnson</h4>
+                        <p><strong>ID:</strong> DT-2024-AS-001</p>
+                        <p><strong>Age:</strong> 28 | <strong>Nationality:</strong> USA</p>
+                        <p><strong>Phone:</strong> +91-9876543210</p>
+                        <p><strong>Emergency Contact:</strong> +1-555-0123</p>
+                    </div>
+                </div>
+                <div class="missing-details">
+                    <strong>Last Known Location:</strong> Kaziranga National Park<br>
+                    <strong>Last Contact:</strong> Today, 8:30 AM<br>
+                    <strong>Missing Since:</strong> Today, 10:00 AM (6 hours ago)<br>
+                    <strong>Planned Activity:</strong> Wildlife Safari<br>
+                    <strong>Risk Level:</strong> HIGH - Remote area, wildlife present
+                </div>
+                <div class="missing-actions">
+                    <button class="btn btn-danger btn-sm" onclick="escalateCase('MT-2024-001')">🚁 Deploy Search Team</button>
+                    <button class="btn btn-warning btn-sm" onclick="broadcastAlert('MT-2024-001')">📢 Broadcast Alert</button>
+                    <button class="btn btn-primary btn-sm" onclick="viewDetails('MT-2024-001')">👁️ View Details</button>
+                    <button class="btn btn-success btn-sm" onclick="markFound('MT-2024-001')">✅ Mark Found</button>
+                </div>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-time">4:00 PM</div>
+                        <div class="timeline-event">Search team deployed to Kaziranga</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-time">2:30 PM</div>
+                        <div class="timeline-event">Family contacted, emergency alert issued</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-time">10:30 AM</div>
+                        <div class="timeline-event">Reported missing by tour guide</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Active Case -->
+            <div class="missing-card">
+                <div class="missing-header">
+                    <span class="missing-status status-active">ACTIVE - 2 HOURS</span>
+                    <span style="font-size: 12px; color: #666;">MT-2024-002</span>
+                </div>
+                <div class="tourist-info">
+                    <div class="tourist-photo">👤</div>
+                    <div>
+                        <h4>Raj Patel</h4>
+                        <p><strong>ID:</strong> DT-2024-GJ-002</p>
+                        <p><strong>Age:</strong> 35 | <strong>Nationality:</strong> India</p>
+                        <p><strong>Phone:</strong> +91-9876543211</p>
+                        <p><strong>Emergency Contact:</strong> +91-9876543212</p>
+                    </div>
+                </div>
+                <div class="missing-details">
+                    <strong>Last Known Location:</strong> Tawang Monastery, Arunachal Pradesh<br>
+                    <strong>Last Contact:</strong> Today, 2:15 PM<br>
+                    <strong>Missing Since:</strong> Today, 2:30 PM (2 hours ago)<br>
+                    <strong>Planned Activity:</strong> Solo trekking<br>
+                    <strong>Risk Level:</strong> MEDIUM - High altitude area
+                </div>
+                <div class="missing-actions">
+                    <button class="btn btn-warning btn-sm" onclick="sendSearchTeam('MT-2024-002')">👮 Send Patrol</button>
+                    <button class="btn btn-primary btn-sm" onclick="contactTourist('MT-2024-002')">📞 Call Tourist</button>
+                    <button class="btn btn-primary btn-sm" onclick="viewDetails('MT-2024-002')">👁️ View Details</button>
+                    <button class="btn btn-success btn-sm" onclick="markFound('MT-2024-002')">✅ Mark Found</button>
+                </div>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-time">3:45 PM</div>
+                        <div class="timeline-event">Local police notified</div>
+                    </div>
+                    <div class="timeline-item">
+                        <div class="timeline-time">3:00 PM</div>
+                        <div class="timeline-event">Automatic alert triggered - no GPS signal</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Case -->
+            <div class="missing-card">
+                <div class="missing-header">
+                    <span class="missing-status status-active">ACTIVE - 45 MIN</span>
+                    <span style="font-size: 12px; color: #666;">MT-2024-003</span>
+                </div>
+                <div class="tourist-info">
+                    <div class="tourist-photo">👤</div>
+                    <div>
+                        <h4>Emma Wilson</h4>
+                        <p><strong>ID:</strong> DT-2024-UK-003</p>
+                        <p><strong>Age:</strong> 24 | <strong>Nationality:</strong> UK</p>
+                        <p><strong>Phone:</strong> +91-9876543213</p>
+                        <p><strong>Emergency Contact:</strong> +44-7700-900123</p>
+                    </div>
+                </div>
+                <div class="missing-details">
+                    <strong>Last Known Location:</strong> Shillong Peak, Meghalaya<br>
+                    <strong>Last Contact:</strong> Today, 3:30 PM<br>
+                    <strong>Missing Since:</strong> Today, 3:30 PM (45 minutes ago)<br>
+                    <strong>Planned Activity:</strong> Photography tour<br>
+                    <strong>Risk Level:</strong> LOW - Popular tourist area
+                </div>
+                <div class="missing-actions">
+                    <button class="btn btn-primary btn-sm" onclick="contactTourist('MT-2024-003')">📞 Call Tourist</button>
+                    <button class="btn btn-primary btn-sm" onclick="checkLastLocation('MT-2024-003')">📍 Check Location</button>
+                    <button class="btn btn-primary btn-sm" onclick="viewDetails('MT-2024-003')">👁️ View Details</button>
+                    <button class="btn btn-success btn-sm" onclick="markFound('MT-2024-003')">✅ Mark Found</button>
+                </div>
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-time">4:15 PM</div>
+                        <div class="timeline-event">Case registered - no response to calls</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Resolved Case -->
+            <div class="missing-card" style="opacity: 0.7; border-left-color: #28a745;">
+                <div class="missing-header">
+                    <span class="missing-status status-resolved">RESOLVED</span>
+                    <span style="font-size: 12px; color: #666;">MT-2024-004</span>
+                </div>
+                <div class="tourist-info">
+                    <div class="tourist-photo">👤</div>
+                    <div>
+                        <h4>Michael Chen</h4>
+                        <p><strong>ID:</strong> DT-2024-SG-004</p>
+                        <p><strong>Age:</strong> 31 | <strong>Nationality:</strong> Singapore</p>
+                        <p><strong>Resolution:</strong> Found safe at hotel</p>
+                    </div>
+                </div>
+                <div class="missing-details">
+                    <strong>Was Missing:</strong> 1.5 hours<br>
+                    <strong>Found At:</strong> Hotel Brahmaputra Ashok<br>
+                    <strong>Reason:</strong> Phone battery died, fell asleep<br>
+                    <strong>Resolved By:</strong> SI Rajesh Kumar
+                </div>
+                <div class="missing-actions">
+                    <button class="btn btn-primary btn-sm" onclick="viewDetails('MT-2024-004')">👁️ View Report</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function searchMissing() {
+            const filters = {
+                touristId: document.getElementById('touristId').value,
+                touristName: document.getElementById('touristName').value,
+                duration: document.getElementById('missingDuration').value,
+                location: document.getElementById('location').value
+            };
+            
+            console.log('Searching with filters:', filters);
+            alert('Search completed. Results updated.');
+        }
+
+        function reportMissing() {
+            const touristId = prompt('Enter Tourist ID to report missing:', 'DT-2024-XX-XXX');
+            if (touristId) {
+                if (confirm(`Report tourist ${touristId} as missing? This will trigger emergency protocols.`)) {
+                    alert(`Missing person alert created for ${touristId}. Emergency response activated.`);
+                    // In real implementation, this would create a missing person case
+                }
+            }
+        }
+
+        function escalateCase(caseId) {
+            if (confirm(`Deploy search and rescue team for case ${caseId}? This is a high-priority operation.`)) {
+                alert(`Search and rescue team deployed for ${caseId}. Helicopter and ground teams dispatched.`);
+            }
+        }
+
+        function broadcastAlert(caseId) {
+            if (confirm(`Broadcast public alert for case ${caseId}? This will notify all nearby tourists and authorities.`)) {
+                alert(`Public alert broadcasted for ${caseId}. All nearby tourists and local authorities notified.`);
+            }
+        }
+
+        function sendSearchTeam(caseId) {
+            if (confirm(`Send patrol team for case ${caseId}?`)) {
+                alert(`Patrol team dispatched for ${caseId}. ETA: 15 minutes.`);
+            }
+        }
+
+        function contactTourist(caseId) {
+            alert(`Attempting to contact tourist for case ${caseId}...`);
+            setTimeout(() => {
+                const response = confirm('No response from tourist. Try emergency contact?');
+                if (response) {
+                    alert('Calling emergency contact...');
+                }
+            }, 2000);
+        }
+
+        function checkLastLocation(caseId) {
+            alert(`Checking last known GPS location for case ${caseId}...`);
+            setTimeout(() => {
+                alert('Last GPS ping: Shillong Peak viewpoint, 45 minutes ago. Signal lost in area with poor coverage.');
+            }, 1500);
+        }
+
+        function viewDetails(caseId) {
+            window.location.href = `incident-details.html?case=${caseId}`;
+        }
+
+        function markFound(caseId) {
+            const location = prompt('Where was the tourist found?', 'Safe at hotel');
+            if (location) {
+                if (confirm(`Mark case ${caseId} as resolved? Tourist found: ${location}`)) {
+                    alert(`Case ${caseId} marked as resolved. Tourist found safe: ${location}`);
+                    // In real implementation, this would update the case status
+                }
+            }
+        }
+
+        // Auto-refresh missing cases every 2 minutes
+        setInterval(() => {
+            console.log('Auto-refreshing missing tourist cases...');
+            // In real implementation, this would fetch updated case data
+        }, 120000);
+
+        // Simulate real-time updates
+        function simulateRealTimeUpdates() {
+            // This would be replaced with WebSocket connection
+            console.log('Monitoring missing tourist cases in real-time...');
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            simulateRealTimeUpdates();
+        });
+    </script>
+    <!-- Universal Menu Script -->`n    <script src="universal-menu.js"></script>`n</body>
+</html>

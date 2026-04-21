@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tourism Dashboard - Tourist Safety System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #f5f5f5; }
+        .header { background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 1rem; }
+        .nav { display: flex; justify-content: space-between; align-items: center; }
+        .container { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; }
+        .dashboard-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem; }
+        .card { background: white; border-radius: 10px; padding: 2rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .metric-card { text-align: center; }
+        .metric-number { font-size: 3rem; font-weight: bold; margin: 1rem 0; }
+        .metric-tourists { color: #007bff; }
+        .metric-safe { color: #28a745; }
+        .metric-alerts { color: #ffc107; }
+        .metric-incidents { color: #dc3545; }
+        .btn { padding: 0.8rem 1.5rem; border: none; border-radius: 5px; cursor: pointer; margin: 0.5rem; }
+        .btn-primary { background: #007bff; color: white; }
+        .btn-success { background: #28a745; color: white; }
+        .chart-placeholder { height: 200px; background: #f8f9fa; border-radius: 5px; display: flex; align-items: center; justify-content: center; color: #666; }
+    </style>
+</head>
+<body>    <script src="universal-menu.js"></script>
+    <div class="header">
+        <div class="nav">
+            <div>
+                <h1><i class="fas fa-chart-line"></i> Tourism Dashboard</h1>
+                <p>Ministry of Development of North Eastern Region</p>
+            </div>
+            <div>
+                <span>Welcome, Tourism Officer</span>
+                <button class="btn btn-primary" onclick="logout()">Logout</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="dashboard-grid">
+            <div class="card metric-card">
+                <i class="fas fa-users metric-tourists" style="font-size: 2rem;"></i>
+                <div class="metric-number metric-tourists">1,247</div>
+                <h3>Active Tourists</h3>
+                <p>Currently in NE Region</p>
+            </div>
+
+            <div class="card metric-card">
+                <i class="fas fa-shield-alt metric-safe" style="font-size: 2rem;"></i>
+                <div class="metric-number metric-safe">1,198</div>
+                <h3>Safe Tourists</h3>
+                <p>96.1% Safety Rate</p>
+            </div>
+
+            <div class="card metric-card">
+                <i class="fas fa-exclamation-triangle metric-alerts" style="font-size: 2rem;"></i>
+                <div class="metric-number metric-alerts">47</div>
+                <h3>Active Alerts</h3>
+                <p>Monitoring Required</p>
+            </div>
+
+            <div class="card metric-card">
+                <i class="fas fa-ambulance metric-incidents" style="font-size: 2rem;"></i>
+                <div class="metric-number metric-incidents">2</div>
+                <h3>Incidents Today</h3>
+                <p>Emergency Response</p>
+            </div>
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="card">
+                <h3><i class="fas fa-map-marked-alt"></i> Tourist Distribution</h3>
+                <div class="chart-placeholder">Tourist Distribution Map</div>
+                <button class="btn btn-primary" onclick="viewMap()">View Full Map</button>
+            </div>
+
+            <div class="card">
+                <h3><i class="fas fa-chart-bar"></i> Safety Analytics</h3>
+                <div class="chart-placeholder">Safety Trends Chart</div>
+                <button class="btn btn-primary" onclick="viewAnalytics()">Detailed Analytics</button>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3><i class="fas fa-list"></i> Quick Actions</h3>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                <button class="btn btn-primary" onclick="viewStatistics()">
+                    <i class="fas fa-chart-pie"></i> Tourist Statistics
+                </button>
+                <button class="btn btn-primary" onclick="manageRiskZones()">
+                    <i class="fas fa-exclamation-triangle"></i> Risk Zone Management
+                </button>
+                <button class="btn btn-primary" onclick="viewReports()">
+                    <i class="fas fa-file-alt"></i> Generate Reports
+                </button>
+                <button class="btn btn-primary" onclick="manageAdvisories()">
+                    <i class="fas fa-bullhorn"></i> Tourism Advisories
+                </button>
+                <button class="btn btn-success" onclick="emergencyProtocol()">
+                    <i class="fas fa-phone-alt"></i> Emergency Protocol
+                </button>
+                <button class="btn btn-primary" onclick="deviceMonitoring()">
+                    <i class="fas fa-watch"></i> Device Monitoring
+                </button>
+            </div>
+        </div>
+
+        <div class="card">
+            <h3><i class="fas fa-clock"></i> Recent Activities</h3>
+            <div style="border-left: 3px solid #007bff; padding-left: 1rem; margin: 0.5rem 0;">
+                <p><strong>14:30</strong> - New tourist registered: TID-2024-001247</p>
+            </div>
+            <div style="border-left: 3px solid #28a745; padding-left: 1rem; margin: 0.5rem 0;">
+                <p><strong>14:25</strong> - Emergency resolved: Kaziranga incident</p>
+            </div>
+            <div style="border-left: 3px solid #ffc107; padding-left: 1rem; margin: 0.5rem 0;">
+                <p><strong>14:20</strong> - Weather alert issued: Heavy rainfall warning</p>
+            </div>
+            <div style="border-left: 3px solid #17a2b8; padding-left: 1rem; margin: 0.5rem 0;">
+                <p><strong>14:15</strong> - Risk zone updated: Shillong Peak area</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function logout() {
+            if (confirm('Are you sure you want to logout?')) {
+                window.location.href = 'tourism-login.html';
+            }
+        }
+
+        function viewMap() {
+            window.location.href = 'tourist-cluster-map.html';
+        }
+
+        function viewAnalytics() {
+            window.location.href = 'incident-analytics.html';
+        }
+
+        function viewStatistics() {
+            window.location.href = 'tourist-statistics.html';
+        }
+
+        function manageRiskZones() {
+            window.location.href = 'risk-zone-management.html';
+        }
+
+        function viewReports() {
+            window.location.href = 'tourism-reports.html';
+        }
+
+        function manageAdvisories() {
+            window.location.href = 'tourism-advisories.html';
+        }
+
+        function emergencyProtocol() {
+            alert('Emergency Protocol Activated!\nAll emergency teams have been notified.');
+        }
+
+        function deviceMonitoring() {
+            window.location.href = 'wearable-device-monitoring.html';
+        }
+    </script>
+    <!-- Universal Menu Script -->`n    <script src="universal-menu.js"></script>`n</body>
+</html>

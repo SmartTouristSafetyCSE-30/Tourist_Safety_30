@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Language Selection - Tourist Safety System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #f5f5f5; }
+        .header { background: linear-gradient(135deg, #FF6B35, #F7931E); color: white; padding: 1rem; text-align: center; }
+        .container { max-width: 800px; margin: 2rem auto; padding: 0 1rem; }
+        .language-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin: 2rem 0; }
+        .language-card { background: white; border-radius: 10px; padding: 1.5rem; text-align: center; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .language-card:hover { transform: translateY(-5px); box-shadow: 0 8px 16px rgba(0,0,0,0.2); }
+        .language-card.selected { border: 3px solid #007bff; background: #e3f2fd; }
+        .flag { font-size: 3rem; margin-bottom: 1rem; }
+        .btn { padding: 0.8rem 1.5rem; border: none; border-radius: 5px; cursor: pointer; margin: 0.5rem; }
+        .btn-primary { background: #007bff; color: white; }
+        .btn-success { background: #28a745; color: white; }
+        .settings-card { background: white; border-radius: 10px; padding: 2rem; margin: 1rem 0; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+    </style>
+</head>
+<body>    <script src="universal-menu.js"></script>
+    <div class="header">
+        <h1><i class="fas fa-language"></i> भाषा चुनें / Choose Language</h1>
+        <p>Select your preferred language for the tourist safety system</p>
+    </div>
+
+    <div class="container">
+        <div class="language-grid">
+            <div class="language-card selected" onclick="selectLanguage('en', this)">
+                <div class="flag">🇮🇳</div>
+                <h3>English</h3>
+                <p>Default Language</p>
+            </div>
+
+            <div class="language-card" onclick="selectLanguage('hi', this)">
+                <div class="flag">🇮🇳</div>
+                <h3>हिंदी</h3>
+                <p>Hindi</p>
+            </div>
+
+            <div class="language-card" onclick="selectLanguage('as', this)">
+                <div class="flag">🇮🇳</div>
+                <h3>অসমীয়া</h3>
+                <p>Assamese</p>
+            </div>
+
+            <div class="language-card" onclick="selectLanguage('bn', this)">
+                <div class="flag">🇮🇳</div>
+                <h3>বাংলা</h3>
+                <p>Bengali</p>
+            </div>
+
+            <div class="language-card" onclick="selectLanguage('mni', this)">
+                <div class="flag">🇮🇳</div>
+                <h3>মৈতৈলোন্</h3>
+                <p>Manipuri</p>
+            </div>
+
+            <div class="language-card" onclick="selectLanguage('ne', this)">
+                <div class="flag">🇮🇳</div>
+                <h3>नेपाली</h3>
+                <p>Nepali</p>
+            </div>
+
+            <div class="language-card" onclick="selectLanguage('kha', this)">
+                <div class="flag">🇮🇳</div>
+                <h3>Khasi</h3>
+                <p>Khasi</p>
+            </div>
+
+            <div class="language-card" onclick="selectLanguage('garo', this)">
+                <div class="flag">🇮🇳</div>
+                <h3>Garo</h3>
+                <p>Garo</p>
+            </div>
+
+            <div class="language-card" onclick="selectLanguage('mizo', this)">
+                <div class="flag">🇮🇳</div>
+                <h3>Mizo ṭawng</h3>
+                <p>Mizo</p>
+            </div>
+
+            <div class="language-card" onclick="selectLanguage('naga', this)">
+                <div class="flag">🇮🇳</div>
+                <h3>Naga</h3>
+                <p>Naga Languages</p>
+            </div>
+        </div>
+
+        <div class="settings-card">
+            <h3><i class="fas fa-cog"></i> Language Settings</h3>
+            <p>Voice commands language: <span id="voiceLang">English</span></p>
+            <p>Emergency alerts language: <span id="alertLang">English</span></p>
+            <p>AI assistant language: <span id="aiLang">English</span></p>
+            <p>Auto-translate: <input type="checkbox" checked> Enable automatic translation</p>
+            <button class="btn btn-primary" onclick="testLanguage()">Test Selected Language</button>
+            <button class="btn btn-success" onclick="saveLanguage()">Save & Continue</button>
+        </div>
+
+        <div class="settings-card">
+            <h3><i class="fas fa-info-circle"></i> Language Support</h3>
+            <p>✅ Full interface translation</p>
+            <p>✅ Voice command recognition</p>
+            <p>✅ Emergency alert messages</p>
+            <p>✅ AI assistant responses</p>
+            <p>✅ Government form translations</p>
+            <p>✅ Tourist information content</p>
+        </div>
+    </div>
+
+    <script>
+        let selectedLanguage = 'en';
+
+        function selectLanguage(langCode, element) {
+            // Remove selected class from all cards
+            document.querySelectorAll('.language-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            
+            // Add selected class to clicked card
+            element.classList.add('selected');
+            selectedLanguage = langCode;
+            
+            // Update language displays
+            const langNames = {
+                'en': 'English',
+                'hi': 'हिंदी (Hindi)',
+                'as': 'অসমীয়া (Assamese)',
+                'bn': 'বাংলা (Bengali)',
+                'mni': 'মৈতৈলোন্ (Manipuri)',
+                'ne': 'नेपाली (Nepali)',
+                'kha': 'Khasi',
+                'garo': 'Garo',
+                'mizo': 'Mizo ṭawng',
+                'naga': 'Naga Languages'
+            };
+            
+            document.getElementById('voiceLang').textContent = langNames[langCode];
+            document.getElementById('alertLang').textContent = langNames[langCode];
+            document.getElementById('aiLang').textContent = langNames[langCode];
+        }
+
+        function testLanguage() {
+            const testMessages = {
+                'en': 'Welcome to the Tourist Safety System. Emergency services are available 24/7.',
+                'hi': 'पर्यटक सुरक्षा प्रणाली में आपका स्वागत है। आपातकालीन सेवाएं 24/7 उपलब्ध हैं।',
+                'as': 'পৰ্যটক সুৰক্ষা ব্যৱস্থালৈ আপোনাক স্বাগতম। জৰুৰীকালীন সেৱা ২৪/৭ উপলব্ধ।',
+                'bn': 'পর্যটক নিরাপত্তা ব্যবস্থায় আপনাকে স্বাগতম। জরুরি সেবা ২৪/৭ উপলব্ধ।'
+            };
+            
+            const message = testMessages[selectedLanguage] || testMessages['en'];
+            alert(`Language Test:\n\n${message}`);
+        }
+
+        function saveLanguage() {
+            localStorage.setItem('selectedLanguage', selectedLanguage);
+            alert(`Language saved: ${document.getElementById('voiceLang').textContent}\n\nRedirecting to dashboard...`);
+            // In real app, redirect to dashboard
+            window.location.href = 'tourist-dashboard.html';
+        }
+    </script>
+    <!-- Universal Menu Script -->`n    <script src="universal-menu.js"></script>`n</body>
+</html>

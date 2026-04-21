@@ -1,0 +1,1987 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live: Smart Tourist Safety Monitoring System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@300;400;600;700&family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #003366;
+            --primary-dark: #002244;
+            --primary-light: #004488;
+            --secondary: #0066cc;
+            --accent: #cc0000;
+            --accent-light: #ff3333;
+            --warning: #ff9900;
+            --success: #28a745;
+            --success-dark: #1e7e34;
+            --light: #f8f9fa;
+            --gray-light: #e9ecef;
+            --gray: #6c757d;
+            --dark: #212529;
+            --government-blue: #0a2e5c;
+            --government-gray: #4a5c6c;
+            --government-gold: #b9975b;
+            --video-surveillance: #8e44ad;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Source Sans Pro', Arial, sans-serif;
+            background-color: #0a1929;
+            background-image: 
+                radial-gradient(circle at 10% 20%, rgba(10, 46, 92, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 90% 80%, rgba(10, 46, 92, 0.1) 0%, transparent 20%),
+                radial-gradient(circle at 50% 50%, rgba(185, 151, 91, 0.05) 0%, transparent 30%);
+            color: var(--light);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            grid-template-rows: auto 1fr auto;
+            grid-template-areas:
+                "header header"
+                "sidebar main"
+                "footer footer";
+            min-height: 100vh;
+            max-width: 1800px;
+            margin: 0 auto;
+            background-color: rgba(15, 30, 50, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 0 50px rgba(0, 51, 102, 0.3);
+            position: relative;
+        }
+        
+        .live-indicator {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: var(--accent);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            z-index: 100;
+            animation: pulse-live 2s infinite;
+            box-shadow: 0 0 15px rgba(204, 0, 0, 0.5);
+        }
+        
+        @keyframes pulse-live {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+        
+        /* Header Styles */
+        header {
+            grid-area: header;
+            background: linear-gradient(135deg, var(--primary-dark), var(--government-blue));
+            color: white;
+            padding: 1rem 2rem;
+            border-bottom: 3px solid var(--government-gold);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .government-seal {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .seal-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--government-gold), #d4af37);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: var(--primary-dark);
+            border: 3px solid white;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.4);
+            animation: rotate-slow 20s linear infinite;
+        }
+        
+        @keyframes rotate-slow {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .seal-text h1 {
+            font-family: 'Roboto Condensed', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            letter-spacing: 0.5px;
+            text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.5);
+        }
+        
+        .seal-text .tagline {
+            font-size: 0.95rem;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+        
+        .system-time {
+            text-align: right;
+            font-family: 'Courier New', monospace;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 10px 15px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .real-time {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--government-gold);
+        }
+        
+        .date-display {
+            font-size: 0.9rem;
+            opacity: 0.8;
+        }
+        
+        .header-bottom {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 0.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .system-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .system-name span {
+            color: var(--government-gold);
+            background: rgba(0, 0, 0, 0.3);
+            padding: 3px 10px;
+            border-radius: 4px;
+        }
+        
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s;
+        }
+        
+        .user-profile:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--secondary), var(--primary-light));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            font-size: 1.2rem;
+            box-shadow: 0 0 10px rgba(0, 102, 204, 0.5);
+        }
+        
+        /* Sidebar Styles */
+        .sidebar {
+            grid-area: sidebar;
+            background-color: rgba(20, 35, 60, 0.9);
+            padding: 2rem 0;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(5px);
+        }
+        
+        .agency-logo {
+            padding: 0 1.5rem 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 1.5rem;
+        }
+        
+        .system-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: var(--success);
+            box-shadow: 0 0 10px var(--success);
+            animation: pulse 2s infinite;
+        }
+        
+        .nav-menu {
+            list-style: none;
+        }
+        
+        .nav-item {
+            padding: 1rem 1.5rem;
+            border-left: 4px solid transparent;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            color: rgba(255, 255, 255, 0.7);
+            font-weight: 500;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        
+        .nav-item:hover, .nav-item.active {
+            background-color: rgba(10, 46, 92, 0.5);
+            color: white;
+            border-left: 4px solid var(--government-gold);
+        }
+        
+        .nav-item i {
+            width: 25px;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+        
+        /* Main Content Styles */
+        .main-content {
+            grid-area: main;
+            padding: 2rem;
+            background-color: rgba(10, 25, 45, 0.7);
+            overflow-y: auto;
+            max-height: calc(100vh - 200px);
+        }
+        
+        .page-title {
+            margin-bottom: 1.5rem;
+            color: white;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--government-gold);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .page-title h2 {
+            font-family: 'Roboto Condensed', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+        }
+        
+        .data-refresh {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 8px 15px;
+            border-radius: 6px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .refresh-btn {
+            background: var(--secondary);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .refresh-btn:hover {
+            background: var(--primary-light);
+            transform: translateY(-2px);
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: linear-gradient(135deg, rgba(20, 35, 60, 0.8), rgba(10, 25, 45, 0.9));
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            transition: all 0.3s;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--secondary), var(--government-gold));
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+        
+        .stat-card.live-updating {
+            animation: pulse-card 3s infinite;
+        }
+        
+        @keyframes pulse-card {
+            0% { box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3); }
+            50% { box-shadow: 0 10px 20px rgba(0, 102, 204, 0.5); }
+            100% { box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3); }
+        }
+        
+        .stat-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .ai-icon { background: linear-gradient(135deg, var(--accent), #ff6666); }
+        .geo-icon { background: linear-gradient(135deg, var(--success), var(--success-dark)); }
+        .video-icon { background: linear-gradient(135deg, var(--video-surveillance), #9b59b6); }
+        .blockchain-icon { background: linear-gradient(135deg, var(--primary), var(--primary-light)); }
+        .tourist-icon { background: linear-gradient(135deg, var(--government-gold), #d4af37); }
+        .safety-icon { background: linear-gradient(135deg, #00b894, #00a085); }
+        
+        .stat-info h3 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: white;
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+        
+        .stat-info p {
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+            margin-bottom: 5px;
+        }
+        
+        .stat-trend {
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .trend-up { color: #00ff00; }
+        .trend-down { color: #ff4444; }
+        
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        @media (max-width: 1200px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .card {
+            background: linear-gradient(135deg, rgba(20, 35, 60, 0.8), rgba(10, 25, 45, 0.9));
+            border-radius: 10px;
+            padding: 1.5rem;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .card-title {
+            font-family: 'Roboto Condensed', sans-serif;
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .card-title i {
+            color: var(--government-gold);
+        }
+        
+        /* Live Map Container */
+        .live-map-container {
+            height: 400px;
+            background: rgba(0, 20, 40, 0.8);
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(0, 102, 204, 0.3);
+            box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.5);
+        }
+        
+        .map-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(0, 102, 204, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(0, 102, 204, 0.1) 1px, transparent 1px);
+            background-size: 50px 50px;
+        }
+        
+        .map-marker {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 0.8rem;
+            box-shadow: 0 0 15px currentColor;
+            transition: all 0.5s;
+            cursor: pointer;
+            z-index: 10;
+        }
+        
+        .map-marker:hover {
+            transform: scale(1.5);
+            z-index: 20;
+        }
+        
+        .tourist-marker { 
+            background-color: var(--secondary); 
+            border: 2px solid white;
+            animation: float 3s infinite ease-in-out;
+        }
+        
+        .camera-marker { 
+            background-color: var(--video-surveillance); 
+            border: 2px solid white;
+        }
+        
+        .alert-marker { 
+            background-color: var(--accent); 
+            border: 2px solid white;
+            animation: pulse 1.5s infinite;
+        }
+        
+        .zone-marker {
+            position: absolute;
+            border: 2px dashed rgba(0, 255, 0, 0.5);
+            border-radius: 50%;
+            background-color: rgba(0, 255, 0, 0.1);
+            pointer-events: none;
+        }
+        
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+        
+        .map-info {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid var(--government-gold);
+            max-width: 300px;
+            backdrop-filter: blur(5px);
+        }
+        
+        /* Live Data Feed */
+        .live-data-feed {
+            height: 400px;
+            overflow-y: auto;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 8px;
+            padding: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .data-item {
+            padding: 12px 15px;
+            margin-bottom: 10px;
+            background: rgba(20, 35, 60, 0.8);
+            border-radius: 6px;
+            border-left: 4px solid var(--secondary);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            animation: slideIn 0.5s ease-out;
+            transition: all 0.3s;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(-20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        .data-item:hover {
+            background: rgba(30, 45, 70, 0.9);
+            transform: translateX(5px);
+        }
+        
+        .data-item.alert {
+            border-left-color: var(--accent);
+            background: rgba(204, 0, 0, 0.1);
+        }
+        
+        .data-item.warning {
+            border-left-color: var(--warning);
+            background: rgba(255, 153, 0, 0.1);
+        }
+        
+        .data-time {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.6);
+            font-family: 'Courier New', monospace;
+        }
+        
+        /* Video Feed */
+        .video-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+        
+        .video-feed {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .video-feed:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+            border-color: var(--secondary);
+        }
+        
+        .video-header {
+            padding: 10px 15px;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .video-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .video-status {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: var(--success);
+            box-shadow: 0 0 10px var(--success);
+        }
+        
+        .video-status.recording {
+            background-color: var(--accent);
+            box-shadow: 0 0 10px var(--accent);
+            animation: pulse 1.5s infinite;
+        }
+        
+        .video-preview {
+            height: 150px;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .video-preview::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, transparent 40%, rgba(255, 255, 255, 0.05) 50%, transparent 60%);
+            background-size: 200% 200%;
+            animation: shimmer 2s infinite;
+        }
+        
+        @keyframes shimmer {
+            0% { background-position: -200% -200%; }
+            100% { background-position: 200% 200%; }
+        }
+        
+        /* Live Chart */
+        .live-chart-container {
+            height: 300px;
+            margin-top: 1rem;
+            position: relative;
+        }
+        
+        .chart-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            border: 1px dashed rgba(255, 255, 255, 0.2);
+        }
+        
+        /* Controls */
+        .controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s;
+            font-family: 'Source Sans Pro', sans-serif;
+            font-size: 0.95rem;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--secondary), var(--primary-light));
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(135deg, var(--primary-light), var(--secondary));
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 102, 204, 0.4);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, var(--success), var(--success-dark));
+            color: white;
+        }
+        
+        .btn-success:hover {
+            background: linear-gradient(135deg, var(--success-dark), var(--success));
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, var(--accent), #ff6666);
+            color: white;
+        }
+        
+        .btn-danger:hover {
+            background: linear-gradient(135deg, #ff6666, var(--accent));
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(204, 0, 0, 0.4);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            color: var(--secondary);
+            border: 1px solid var(--secondary);
+        }
+        
+        .btn-outline:hover {
+            background: rgba(0, 102, 204, 0.1);
+            transform: translateY(-3px);
+        }
+        
+        /* Footer Styles */
+        footer {
+            grid-area: footer;
+            background: linear-gradient(135deg, var(--primary-dark), var(--government-blue));
+            color: white;
+            padding: 1.5rem 2rem;
+            border-top: 3px solid var(--government-gold);
+            box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.3);
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .system-health {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .health-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+        }
+        
+        .footer-links {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.7);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s;
+        }
+        
+        .footer-links a:hover {
+            color: white;
+            text-decoration: underline;
+        }
+        
+        .copyright {
+            font-size: 0.85rem;
+            opacity: 0.8;
+        }
+        
+        /* Notification Panel */
+        .notification-panel {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            width: 350px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .notification {
+            background: linear-gradient(135deg, rgba(20, 35, 60, 0.95), rgba(10, 25, 45, 0.98));
+            color: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+            border-left: 4px solid var(--secondary);
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+            animation: slideInRight 0.5s ease-out;
+            transform-origin: top right;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+        }
+        
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(100px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        
+        .notification.alert {
+            border-left-color: var(--accent);
+        }
+        
+        .notification.warning {
+            border-left-color: var(--warning);
+        }
+        
+        .notification-icon {
+            font-size: 1.5rem;
+            color: var(--government-gold);
+        }
+        
+        .notification-content {
+            flex: 1;
+        }
+        
+        .notification-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+        
+        .notification-message {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+        
+        .notification-time {
+            font-size: 0.8rem;
+            opacity: 0.7;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .close-notification {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .close-notification:hover {
+            color: white;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .video-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+        }
+        
+        @media (max-width: 992px) {
+            .container {
+                grid-template-columns: 1fr;
+                grid-template-areas:
+                    "header"
+                    "main"
+                    "footer";
+            }
+            
+            .sidebar {
+                display: none;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header-top {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .system-time {
+                text-align: left;
+                width: 100%;
+            }
+            
+            .header-bottom {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .header-controls {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .video-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .notification-panel {
+                width: 300px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .main-content {
+                padding: 1.5rem;
+            }
+            
+            .controls {
+                flex-direction: column;
+            }
+            
+            .notification-panel {
+                width: 250px;
+                top: 10px;
+                right: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Live Indicator -->
+    <div class="live-indicator">
+        <i class="fas fa-circle"></i> LIVE DATA STREAMING
+    </div>
+    
+    <!-- Notification Panel -->
+    <div class="notification-panel" id="notification-panel"></div>
+    
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <div class="header-top">
+                <div class="government-seal">
+                    <div class="seal-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div class="seal-text">
+                        <h1>NATIONAL TOURIST SAFETY AUTHORITY</h1>
+                        <div class="tagline">Real-time Safety Monitoring & Surveillance</div>
+                    </div>
+                </div>
+                <div class="system-time">
+                    <div class="real-time" id="real-time">00:00:00</div>
+                    <div class="date-display" id="date-display">January 1, 2023</div>
+                </div>
+            </div>
+            
+            <div class="header-bottom">
+                <div class="system-name">
+                    <i class="fas fa-satellite"></i> 
+                    SMART TOURIST SAFETY MONITORING SYSTEM <span>LIVE v5.0</span>
+                </div>
+                <div class="header-controls">
+                    <div class="data-refresh">
+                        <span>Last update: <span id="last-update">Just now</span></span>
+                        <button class="refresh-btn" id="refresh-all">
+                            <i class="fas fa-sync-alt"></i> Refresh All
+                        </button>
+                    </div>
+                    <div class="user-profile">
+                        <div class="user-avatar">AG</div>
+                        <div>
+                            <div class="user-name">Agent Garcia</div>
+                            <div class="user-role">Security Level 5</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="agency-logo">
+                <div style="font-weight: bold; color: white; font-size: 1.1rem; margin-bottom: 10px;">
+                    <i class="fas fa-landmark"></i> LIVE SYSTEMS
+                </div>
+                <div class="system-status">
+                    <div class="status-indicator"></div>
+                    <span>ALL SYSTEMS OPERATIONAL</span>
+                </div>
+                <div style="height: 2px; background: linear-gradient(to right, var(--government-gold), var(--primary)); margin: 15px 0;"></div>
+            </div>
+            <ul class="nav-menu">
+                <li class="nav-item active">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Live Dashboard</span>
+                </li>
+                <li class="nav-item">
+                    <i class="fas fa-map-marked-alt"></i>
+                    <span>Real-time Tracking</span>
+                </li>
+                <li class="nav-item">
+                    <i class="fas fa-video"></i>
+                    <span>Live Surveillance</span>
+                </li>
+                <li class="nav-item">
+                    <i class="fas fa-robot"></i>
+                    <span>AI Analytics</span>
+                </li>
+                <li class="nav-item">
+                    <i class="fas fa-fingerprint"></i>
+                    <span>ID Verification</span>
+                </li>
+                <li class="nav-item">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span>Alerts Center</span>
+                </li>
+                <li class="nav-item">
+                    <i class="fas fa-database"></i>
+                    <span>Data Warehouse</span>
+                </li>
+                <li class="nav-item">
+                    <i class="fas fa-cog"></i>
+                    <span>System Controls</span>
+                </li>
+            </ul>
+        </nav>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="page-title">
+                <h2><i class="fas fa-satellite-dish"></i> LIVE MONITORING DASHBOARD</h2>
+                <div class="data-refresh">
+                    <span>Auto-refresh: <span id="auto-refresh-status">ON</span></span>
+                    <button class="refresh-btn" id="toggle-auto-refresh">
+                        <i class="fas fa-pause"></i> Pause
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Live Stats -->
+            <div class="stats-grid">
+                <div class="stat-card live-updating" id="ai-stat">
+                    <div class="stat-icon ai-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="ai-detections">0</h3>
+                        <p>AI Threat Detections</p>
+                        <div class="stat-trend">
+                            <i class="fas fa-arrow-up trend-up"></i>
+                            <span class="trend-up">+12 this minute</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="stat-card" id="tourist-stat">
+                    <div class="stat-icon tourist-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="active-tourists">0</h3>
+                        <p>Active Tourists Tracked</p>
+                        <div class="stat-trend">
+                            <i class="fas fa-user-plus trend-up"></i>
+                            <span class="trend-up">+5 just arrived</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="stat-card" id="camera-stat">
+                    <div class="stat-icon video-icon">
+                        <i class="fas fa-video"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="active-cameras">0</h3>
+                        <p>Active CCTV Cameras</p>
+                        <div class="stat-trend">
+                            <i class="fas fa-eye trend-up"></i>
+                            <span class="trend-up">All operational</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="stat-card" id="safety-stat">
+                    <div class="stat-icon safety-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="safety-index">0%</h3>
+                        <p>National Safety Index</p>
+                        <div class="stat-trend">
+                            <i class="fas fa-arrow-up trend-up"></i>
+                            <span class="trend-up">+1.2% today</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Live Map and Data Feed -->
+            <div class="dashboard-grid">
+                <!-- Live Map -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fas fa-map-marked-alt"></i> LIVE TOURIST TRACKING MAP</h3>
+                        <div class="controls">
+                            <button class="btn btn-outline" id="zoom-in">
+                                <i class="fas fa-search-plus"></i>
+                            </button>
+                            <button class="btn btn-outline" id="zoom-out">
+                                <i class="fas fa-search-minus"></i>
+                            </button>
+                            <button class="btn btn-primary" id="center-map">
+                                <i class="fas fa-crosshairs"></i> Center
+                            </button>
+                        </div>
+                    </div>
+                    <div class="live-map-container" id="live-map">
+                        <div class="map-grid"></div>
+                        <div class="map-info">
+                            <h4 style="color: var(--government-gold); margin-bottom: 5px;">Live Tracking Active</h4>
+                            <p style="font-size: 0.9rem; opacity: 0.8;">
+                                <span id="map-tourist-count">0</span> tourists tracked<br>
+                                <span id="map-camera-count">0</span> CCTV cameras<br>
+                                <span id="map-alert-count">0</span> active alerts
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Live Data Feed -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fas fa-stream"></i> LIVE DATA STREAM</h3>
+                        <div class="controls">
+                            <button class="btn btn-outline" id="clear-feed">
+                                <i class="fas fa-trash"></i> Clear
+                            </button>
+                            <button class="btn btn-primary" id="pause-feed">
+                                <i class="fas fa-pause"></i> Pause
+                            </button>
+                        </div>
+                    </div>
+                    <div class="live-data-feed" id="live-data-feed">
+                        <!-- Live data items will be added here -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Video Surveillance -->
+            <div class="card" style="margin-top: 2rem;">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="fas fa-video"></i> LIVE SURVEILLANCE FEEDS</h3>
+                    <div class="controls">
+                        <button class="btn btn-primary" id="refresh-cameras">
+                            <i class="fas fa-sync-alt"></i> Refresh Feeds
+                        </button>
+                        <button class="btn btn-success" id="record-all">
+                            <i class="fas fa-record-vinyl"></i> Record All
+                        </button>
+                    </div>
+                </div>
+                <div class="video-grid" id="video-grid">
+                    <!-- Video feeds will be added here -->
+                </div>
+            </div>
+            
+            <!-- AI Analytics -->
+            <div class="card" style="margin-top: 2rem;">
+                <div class="card-header">
+                    <h3 class="card-title"><i class="fas fa-chart-line"></i> LIVE AI ANALYTICS</h3>
+                    <div class="controls">
+                        <select id="analytics-period" style="background: rgba(0,0,0,0.3); color: white; border: 1px solid rgba(255,255,255,0.2); padding: 8px 15px; border-radius: 6px;">
+                            <option value="hour">Last Hour</option>
+                            <option value="day" selected>Last 24 Hours</option>
+                            <option value="week">Last Week</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="live-chart-container">
+                    <div class="chart-placeholder">
+                        <div style="text-align: center;">
+                            <i class="fas fa-chart-bar" style="font-size: 3rem; color: rgba(255,255,255,0.2); margin-bottom: 1rem;"></i>
+                            <p>Live AI Analytics Chart</p>
+                            <p style="font-size: 0.9rem; opacity: 0.7;">Real-time threat detection visualization</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <!-- Footer -->
+        <footer>
+            <div class="footer-content">
+                <div class="system-health">
+                    <div class="health-item">
+                        <div class="status-indicator"></div>
+                        <span>System: <strong>OPERATIONAL</strong></span>
+                    </div>
+                    <div class="health-item">
+                        <div class="status-indicator" style="background-color: #28a745;"></div>
+                        <span>Network: <strong>STABLE</strong></span>
+                    </div>
+                    <div class="health-item">
+                        <div class="status-indicator" style="background-color: #28a745;"></div>
+                        <span>Database: <strong>ONLINE</strong></span>
+                    </div>
+                </div>
+                <div class="footer-links">
+                    <a href="#"><i class="fas fa-broadcast-tower"></i> Live Status</a>
+                    <a href="#"><i class="fas fa-history"></i> Audit Log</a>
+                    <a href="#"><i class="fas fa-headset"></i> Support</a>
+                </div>
+                <div class="copyright">
+                    &copy; 2023 National Tourist Safety Authority. LIVE SYSTEM - All access logged and monitored.
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // ============================================
+        // LIVE DASHBOARD SYSTEM - REAL-TIME SIMULATION
+        // ============================================
+        
+        // System Configuration
+        const SYSTEM_CONFIG = {
+            updateInterval: 2000, // 2 seconds
+            maxDataItems: 20,
+            maxNotifications: 5,
+            touristCount: 150,
+            cameraCount: 48,
+            initialAIThreats: 312
+        };
+        
+        // State Management
+        let systemState = {
+            isLive: true,
+            autoRefresh: true,
+            dataFeedPaused: false,
+            lastUpdate: new Date(),
+            tourists: [],
+            cameras: [],
+            alerts: [],
+            notifications: [],
+            mapMarkers: [],
+            aiThreats: SYSTEM_CONFIG.initialAIThreats,
+            activeTourists: 0,
+            safetyIndex: 96.2
+        };
+        
+        // DOM Elements
+        const elements = {
+            realTime: document.getElementById('real-time'),
+            dateDisplay: document.getElementById('date-display'),
+            lastUpdate: document.getElementById('last-update'),
+            refreshAll: document.getElementById('refresh-all'),
+            toggleAutoRefresh: document.getElementById('toggle-auto-refresh'),
+            autoRefreshStatus: document.getElementById('auto-refresh-status'),
+            aiDetections: document.getElementById('ai-detections'),
+            activeTourists: document.getElementById('active-tourists'),
+            activeCameras: document.getElementById('active-cameras'),
+            safetyIndex: document.getElementById('safety-index'),
+            liveMap: document.getElementById('live-map'),
+            mapTouristCount: document.getElementById('map-tourist-count'),
+            mapCameraCount: document.getElementById('map-camera-count'),
+            mapAlertCount: document.getElementById('map-alert-count'),
+            liveDataFeed: document.getElementById('live-data-feed'),
+            videoGrid: document.getElementById('video-grid'),
+            notificationPanel: document.getElementById('notification-panel'),
+            zoomIn: document.getElementById('zoom-in'),
+            zoomOut: document.getElementById('zoom-out'),
+            centerMap: document.getElementById('center-map'),
+            clearFeed: document.getElementById('clear-feed'),
+            pauseFeed: document.getElementById('pause-feed'),
+            refreshCameras: document.getElementById('refresh-cameras'),
+            recordAll: document.getElementById('record-all')
+        };
+        
+        // Initialize Live System
+        function initLiveSystem() {
+            console.log('🚀 Initializing Live Tourist Safety Monitoring System...');
+            
+            // Initialize real-time clock
+            updateRealTime();
+            setInterval(updateRealTime, 1000);
+            
+            // Initialize data
+            generateInitialTourists();
+            generateInitialCameras();
+            generateInitialAlerts();
+            
+            // Render initial state
+            renderMapMarkers();
+            renderVideoFeeds();
+            updateStats();
+            updateLastUpdate();
+            
+            // Start live updates
+            if (systemState.autoRefresh) {
+                startLiveUpdates();
+            }
+            
+            // Setup event listeners
+            setupEventListeners();
+            
+            // Show welcome notification
+            showNotification(
+                'System Initialized',
+                'Live tourist safety monitoring system is now operational. Real-time data streaming activated.',
+                'success'
+            );
+            
+            console.log('✅ Live system initialized successfully');
+        }
+        
+        // Real-time Clock
+        function updateRealTime() {
+            const now = new Date();
+            
+            // Update time
+            const timeString = now.toLocaleTimeString('en-US', { hour12: false });
+            elements.realTime.textContent = timeString;
+            
+            // Update date
+            const dateString = now.toLocaleDateString('en-US', { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            });
+            elements.dateDisplay.textContent = dateString;
+        }
+        
+        // Update Last Update
+        function updateLastUpdate() {
+            const now = new Date();
+            const diffMs = now - systemState.lastUpdate;
+            const diffSec = Math.floor(diffMs / 1000);
+            
+            let timeString;
+            if (diffSec < 10) {
+                timeString = 'Just now';
+            } else if (diffSec < 60) {
+                timeString = `${diffSec} seconds ago`;
+            } else if (diffSec < 3600) {
+                const minutes = Math.floor(diffSec / 60);
+                timeString = `${minutes} minute${minutes > 1 ? 's' : ''} ago`;
+            } else {
+                const hours = Math.floor(diffSec / 3600);
+                timeString = `${hours} hour${hours > 1 ? 's' : ''} ago`;
+            }
+            
+            elements.lastUpdate.textContent = timeString;
+        }
+        
+        // Generate Initial Tourists
+        function generateInitialTourists() {
+            const locations = [
+                { name: 'City Center', x: 30, y: 25 },
+                { name: 'Airport', x: 70, y: 15 },
+                { name: 'Beach Front', x: 20, y: 60 },
+                { name: 'Museum District', x: 50, y: 50 },
+                { name: 'Market Square', x: 60, y: 30 },
+                { name: 'Hotel Zone', x: 40, y: 40 },
+                { name: 'Park Area', x: 25, y: 75 },
+                { name: 'Transport Hub', x: 75, y: 35 }
+            ];
+            
+            const names = ['Emma', 'Liam', 'Olivia', 'Noah', 'Ava', 'William', 'Sophia', 'James', 'Isabella', 'Oliver'];
+            const nationalities = ['USA', 'UK', 'Canada', 'Australia', 'Germany', 'France', 'Japan', 'China', 'India', 'Brazil'];
+            
+            for (let i = 0; i < SYSTEM_CONFIG.touristCount; i++) {
+                const location = locations[Math.floor(Math.random() * locations.length)];
+                const name = `${names[Math.floor(Math.random() * names.length)]} ${names[Math.floor(Math.random() * names.length)]}`;
+                const nationality = nationalities[Math.floor(Math.random() * nationalities.length)];
+                const status = Math.random() > 0.9 ? 'warning' : 'safe';
+                
+                systemState.tourists.push({
+                    id: i + 1,
+                    name,
+                    nationality,
+                    status,
+                    location: location.name,
+                    x: location.x + (Math.random() * 10 - 5),
+                    y: location.y + (Math.random() * 10 - 5),
+                    lastUpdate: new Date()
+                });
+            }
+            
+            systemState.activeTourists = systemState.tourists.length;
+        }
+        
+        // Generate Initial Cameras
+        function generateInitialCameras() {
+            const cameraTypes = ['public-area', 'transport', 'cultural', 'nature'];
+            const statuses = ['active', 'recording'];
+            
+            for (let i = 0; i < SYSTEM_CONFIG.cameraCount; i++) {
+                const type = cameraTypes[Math.floor(Math.random() * cameraTypes.length)];
+                const status = statuses[Math.floor(Math.random() * statuses.length)];
+                const x = Math.random() * 80 + 10;
+                const y = Math.random() * 80 + 10;
+                
+                systemState.cameras.push({
+                    id: i + 1,
+                    name: `CAM-${String(i+1).padStart(3, '0')}`,
+                    type,
+                    status,
+                    location: getLocationName(x, y),
+                    x,
+                    y,
+                    uptime: (95 + Math.random() * 4).toFixed(1) + '%'
+                });
+            }
+        }
+        
+        // Generate Initial Alerts
+        function generateInitialAlerts() {
+            const alertTypes = [
+                { type: 'warning', message: 'Unusual crowd pattern detected' },
+                { type: 'warning', message: 'Weather alert: High winds in coastal areas' },
+                { type: 'alert', message: 'Tourist entered restricted zone' },
+                { type: 'info', message: 'Camera maintenance scheduled' },
+                { type: 'info', message: 'System backup completed' }
+            ];
+            
+            alertTypes.forEach(alert => {
+                systemState.alerts.push({
+                    ...alert,
+                    id: systemState.alerts.length + 1,
+                    time: new Date(Date.now() - Math.random() * 3600000) // Within last hour
+                });
+            });
+        }
+        
+        // Render Map Markers
+        function renderMapMarkers() {
+            // Clear existing markers
+            systemState.mapMarkers.forEach(marker => {
+                if (marker.element && marker.element.parentNode) {
+                    marker.element.parentNode.removeChild(marker.element);
+                }
+            });
+            
+            systemState.mapMarkers = [];
+            
+            // Add tourist markers
+            systemState.tourists.forEach(tourist => {
+                if (Math.random() > 0.3) { // Only show 70% of tourists on map
+                    const marker = createMapMarker(tourist, 'tourist');
+                    systemState.mapMarkers.push(marker);
+                }
+            });
+            
+            // Add camera markers
+            systemState.cameras.forEach(camera => {
+                const marker = createMapMarker(camera, 'camera');
+                systemState.mapMarkers.push(marker);
+            });
+            
+            // Add alert markers (if any)
+            systemState.alerts.filter(a => a.type === 'alert').forEach(alert => {
+                if (Math.random() > 0.5) {
+                    const marker = createMapMarker(alert, 'alert');
+                    systemState.mapMarkers.push(marker);
+                }
+            });
+            
+            // Add geo-fence zones
+            createGeoFenceZones();
+            
+            // Update map counts
+            elements.mapTouristCount.textContent = systemState.tourists.length;
+            elements.mapCameraCount.textContent = systemState.cameras.length;
+            elements.mapAlertCount.textContent = systemState.alerts.filter(a => a.type === 'alert').length;
+        }
+        
+        // Create Map Marker
+        function createMapMarker(item, type) {
+            const marker = document.createElement('div');
+            marker.className = `map-marker ${type}-marker`;
+            
+            let x, y;
+            if (item.x && item.y) {
+                x = item.x;
+                y = item.y;
+            } else {
+                x = Math.random() * 80 + 10;
+                y = Math.random() * 80 + 10;
+            }
+            
+            marker.style.left = `${x}%`;
+            marker.style.top = `${y}%`;
+            
+            if (type === 'camera') {
+                marker.innerHTML = '<i class="fas fa-video"></i>';
+                marker.title = `${item.name} - ${item.location}`;
+            } else if (type === 'tourist') {
+                marker.innerHTML = '<i class="fas fa-user"></i>';
+                marker.title = `${item.name} - ${item.nationality}`;
+            } else if (type === 'alert') {
+                marker.innerHTML = '<i class="fas fa-exclamation"></i>';
+                marker.title = item.message;
+            }
+            
+            elements.liveMap.appendChild(marker);
+            
+            return { element: marker, type, item };
+        }
+        
+        // Create Geo-fence Zones
+        function createGeoFenceZones() {
+            const zones = [
+                { x: 25, y: 20, radius: 15, name: 'City Center Zone' },
+                { x: 70, y: 15, radius: 10, name: 'Airport Security Zone' },
+                { x: 20, y: 60, radius: 12, name: 'Beach Protected Area' },
+                { x: 60, y: 50, radius: 8, name: 'Cultural Heritage Site' }
+            ];
+            
+            zones.forEach(zone => {
+                const zoneElement = document.createElement('div');
+                zoneElement.className = 'zone-marker';
+                zoneElement.style.left = `${zone.x - zone.radius}%`;
+                zoneElement.style.top = `${zone.y - zone.radius}%`;
+                zoneElement.style.width = `${zone.radius * 2}%`;
+                zoneElement.style.height = `${zone.radius * 2}%`;
+                zoneElement.title = zone.name;
+                
+                elements.liveMap.appendChild(zoneElement);
+            });
+        }
+        
+        // Get Location Name from Coordinates
+        function getLocationName(x, y) {
+            if (x < 40 && y < 40) return 'City Center';
+            if (x > 60 && y < 30) return 'Airport Area';
+            if (x < 30 && y > 50) return 'Beach Front';
+            if (x > 40 && x < 60 && y > 40 && y < 60) return 'Cultural District';
+            if (x > 70) return 'Eastern District';
+            if (y > 70) return 'Southern District';
+            return 'Central Zone';
+        }
+        
+        // Render Video Feeds
+        function renderVideoFeeds() {
+            elements.videoGrid.innerHTML = '';
+            
+            // Show a subset of cameras
+            const visibleCameras = systemState.cameras.slice(0, 6);
+            
+            visibleCameras.forEach(camera => {
+                const videoFeed = document.createElement('div');
+                videoFeed.className = 'video-feed';
+                
+                const isRecording = camera.status === 'recording';
+                const statusClass = isRecording ? 'recording' : '';
+                const statusText = isRecording ? 'REC' : 'LIVE';
+                
+                videoFeed.innerHTML = `
+                    <div class="video-header">
+                        <div class="video-title">
+                            <i class="fas fa-video"></i>
+                            <span>${camera.name}</span>
+                        </div>
+                        <div class="video-status ${statusClass}"></div>
+                    </div>
+                    <div class="video-preview">
+                        <i class="fas fa-video" style="font-size: 2rem; margin-bottom: 10px; opacity: 0.5;"></i>
+                        <div style="font-size: 0.9rem;">${camera.location}</div>
+                        <div style="font-size: 0.8rem; opacity: 0.7; margin-top: 5px;">${statusText}</div>
+                    </div>
+                `;
+                
+                elements.videoGrid.appendChild(videoFeed);
+            });
+        }
+        
+        // Update Statistics
+        function updateStats() {
+            // Update AI detections (random increase)
+            const aiIncrease = Math.floor(Math.random() * 5);
+            systemState.aiThreats += aiIncrease;
+            elements.aiDetections.textContent = systemState.aiThreats;
+            
+            // Update active tourists (random fluctuation)
+            const touristChange = Math.floor(Math.random() * 5) - 2;
+            systemState.activeTourists = Math.max(50, systemState.activeTourists + touristChange);
+            elements.activeTourists.textContent = systemState.activeTourists;
+            
+            // Update active cameras
+            elements.activeCameras.textContent = SYSTEM_CONFIG.cameraCount;
+            
+            // Update safety index (small random fluctuation)
+            const safetyChange = (Math.random() * 0.2) - 0.1;
+            systemState.safetyIndex = Math.max(94, Math.min(99, systemState.safetyIndex + safetyChange));
+            elements.safetyIndex.textContent = systemState.safetyIndex.toFixed(1) + '%';
+            
+            // Add pulse animation to AI stat card
+            if (aiIncrease > 0) {
+                const aiCard = document.getElementById('ai-stat');
+                aiCard.classList.add('live-updating');
+                setTimeout(() => aiCard.classList.remove('live-updating'), 1000);
+            }
+        }
+        
+        // Add Live Data Item
+        function addLiveDataItem() {
+            if (systemState.dataFeedPaused) return;
+            
+            const dataTypes = [
+                { type: 'info', icon: 'fa-info-circle', message: 'System heartbeat check passed' },
+                { type: 'info', icon: 'fa-sync-alt', message: 'Data synchronization completed' },
+                { type: 'info', icon: 'fa-database', message: 'Backup to secure server completed' },
+                { type: 'warning', icon: 'fa-exclamation-triangle', message: 'High tourist density detected in City Center' },
+                { type: 'warning', icon: 'fa-cloud', message: 'Weather alert: Rain expected in northern areas' },
+                { type: 'alert', icon: 'fa-bell', message: 'AI detected unusual movement pattern' },
+                { type: 'success', icon: 'fa-check-circle', message: 'Tourist assistance request resolved' },
+                { type: 'success', icon: 'fa-shield-alt', message: 'Security perimeter check passed' }
+            ];
+            
+            const dataType = dataTypes[Math.floor(Math.random() * dataTypes.length)];
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+            
+            const dataItem = document.createElement('div');
+            dataItem.className = `data-item ${dataType.type}`;
+            dataItem.innerHTML = `
+                <div>
+                    <i class="fas ${dataType.icon}"></i>
+                    <span>${dataType.message}</span>
+                </div>
+                <div class="data-time">${timeString}</div>
+            `;
+            
+            // Add to top of feed
+            elements.liveDataFeed.insertBefore(dataItem, elements.liveDataFeed.firstChild);
+            
+            // Limit number of items
+            const items = elements.liveDataFeed.querySelectorAll('.data-item');
+            if (items.length > SYSTEM_CONFIG.maxDataItems) {
+                elements.liveDataFeed.removeChild(items[items.length - 1]);
+            }
+            
+            // Add notification for important items
+            if (dataType.type === 'alert' || (dataType.type === 'warning' && Math.random() > 0.5)) {
+                showNotification(
+                    dataType.type === 'alert' ? 'Security Alert' : 'System Warning',
+                    dataType.message,
+                    dataType.type
+                );
+            }
+        }
+        
+        // Show Notification
+        function showNotification(title, message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.className = `notification ${type}`;
+            
+            const icon = type === 'alert' ? 'fa-exclamation-circle' : 
+                        type === 'warning' ? 'fa-exclamation-triangle' : 
+                        type === 'success' ? 'fa-check-circle' : 'fa-info-circle';
+            
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' });
+            
+            notification.innerHTML = `
+                <div class="notification-icon">
+                    <i class="fas ${icon}"></i>
+                </div>
+                <div class="notification-content">
+                    <div class="notification-title">${title}</div>
+                    <div class="notification-message">${message}</div>
+                    <div class="notification-time">${timeString}</div>
+                </div>
+                <button class="close-notification">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            
+            // Add to notification panel
+            elements.notificationPanel.appendChild(notification);
+            
+            // Limit number of notifications
+            const notifications = elements.notificationPanel.querySelectorAll('.notification');
+            if (notifications.length > SYSTEM_CONFIG.maxNotifications) {
+                elements.notificationPanel.removeChild(notifications[0]);
+            }
+            
+            // Auto-remove after 10 seconds
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 10000);
+            
+            // Close button event
+            notification.querySelector('.close-notification').addEventListener('click', () => {
+                notification.parentNode.removeChild(notification);
+            });
+        }
+        
+        // Start Live Updates
+        function startLiveUpdates() {
+            if (systemState.liveUpdateInterval) {
+                clearInterval(systemState.liveUpdateInterval);
+            }
+            
+            systemState.liveUpdateInterval = setInterval(() => {
+                if (systemState.isLive && systemState.autoRefresh) {
+                    // Update system state
+                    systemState.lastUpdate = new Date();
+                    
+                    // Update statistics
+                    updateStats();
+                    
+                    // Add live data item
+                    addLiveDataItem();
+                    
+                    // Update map markers (move tourists)
+                    moveTourists();
+                    
+                    // Update last update display
+                    updateLastUpdate();
+                    
+                    // Randomly add new alerts
+                    if (Math.random() > 0.7) {
+                        addRandomAlert();
+                    }
+                }
+            }, SYSTEM_CONFIG.updateInterval);
+            
+            console.log('▶ Live updates started');
+        }
+        
+        // Move Tourists (simulate movement)
+        function moveTourists() {
+            systemState.tourists.forEach(tourist => {
+                // Small random movement
+                tourist.x += (Math.random() * 2 - 1);
+                tourist.y += (Math.random() * 2 - 1);
+                
+                // Keep within bounds
+                tourist.x = Math.max(5, Math.min(95, tourist.x));
+                tourist.y = Math.max(5, Math.min(95, tourist.y));
+                
+                // Occasionally change status
+                if (Math.random() > 0.95) {
+                    tourist.status = tourist.status === 'safe' ? 'warning' : 'safe';
+                }
+            });
+            
+            // Re-render map markers
+            renderMapMarkers();
+        }
+        
+        // Add Random Alert
+        function addRandomAlert() {
+            const alertTypes = [
+                { type: 'alert', message: 'Tourist entered restricted area' },
+                { type: 'warning', message: 'Crowd density exceeding safety limits' },
+                { type: 'warning', message: 'Suspicious activity detected by AI' },
+                { type: 'info', message: 'Camera offline for maintenance' }
+            ];
+            
+            const alert = alertTypes[Math.floor(Math.random() * alertTypes.length)];
+            systemState.alerts.push({
+                ...alert,
+                id: systemState.alerts.length + 1,
+                time: new Date()
+            });
+            
+            // Update alert count
+            elements.mapAlertCount.textContent = systemState.alerts.filter(a => a.type === 'alert').length;
+        }
+        
+        // Setup Event Listeners
+        function setupEventListeners() {
+            // Refresh All button
+            elements.refreshAll.addEventListener('click', () => {
+                systemState.lastUpdate = new Date();
+                updateStats();
+                updateLastUpdate();
+                renderMapMarkers();
+                
+                showNotification('Manual Refresh', 'All system data has been refreshed manually.', 'info');
+            });
+            
+            // Toggle Auto Refresh
+            elements.toggleAutoRefresh.addEventListener('click', () => {
+                systemState.autoRefresh = !systemState.autoRefresh;
+                
+                if (systemState.autoRefresh) {
+                    elements.toggleAutoRefresh.innerHTML = '<i class="fas fa-pause"></i> Pause';
+                    elements.autoRefreshStatus.textContent = 'ON';
+                    startLiveUpdates();
+                    showNotification('Auto-Refresh Enabled', 'Live data streaming resumed.', 'success');
+                } else {
+                    elements.toggleAutoRefresh.innerHTML = '<i class="fas fa-play"></i> Resume';
+                    elements.autoRefreshStatus.textContent = 'OFF';
+                    clearInterval(systemState.liveUpdateInterval);
+                    showNotification('Auto-Refresh Paused', 'Live data streaming paused.', 'warning');
+                }
+            });
+            
+            // Map Controls
+            elements.zoomIn.addEventListener('click', () => {
+                showNotification('Map Control', 'Zoom level increased.', 'info');
+            });
+            
+            elements.zoomOut.addEventListener('click', () => {
+                showNotification('Map Control', 'Zoom level decreased.', 'info');
+            });
+            
+            elements.centerMap.addEventListener('click', () => {
+                showNotification('Map Control', 'Map centered on active area.', 'info');
+            });
+            
+            // Data Feed Controls
+            elements.clearFeed.addEventListener('click', () => {
+                elements.liveDataFeed.innerHTML = '';
+                showNotification('Data Feed Cleared', 'All data feed items have been cleared.', 'info');
+            });
+            
+            elements.pauseFeed.addEventListener('click', () => {
+                systemState.dataFeedPaused = !systemState.dataFeedPaused;
+                
+                if (systemState.dataFeedPaused) {
+                    elements.pauseFeed.innerHTML = '<i class="fas fa-play"></i> Resume';
+                    showNotification('Data Feed Paused', 'Live data feed updates paused.', 'warning');
+                } else {
+                    elements.pauseFeed.innerHTML = '<i class="fas fa-pause"></i> Pause';
+                    showNotification('Data Feed Resumed', 'Live data feed updates resumed.', 'success');
+                }
+            });
+            
+            // Camera Controls
+            elements.refreshCameras.addEventListener('click', () => {
+                renderVideoFeeds();
+                showNotification('Camera Feeds Refreshed', 'All surveillance camera feeds have been refreshed.', 'success');
+            });
+            
+            elements.recordAll.addEventListener('click', () => {
+                // Toggle recording status for all cameras
+                const wasRecording = systemState.cameras.some(c => c.status === 'recording');
+                
+                systemState.cameras.forEach(camera => {
+                    camera.status = wasRecording ? 'active' : 'recording';
+                });
+                
+                renderVideoFeeds();
+                
+                const message = wasRecording ? 
+                    'Recording stopped for all cameras.' : 
+                    'Recording started for all cameras.';
+                    
+                showNotification(
+                    wasRecording ? 'Recording Stopped' : 'Recording Started',
+                    message,
+                    wasRecording ? 'info' : 'alert'
+                );
+            });
+            
+            // Simulate map click for marker info
+            elements.liveMap.addEventListener('click', (e) => {
+                if (e.target.classList.contains('map-marker')) {
+                    const markerType = e.target.classList.contains('tourist-marker') ? 'Tourist' :
+                                     e.target.classList.contains('camera-marker') ? 'Camera' :
+                                     e.target.classList.contains('alert-marker') ? 'Alert' : 'Marker';
+                    
+                    showNotification(
+                        `${markerType} Selected`,
+                        e.target.title || `${markerType} information`,
+                        'info'
+                    );
+                }
+            });
+            
+            // Add keyboard shortcuts
+            document.addEventListener('keydown', (e) => {
+                // Space to toggle auto-refresh
+                if (e.code === 'Space' && !e.target.matches('input, textarea, select')) {
+                    e.preventDefault();
+                    elements.toggleAutoRefresh.click();
+                }
+                
+                // R to refresh all
+                if (e.code === 'KeyR' && e.ctrlKey) {
+                    e.preventDefault();
+                    elements.refreshAll.click();
+                }
+                
+                // C to clear feed
+                if (e.code === 'KeyC' && e.ctrlKey) {
+                    e.preventDefault();
+                    elements.clearFeed.click();
+                }
+            });
+        }
+        
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', initLiveSystem);
+        
+        // Export system state for debugging (optional)
+        window.getSystemState = () => systemState;
+        
+    </script>
+    <!-- Universal Menu Script -->`n    <script src="universal-menu.js"></script>`n</body>
+</html>

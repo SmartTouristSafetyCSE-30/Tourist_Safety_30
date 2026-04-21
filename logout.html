@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logout - Smart Tourist Safety System</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; background: linear-gradient(rgba(0,51,102,0.9), rgba(0,51,102,0.9)), url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><rect fill="%23e3f2fd" width="1200" height="800"/><g fill="%23bbdefb" opacity="0.3"><circle cx="200" cy="150" r="30"/><circle cx="400" cy="200" r="25"/><circle cx="600" cy="100" r="35"/><circle cx="800" cy="180" r="28"/><circle cx="1000" cy="120" r="32"/><path d="M100,300 Q200,250 300,300 T500,300" stroke="%2390caf9" stroke-width="3" fill="none"/><path d="M600,400 Q700,350 800,400 T1000,400" stroke="%2390caf9" stroke-width="3" fill="none"/><polygon points="150,500 170,480 190,500 170,520" fill="%2381c784"/><polygon points="350,450 370,430 390,450 370,470" fill="%2381c784"/><polygon points="750,520 770,500 790,520 770,540" fill="%2381c784"/><rect x="250" y="600" width="40" height="60" fill="%23a5d6a7"/><rect x="500" y="580" width="35" height="80" fill="%23a5d6a7"/><rect x="850" y="620" width="45" height="40" fill="%23a5d6a7"/></g></svg>') fixed; background-size: cover; min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+        .logout-container { max-width: 500px; padding: 20px; }
+        .logout-card { background: white; border-radius: 15px; padding: 40px; box-shadow: 0 15px 35px rgba(0,0,0,0.2); text-align: center; }
+        .logout-icon { font-size: 64px; margin-bottom: 20px; }
+        .logout-title { font-size: 28px; color: #003366; margin-bottom: 15px; }
+        .logout-message { color: #666; margin-bottom: 30px; }
+        .logout-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+        .logout-btn { padding: 12px 20px; border: none; border-radius: 8px; cursor: pointer; font-size: 16px; }
+        .btn-confirm { background: #f44336; color: white; }
+        .btn-cancel { background: #666; color: white; }
+        .btn-confirm:hover { background: #d32f2f; }
+        .btn-cancel:hover { background: #555; }
+        .logout-info { background: #e8f5e8; border: 1px solid #4caf50; border-radius: 8px; padding: 15px; margin-top: 20px; }
+        .info-title { font-weight: bold; color: #2e7d32; margin-bottom: 5px; }
+        .info-text { color: #388e3c; font-size: 14px; }
+    </style>
+</head>
+<body>    <script src="universal-menu.js"></script>
+    <main class="logout-container">
+        <div class="logout-card">
+            <div class="logout-icon">🚪</div>
+            <h1 class="logout-title">Logout Confirmation</h1>
+            <p class="logout-message">Are you sure you want to logout from the Smart Tourist Safety System?</p>
+            
+            <div class="logout-actions">
+                <button class="logout-btn btn-confirm" onclick="confirmLogout()">🚪 Yes, Logout</button>
+                <button class="logout-btn btn-cancel" onclick="cancelLogout()">❌ Cancel</button>
+            </div>
+            
+            <div class="logout-info">
+                <div class="info-title">🛡️ Safety Notice</div>
+                <div class="info-text">
+                    Logging out will disable GPS tracking and emergency services. 
+                    Ensure you're in a safe location before proceeding.
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <script>
+        function confirmLogout() {
+            // Clear all stored data
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('userInfo');
+            localStorage.removeItem('policeStation');
+            
+            // Show logout message
+            alert('You have been successfully logged out. Thank you for using the Smart Tourist Safety System.');
+            
+            // Redirect to home page
+            window.location.href = 'index.html';
+        }
+        
+        function cancelLogout() {
+            // Go back to previous page or dashboard
+            const userInfo = JSON.parse(localStorage.getItem('userInfo') || '{}');
+            
+            if (userInfo.role === 'tourist') {
+                window.location.href = 'tourist-dashboard.html';
+            } else if (userInfo.role === 'police') {
+                window.location.href = 'police-dashboard.html';
+            } else if (userInfo.role === 'tourism_dept') {
+                window.location.href = 'tourism-dashboard.html';
+            } else if (userInfo.role === 'admin') {
+                window.location.href = 'admin-dashboard.html';
+            } else {
+                window.location.href = 'index.html';
+            }
+        }
+        
+        // Auto-logout after 5 minutes of inactivity on this page
+        setTimeout(function() {
+            alert('Session timeout. You will be automatically logged out for security.');
+            confirmLogout();
+        }, 300000); // 5 minutes
+    </script>
+    <!-- Universal Menu Script -->`n    <script src="universal-menu.js"></script>`n</body>
+</html>

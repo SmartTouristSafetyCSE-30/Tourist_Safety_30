@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tourism Advisories | Tourism Department</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f8f9fa; }
+        .header { background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 20px 0; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 30px 20px; }
+        .card { background: white; border-radius: 10px; padding: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .btn { padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: 600; }
+        .btn-primary { background: #667eea; color: white; }
+        .btn-success { background: #28a745; color: white; }
+        .advisory-item { border: 1px solid #dee2e6; border-radius: 8px; padding: 15px; margin-bottom: 15px; }
+        .advisory-critical { border-left: 4px solid #dc3545; }
+        .advisory-warning { border-left: 4px solid #ffc107; }
+        .advisory-info { border-left: 4px solid #17a2b8; }
+    </style>
+</head>
+<body>    <script src="universal-menu.js"></script>
+    <header class="header">
+        <div style="max-width: 1400px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+                <h1>📢 Tourism Advisories</h1>
+                <p>Travel Alerts & Safety Notifications</p>
+            </div>
+            <button class="btn btn-primary" onclick="window.location.href='tourism-dashboard.html'">← Back</button>
+        </div>
+    </header>
+    <main class="container">
+        <div class="card">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h3>📋 Active Advisories</h3>
+                <button class="btn btn-success" onclick="createAdvisory()">➕ Create Advisory</button>
+            </div>
+            
+            <div class="advisory-item advisory-critical">
+                <h4>🚨 CRITICAL: Heavy Rainfall Alert - Meghalaya</h4>
+                <p><strong>Issued:</strong> Today, 2:00 PM | <strong>Valid Until:</strong> Tomorrow, 6:00 AM</p>
+                <p>Heavy rainfall expected in Shillong and surrounding areas. Tourists advised to avoid outdoor activities and stay in safe locations.</p>
+                <div style="margin-top: 10px;">
+                    <button class="btn btn-primary" onclick="editAdvisory('ADV-001')">✏️ Edit</button>
+                    <button class="btn" style="background: #dc3545; color: white;" onclick="expireAdvisory('ADV-001')">⏰ Expire</button>
+                </div>
+            </div>
+
+            <div class="advisory-item advisory-warning">
+                <h4>⚠️ WARNING: Increased Wildlife Activity - Kaziranga</h4>
+                <p><strong>Issued:</strong> Yesterday, 6:00 PM | <strong>Valid Until:</strong> Tomorrow, 6:00 PM</p>
+                <p>Increased elephant movement reported near tourist areas. Visitors advised to maintain safe distance and follow guide instructions.</p>
+                <div style="margin-top: 10px;">
+                    <button class="btn btn-primary" onclick="editAdvisory('ADV-002')">✏️ Edit</button>
+                    <button class="btn" style="background: #dc3545; color: white;" onclick="expireAdvisory('ADV-002')">⏰ Expire</button>
+                </div>
+            </div>
+
+            <div class="advisory-item advisory-info">
+                <h4>ℹ️ INFO: Festival Celebrations - Assam</h4>
+                <p><strong>Issued:</strong> 2 days ago | <strong>Valid Until:</strong> Next week</p>
+                <p>Bihu festival celebrations ongoing. Expect increased crowds at cultural sites. Enhanced security measures in place.</p>
+                <div style="margin-top: 10px;">
+                    <button class="btn btn-primary" onclick="editAdvisory('ADV-003')">✏️ Edit</button>
+                    <button class="btn" style="background: #dc3545; color: white;" onclick="expireAdvisory('ADV-003')">⏰ Expire</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function createAdvisory() {
+            const title = prompt('Enter advisory title:');
+            if (title) {
+                alert(`New advisory "${title}" created successfully.`);
+            }
+        }
+
+        function editAdvisory(id) {
+            alert(`Opening editor for advisory: ${id}`);
+        }
+
+        function expireAdvisory(id) {
+            if (confirm(`Expire advisory ${id}?`)) {
+                alert(`Advisory ${id} has been expired.`);
+            }
+        }
+    </script>
+    <!-- Universal Menu Script -->`n    <script src="universal-menu.js"></script>`n</body>
+</html>

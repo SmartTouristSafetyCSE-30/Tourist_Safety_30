@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tourist Cluster Map | Tourism Department | Tourist Safety System</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f8f9fa; }
+        .header { background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 20px 0; }
+        .header-content { max-width: 1400px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 30px 20px; }
+        .map-controls { background: white; border-radius: 10px; padding: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .controls-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; align-items: center; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 600; font-size: 12px; }
+        .form-group select, .form-group input { width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px; font-size: 12px; }
+        .btn { padding: 8px 16px; border: none; border-radius: 5px; cursor: pointer; font-weight: 600; font-size: 12px; }
+        .btn-primary { background: #667eea; color: white; }
+        .btn-success { background: #28a745; color: white; }
+        .btn-warning { background: #ffc107; color: #212529; }
+        .btn-danger { background: #dc3545; color: white; }
+        .map-container { background: white; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); overflow: hidden; }
+        .map-header { padding: 20px; border-bottom: 1px solid #dee2e6; display: flex; justify-content: space-between; align-items: center; }
+        .map-title { font-size: 18px; font-weight: 600; color: #667eea; }
+        .map-view { height: 600px; background: linear-gradient(135deg, #e3f2fd, #f3e5f5); position: relative; display: flex; align-items: center; justify-content: center; color: #666; }
+        .legend { position: absolute; top: 20px; right: 20px; background: white; border-radius: 10px; padding: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .legend-item { display: flex; align-items: center; margin-bottom: 8px; font-size: 12px; }
+        .legend-color { width: 16px; height: 16px; border-radius: 50%; margin-right: 8px; }
+        .cluster-info { position: absolute; bottom: 20px; left: 20px; background: white; border-radius: 10px; padding: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px; }
+        .info-card { background: white; border-radius: 10px; padding: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .info-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .info-title { font-size: 16px; font-weight: 600; color: #667eea; }
+        .cluster-list { max-height: 300px; overflow-y: auto; }
+        .cluster-item { border: 1px solid #dee2e6; border-radius: 8px; padding: 15px; margin-bottom: 10px; cursor: pointer; transition: all 0.3s; }
+        .cluster-item:hover { background: #f8f9fa; border-color: #667eea; }
+        .cluster-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .cluster-name { font-weight: 600; }
+        .cluster-count { background: #667eea; color: white; padding: 2px 8px; border-radius: 12px; font-size: 12px; }
+        .cluster-details { font-size: 14px; color: #666; }
+        .density-indicator { width: 12px; height: 12px; border-radius: 50%; margin-right: 8px; }
+        .density-low { background: #28a745; }
+        .density-medium { background: #ffc107; }
+        .density-high { background: #fd7e14; }
+        .density-critical { background: #dc3545; }
+        .heatmap-controls { display: flex; gap: 10px; align-items: center; }
+        .heatmap-toggle { display: flex; align-items: center; gap: 5px; }
+    </style>
+</head>
+<body>    <script src="universal-menu.js"></script>
+    <header class="header">
+        <div class="header-content">
+            <div style="display: flex; align-items: center;">
+                <div style="width: 50px; height: 50px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #667eea; margin-right: 15px;">🗺️</div>
+                <div>
+                    <div style="font-size: 24px; font-weight: bold;">Tourist Cluster Map</div>
+                    <div style="font-size: 14px; opacity: 0.9;">Real-time Tourist Distribution & Density Analysis</div>
+                </div>
+            </div>
+            <button class="btn btn-primary" onclick="window.location.href='tourism-dashboard.html'">← Back to Dashboard</button>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Map Controls -->
+        <div class="map-controls">
+            <div class="controls-grid">
+                <div class="form-group">
+                    <label for="mapView">Map View</label>
+                    <select id="mapView" onchange="changeMapView()">
+                        <option value="satellite">Satellite</option>
+                        <option value="terrain">Terrain</option>
+                        <option value="roadmap" selected>Road Map</option>
+                        <option value="hybrid">Hybrid</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="timeFilter">Time Filter</label>
+                    <select id="timeFilter" onchange="filterByTime()">
+                        <option value="realtime" selected>Real-time</option>
+                        <option value="1h">Last 1 Hour</option>
+                        <option value="6h">Last 6 Hours</option>
+                        <option value="24h">Last 24 Hours</option>
+                        <option value="7d">Last 7 Days</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="stateFilter">State Filter</label>
+                    <select id="stateFilter" onchange="filterByState()">
+                        <option value="all">All NE States</option>
+                        <option value="assam">Assam</option>
+                        <option value="arunachal">Arunachal Pradesh</option>
+                        <option value="manipur">Manipur</option>
+                        <option value="meghalaya">Meghalaya</option>
+                        <option value="mizoram">Mizoram</option>
+                        <option value="nagaland">Nagaland</option>
+                        <option value="sikkim">Sikkim</option>
+                        <option value="tripura">Tripura</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="clusterSize">Cluster Size</label>
+                    <select id="clusterSize" onchange="adjustClusterSize()">
+                        <option value="small">Small (5-15)</option>
+                        <option value="medium" selected>Medium (16-50)</option>
+                        <option value="large">Large (51-100)</option>
+                        <option value="xlarge">X-Large (100+)</option>
+                    </select>
+                </div>
+                <div class="heatmap-controls">
+                    <div class="heatmap-toggle">
+                        <input type="checkbox" id="heatmapToggle" onchange="toggleHeatmap()">
+                        <label for="heatmapToggle" style="margin: 0; font-size: 12px;">Heat Map</label>
+                    </div>
+                    <button class="btn btn-primary" onclick="refreshMap()">🔄 Refresh</button>
+                    <button class="btn btn-success" onclick="exportMap()">📊 Export</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Interactive Map -->
+        <div class="map-container">
+            <div class="map-header">
+                <h3 class="map-title">🗺️ Interactive Tourist Cluster Map</h3>
+                <div style="display: flex; gap: 10px;">
+                    <button class="btn btn-primary" onclick="zoomToFit()">🔍 Zoom to Fit</button>
+                    <button class="btn btn-warning" onclick="showAlerts()">⚠️ Show Alerts</button>
+                    <button class="btn btn-danger" onclick="emergencyView()">🚨 Emergency View</button>
+                </div>
+            </div>
+            <div class="map-view" id="mapView">
+                <div style="text-align: center;">
+                    <div style="font-size: 64px; margin-bottom: 20px;">🗺️</div>
+                    <h3>Interactive Tourist Cluster Map</h3>
+                    <p>Real-time visualization of tourist distribution across North Eastern states</p>
+                    <div style="margin-top: 20px; font-size: 14px; color: #666;">
+                        <p>📍 1,247 Active Tourists | 🏛️ 8 States | ⏱️ Updated: 2 minutes ago</p>
+                    </div>
+                </div>
+
+                <!-- Map Legend -->
+                <div class="legend">
+                    <h4 style="margin-bottom: 10px; font-size: 14px;">Tourist Density</h4>
+                    <div class="legend-item">
+                        <div class="legend-color density-low"></div>
+                        <span>Low (1-10)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color density-medium"></div>
+                        <span>Medium (11-25)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color density-high"></div>
+                        <span>High (26-50)</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="legend-color density-critical"></div>
+                        <span>Critical (50+)</span>
+                    </div>
+                    <hr style="margin: 10px 0;">
+                    <div class="legend-item">
+                        <div style="width: 16px; height: 16px; background: #667eea; border-radius: 2px; margin-right: 8px;"></div>
+                        <span>Safe Zones</span>
+                    </div>
+                    <div class="legend-item">
+                        <div style="width: 16px; height: 16px; background: #dc3545; border-radius: 2px; margin-right: 8px;"></div>
+                        <span>Risk Zones</span>
+                    </div>
+                </div>
+
+                <!-- Cluster Info Panel -->
+                <div class="cluster-info">
+                    <h4 style="margin-bottom: 10px; font-size: 14px;">Current View</h4>
+                    <div style="font-size: 12px;">
+                        <div>📍 <strong>Total Clusters:</strong> 23</div>
+                        <div>👥 <strong>Total Tourists:</strong> 1,247</div>
+                        <div>⚠️ <strong>High Density Areas:</strong> 3</div>
+                        <div>🚨 <strong>Active Alerts:</strong> 2</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cluster Information Grid -->
+        <div class="info-grid">
+            <!-- Active Clusters -->
+            <div class="info-card">
+                <div class="info-header">
+                    <h3 class="info-title">📍 Active Tourist Clusters</h3>
+                    <button class="btn btn-primary" onclick="refreshClusters()">🔄 Refresh</button>
+                </div>
+                <div class="cluster-list" id="clusterList">
+                    <div class="cluster-item" onclick="focusCluster('CL-001')">
+                        <div class="cluster-header">
+                            <div class="cluster-name">Kamakhya Temple Complex</div>
+                            <div class="cluster-count">87</div>
+                        </div>
+                        <div class="cluster-details">
+                            <div style="display: flex; align-items: center; margin-bottom: 5px;">
+                                <div class="density-indicator density-critical"></div>
+                                <span>Critical Density - Crowd Management Required</span>
+                            </div>
+                            <div>📍 Guwahati, Assam | ⏱️ Updated: 1 min ago</div>
+                            <div>🚨 Alert: Overcrowding detected</div>
+                        </div>
+                    </div>
+
+                    <div class="cluster-item" onclick="focusCluster('CL-002')">
+                        <div class="cluster-header">
+                            <div class="cluster-name">Kaziranga National Park</div>
+                            <div class="cluster-count">64</div>
+                        </div>
+                        <div class="cluster-details">
+                            <div style="display: flex; align-items: center; margin-bottom: 5px;">
+                                <div class="density-indicator density-high"></div>
+                                <span>High Density - Monitor Closely</span>
+                            </div>
+                            <div>📍 Jorhat, Assam | ⏱️ Updated: 2 min ago</div>
+                            <div>✅ Normal operations</div>
+                        </div>
+                    </div>
+
+                    <div class="cluster-item" onclick="focusCluster('CL-003')">
+                        <div class="cluster-header">
+                            <div class="cluster-name">Shillong Peak</div>
+                            <div class="cluster-count">43</div>
+                        </div>
+                        <div class="cluster-details">
+                            <div style="display: flex; align-items: center; margin-bottom: 5px;">
+                                <div class="density-indicator density-high"></div>
+                                <span>High Density - Weather Alert</span>
+                            </div>
+                            <div>📍 Shillong, Meghalaya | ⏱️ Updated: 3 min ago</div>
+                            <div>⚠️ Weather warning issued</div>
+                        </div>
+                    </div>
+
+                    <div class="cluster-item" onclick="focusCluster('CL-004')">
+                        <div class="cluster-header">
+                            <div class="cluster-name">Tawang Monastery</div>
+                            <div class="cluster-count">29</div>
+                        </div>
+                        <div class="cluster-details">
+                            <div style="display: flex; align-items: center; margin-bottom: 5px;">
+                                <div class="density-indicator density-medium"></div>
+                                <span>Medium Density - Optimal</span>
+                            </div>
+                            <div>📍 Tawang, Arunachal Pradesh | ⏱️ Updated: 4 min ago</div>
+                            <div>✅ All systems normal</div>
+                        </div>
+                    </div>
+
+                    <div class="cluster-item" onclick="focusCluster('CL-005')">
+                        <div class="cluster-header">
+                            <div class="cluster-name">Gangtok City Center</div>
+                            <div class="cluster-count">38</div>
+                        </div>
+                        <div class="cluster-details">
+                            <div style="display: flex; align-items: center; margin-bottom: 5px;">
+                                <div class="density-indicator density-medium"></div>
+                                <span>Medium Density - Stable</span>
+                            </div>
+                            <div>📍 Gangtok, Sikkim | ⏱️ Updated: 5 min ago</div>
+                            <div>✅ Tourist flow normal</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cluster Analytics -->
+            <div class="info-card">
+                <div class="info-header">
+                    <h3 class="info-title">📊 Cluster Analytics</h3>
+                    <button class="btn btn-success" onclick="generateReport()">📋 Generate Report</button>
+                </div>
+                <div>
+                    <h4 style="margin-bottom: 15px; font-size: 14px;">Density Distribution</h4>
+                    <div style="margin-bottom: 15px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                            <span style="font-size: 12px;">Critical Density (50+)</span>
+                            <span style="font-size: 12px; font-weight: bold;">3 clusters</span>
+                        </div>
+                        <div style="height: 8px; background: #e9ecef; border-radius: 4px; overflow: hidden;">
+                            <div style="width: 13%; height: 100%; background: #dc3545;"></div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-bottom: 15px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                            <span style="font-size: 12px;">High Density (26-50)</span>
+                            <span style="font-size: 12px; font-weight: bold;">7 clusters</span>
+                        </div>
+                        <div style="height: 8px; background: #e9ecef; border-radius: 4px; overflow: hidden;">
+                            <div style="width: 30%; height: 100%; background: #fd7e14;"></div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-bottom: 15px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                            <span style="font-size: 12px;">Medium Density (11-25)</span>
+                            <span style="font-size: 12px; font-weight: bold;">9 clusters</span>
+                        </div>
+                        <div style="height: 8px; background: #e9ecef; border-radius: 4px; overflow: hidden;">
+                            <div style="width: 39%; height: 100%; background: #ffc107;"></div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-bottom: 20px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                            <span style="font-size: 12px;">Low Density (1-10)</span>
+                            <span style="font-size: 12px; font-weight: bold;">4 clusters</span>
+                        </div>
+                        <div style="height: 8px; background: #e9ecef; border-radius: 4px; overflow: hidden;">
+                            <div style="width: 18%; height: 100%; background: #28a745;"></div>
+                        </div>
+                    </div>
+
+                    <h4 style="margin-bottom: 15px; font-size: 14px;">Trending Locations</h4>
+                    <div style="font-size: 12px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <span>📈 Kamakhya Temple</span>
+                            <span style="color: #28a745; font-weight: bold;">+23%</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <span>📈 Tawang Monastery</span>
+                            <span style="color: #28a745; font-weight: bold;">+18%</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <span>📉 Shillong Peak</span>
+                            <span style="color: #dc3545; font-weight: bold;">-12%</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span>📈 Gangtok Center</span>
+                            <span style="color: #28a745; font-weight: bold;">+8%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function changeMapView() {
+            const view = document.getElementById('mapView').value;
+            console.log(`Changing map view to: ${view}`);
+            alert(`Map view changed to: ${view.toUpperCase()}`);
+        }
+
+        function filterByTime() {
+            const timeFilter = document.getElementById('timeFilter').value;
+            console.log(`Filtering by time: ${timeFilter}`);
+            alert(`Time filter applied: ${timeFilter}`);
+        }
+
+        function filterByState() {
+            const state = document.getElementById('stateFilter').value;
+            console.log(`Filtering by state: ${state}`);
+            alert(`State filter applied: ${state}`);
+        }
+
+        function adjustClusterSize() {
+            const size = document.getElementById('clusterSize').value;
+            console.log(`Adjusting cluster size: ${size}`);
+            alert(`Cluster size adjusted to: ${size}`);
+        }
+
+        function toggleHeatmap() {
+            const enabled = document.getElementById('heatmapToggle').checked;
+            console.log(`Heatmap ${enabled ? 'enabled' : 'disabled'}`);
+            alert(`Heatmap ${enabled ? 'enabled' : 'disabled'}`);
+        }
+
+        function refreshMap() {
+            alert('Refreshing map data...');
+            setTimeout(() => {
+                alert('Map data refreshed successfully!');
+            }, 1500);
+        }
+
+        function exportMap() {
+            const format = prompt('Export format (PNG/PDF/KML):', 'PNG');
+            if (format) {
+                alert(`Exporting map as ${format.toUpperCase()}...`);
+            }
+        }
+
+        function zoomToFit() {
+            alert('Zooming to fit all tourist clusters...');
+        }
+
+        function showAlerts() {
+            alert('Showing active alerts on map...');
+        }
+
+        function emergencyView() {
+            if (confirm('Switch to emergency view? This will highlight all high-risk areas and active incidents.')) {
+                alert('Emergency view activated. Showing critical areas and incidents.');
+            }
+        }
+
+        function focusCluster(clusterId) {
+            alert(`Focusing on cluster: ${clusterId}`);
+            // In real implementation, this would zoom to the specific cluster
+        }
+
+        function refreshClusters() {
+            alert('Refreshing cluster data...');
+            setTimeout(() => {
+                alert('Cluster data updated!');
+            }, 1000);
+        }
+
+        function generateReport() {
+            alert('Generating cluster analytics report...');
+            setTimeout(() => {
+                alert('Report generated successfully! Download will start shortly.');
+            }, 2000);
+        }
+
+        // Auto-refresh map data every 2 minutes
+        setInterval(() => {
+            console.log('Auto-refreshing map data...');
+            // In real implementation, this would update cluster positions and data
+        }, 120000);
+
+        // Initialize map
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Initializing tourist cluster map...');
+            // In real implementation, this would initialize the interactive map
+        });
+    </script>
+    <!-- Universal Menu Script -->`n    <script src="universal-menu.js"></script>`n</body>
+</html>

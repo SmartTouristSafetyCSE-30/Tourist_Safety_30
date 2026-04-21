@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Live Alerts - Police Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #f5f5f5; }
+        .header { background: linear-gradient(135deg, #1e3c72, #2a5298); color: white; padding: 1rem; }
+        .container { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; }
+        .alert-card { background: white; border-radius: 10px; padding: 1.5rem; margin: 1rem 0; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .alert-critical { border-left: 5px solid #dc3545; }
+        .alert-high { border-left: 5px solid #fd7e14; }
+        .alert-medium { border-left: 5px solid #ffc107; }
+        .alert-low { border-left: 5px solid #28a745; }
+        .alert-header { display: flex; justify-content: between; align-items: center; margin-bottom: 1rem; }
+        .btn { padding: 0.6rem 1rem; border: none; border-radius: 5px; cursor: pointer; margin: 0.3rem; }
+        .btn-primary { background: #007bff; color: white; }
+        .btn-success { background: #28a745; color: white; }
+        .btn-danger { background: #dc3545; color: white; }
+        .status-badge { padding: 0.3rem 0.8rem; border-radius: 15px; font-size: 0.8rem; }
+        .status-active { background: #dc3545; color: white; }
+        .status-responding { background: #ffc107; color: black; }
+        .status-resolved { background: #28a745; color: white; }
+        .alert-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 1rem; }
+    </style>
+</head>
+<body>    <script src="universal-menu.js"></script>
+    <div class="header">
+        <h1><i class="fas fa-exclamation-triangle"></i> Live Emergency Alerts</h1>
+        <p>Real-time tourist emergency monitoring system</p>
+    </div>
+
+    <div class="container">
+        <div class="alert-card">
+            <h3><i class="fas fa-tachometer-alt"></i> Alert Dashboard</h3>
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; text-align: center;">
+                <div>
+                    <h2 style="color: #dc3545;">3</h2>
+                    <p>Critical Alerts</p>
+                </div>
+                <div>
+                    <h2 style="color: #fd7e14;">7</h2>
+                    <p>High Priority</p>
+                </div>
+                <div>
+                    <h2 style="color: #ffc107;">12</h2>
+                    <p>Medium Priority</p>
+                </div>
+                <div>
+                    <h2 style="color: #28a745;">5</h2>
+                    <p>Resolved Today</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="alert-grid">
+            <div class="alert-card alert-critical">
+                <div class="alert-header">
+                    <h4><i class="fas fa-ambulance"></i> Medical Emergency</h4>
+                    <span class="status-badge status-active">ACTIVE</span>
+                </div>
+                <p><strong>Tourist ID:</strong> TID-2024-001234</p>
+                <p><strong>Name:</strong> John Doe</p>
+                <p><strong>Location:</strong> Kaziranga National Park (26.5774°N, 93.1723°E)</p>
+                <p><strong>Time:</strong> 14:25 IST (5 min ago)</p>
+                <p><strong>Issue:</strong> Tourist fell during safari, possible fracture</p>
+                <button class="btn btn-danger" onclick="dispatchTeam('medical', 'TID-2024-001234')">Dispatch Medical Team</button>
+                <button class="btn btn-primary" onclick="contactTourist('TID-2024-001234')">Contact Tourist</button>
+            </div>
+
+            <div class="alert-card alert-high">
+                <div class="alert-header">
+                    <h4><i class="fas fa-user-slash"></i> Missing Tourist</h4>
+                    <span class="status-badge status-responding">RESPONDING</span>
+                </div>
+                <p><strong>Tourist ID:</strong> TID-2024-001235</p>
+                <p><strong>Name:</strong> Sarah Smith</p>
+                <p><strong>Last Location:</strong> Shillong Peak (25.5788°N, 91.8933°E)</p>
+                <p><strong>Time:</strong> 12:00 IST (2.5 hours ago)</p>
+                <p><strong>Issue:</strong> No GPS signal for 2+ hours</p>
+                <button class="btn btn-danger" onclick="initiateSearch('TID-2024-001235')">Initiate Search</button>
+                <button class="btn btn-primary" onclick="contactFamily('TID-2024-001235')">Contact Family</button>
+            </div>
+
+            <div class="alert-card alert-medium">
+                <div class="alert-header">
+                    <h4><i class="fas fa-route"></i> Route Deviation</h4>
+                    <span class="status-badge status-active">ACTIVE</span>
+                </div>
+                <p><strong>Tourist ID:</strong> TID-2024-001236</p>
+                <p><strong>Name:</strong> Mike Johnson</p>
+                <p><strong>Location:</strong> Off-route near Manas National Park</p>
+                <p><strong>Time:</strong> 14:15 IST (15 min ago)</p>
+                <p><strong>Issue:</strong> 5km deviation from planned route</p>
+                <button class="btn btn-primary" onclick="sendRouteCorrection('TID-2024-001236')">Send Route Correction</button>
+                <button class="btn btn-success" onclick="monitorSituation('TID-2024-001236')">Monitor</button>
+            </div>
+
+            <div class="alert-card alert-high">
+                <div class="alert-header">
+                    <h4><i class="fas fa-exclamation-circle"></i> Panic Button</h4>
+                    <span class="status-badge status-active">ACTIVE</span>
+                </div>
+                <p><strong>Tourist ID:</strong> TID-2024-001237</p>
+                <p><strong>Name:</strong> Lisa Chen</p>
+                <p><strong>Location:</strong> Majuli Island (26.9510°N, 94.2037°E)</p>
+                <p><strong>Time:</strong> 14:30 IST (Just now)</p>
+                <p><strong>Issue:</strong> Panic button activated - unknown threat</p>
+                <button class="btn btn-danger" onclick="emergencyResponse('TID-2024-001237')">Emergency Response</button>
+                <button class="btn btn-primary" onclick="callTourist('TID-2024-001237')">Call Immediately</button>
+            </div>
+
+            <div class="alert-card alert-medium">
+                <div class="alert-header">
+                    <h4><i class="fas fa-battery-quarter"></i> Device Alert</h4>
+                    <span class="status-badge status-active">ACTIVE</span>
+                </div>
+                <p><strong>Tourist ID:</strong> TID-2024-001238</p>
+                <p><strong>Name:</strong> David Wilson</p>
+                <p><strong>Location:</strong> Tawang Monastery</p>
+                <p><strong>Time:</strong> 14:00 IST (30 min ago)</p>
+                <p><strong>Issue:</strong> GPS device battery critical (5%)</p>
+                <button class="btn btn-primary" onclick="sendBatteryAlert('TID-2024-001238')">Send Battery Alert</button>
+                <button class="btn btn-success" onclick="locateCharging('TID-2024-001238')">Find Charging Point</button>
+            </div>
+
+            <div class="alert-card alert-low">
+                <div class="alert-header">
+                    <h4><i class="fas fa-check-circle"></i> Resolved Alert</h4>
+                    <span class="status-badge status-resolved">RESOLVED</span>
+                </div>
+                <p><strong>Tourist ID:</strong> TID-2024-001239</p>
+                <p><strong>Name:</strong> Emma Brown</p>
+                <p><strong>Location:</strong> Guwahati Airport</p>
+                <p><strong>Time:</strong> 13:45 IST (45 min ago)</p>
+                <p><strong>Issue:</strong> Lost luggage - Found and returned</p>
+                <button class="btn btn-success" disabled>Case Closed</button>
+            </div>
+        </div>
+
+        <div class="alert-card">
+            <h3><i class="fas fa-filter"></i> Alert Filters</h3>
+            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                <button class="btn btn-danger" onclick="filterAlerts('critical')">Critical Only</button>
+                <button class="btn btn-primary" onclick="filterAlerts('high')">High Priority</button>
+                <button class="btn btn-success" onclick="filterAlerts('all')">All Alerts</button>
+                <button class="btn btn-primary" onclick="filterAlerts('location')">By Location</button>
+                <button class="btn btn-primary" onclick="filterAlerts('time')">Last Hour</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function dispatchTeam(type, touristId) {
+            alert(`Dispatching ${type} team for tourist ${touristId}`);
+        }
+        
+        function contactTourist(touristId) {
+            alert(`Contacting tourist ${touristId}...`);
+        }
+        
+        function initiateSearch(touristId) {
+            alert(`Initiating search operation for ${touristId}`);
+        }
+        
+        function contactFamily(touristId) {
+            alert(`Contacting family members of ${touristId}`);
+        }
+        
+        function sendRouteCorrection(touristId) {
+            alert(`Sending route correction to ${touristId}`);
+        }
+        
+        function monitorSituation(touristId) {
+            alert(`Monitoring situation for ${touristId}`);
+        }
+        
+        function emergencyResponse(touristId) {
+            alert(`Activating emergency response protocol for ${touristId}`);
+        }
+        
+        function callTourist(touristId) {
+            alert(`Calling tourist ${touristId} immediately...`);
+        }
+        
+        function filterAlerts(type) {
+            alert(`Filtering alerts by: ${type}`);
+        }
+        
+        // Auto-refresh alerts every 30 seconds
+        setInterval(() => {
+            console.log('Refreshing alerts...');
+        }, 30000);
+    </script>
+    <!-- Universal Menu Script -->`n    <script src="universal-menu.js"></script>`n</body>
+</html>

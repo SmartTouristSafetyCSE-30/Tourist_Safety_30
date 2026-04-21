@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tourist Statistics | Tourism Department | Tourist Safety System</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f8f9fa; }
+        .header { background: linear-gradient(135deg, #667eea, #764ba2); color: white; padding: 20px 0; }
+        .header-content { max-width: 1400px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 30px 20px; }
+        .filters-card { background: white; border-radius: 10px; padding: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); margin-bottom: 30px; }
+        .filters-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; align-items: end; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 600; }
+        .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; }
+        .btn { padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: 600; }
+        .btn-primary { background: #667eea; color: white; }
+        .btn-success { background: #28a745; color: white; }
+        .stats-overview { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; margin-bottom: 30px; }
+        .stat-card { background: white; border-radius: 10px; padding: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); text-align: center; }
+        .stat-icon { font-size: 48px; margin-bottom: 15px; }
+        .stat-value { font-size: 36px; font-weight: bold; margin-bottom: 10px; }
+        .stat-label { color: #666; font-size: 14px; margin-bottom: 10px; }
+        .stat-change { font-size: 12px; }
+        .stat-increase { color: #28a745; }
+        .stat-decrease { color: #dc3545; }
+        .charts-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 30px; margin-bottom: 30px; }
+        .chart-card { background: white; border-radius: 10px; padding: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .chart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .chart-title { font-size: 18px; font-weight: 600; color: #667eea; }
+        .chart-placeholder { height: 300px; background: #f8f9fa; border-radius: 10px; display: flex; align-items: center; justify-content: center; color: #666; }
+        .data-table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        .data-table th, .data-table td { padding: 12px; text-align: left; border-bottom: 1px solid #dee2e6; }
+        .data-table th { background: #f8f9fa; font-weight: 600; }
+        .data-table tr:hover { background: #f8f9fa; }
+        .demographic-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .demographic-item { background: #f8f9fa; border-radius: 5px; padding: 15px; margin-bottom: 10px; }
+        .demographic-label { font-weight: 600; margin-bottom: 5px; }
+        .demographic-bar { height: 20px; background: #e9ecef; border-radius: 10px; overflow: hidden; }
+        .demographic-fill { height: 100%; background: linear-gradient(90deg, #667eea, #764ba2); border-radius: 10px; }
+    </style>
+</head>
+<body>    <script src="universal-menu.js"></script>
+    <header class="header">
+        <div class="header-content">
+            <div style="display: flex; align-items: center;">
+                <div style="width: 50px; height: 50px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #667eea; margin-right: 15px;">📊</div>
+                <div>
+                    <div style="font-size: 24px; font-weight: bold;">Tourist Statistics & Analytics</div>
+                    <div style="font-size: 14px; opacity: 0.9;">Comprehensive Tourism Data Analysis</div>
+                </div>
+            </div>
+            <button class="btn btn-primary" onclick="window.location.href='tourism-dashboard.html'">← Back to Dashboard</button>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Filters -->
+        <div class="filters-card">
+            <h3 style="margin-bottom: 20px;">📈 Analytics Filters</h3>
+            <div class="filters-grid">
+                <div class="form-group">
+                    <label for="dateRange">Date Range</label>
+                    <select id="dateRange">
+                        <option value="today">Today</option>
+                        <option value="week">This Week</option>
+                        <option value="month" selected>This Month</option>
+                        <option value="quarter">This Quarter</option>
+                        <option value="year">This Year</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="stateFilter">State</label>
+                    <select id="stateFilter">
+                        <option value="all">All NE States</option>
+                        <option value="assam">Assam</option>
+                        <option value="arunachal">Arunachal Pradesh</option>
+                        <option value="manipur">Manipur</option>
+                        <option value="meghalaya">Meghalaya</option>
+                        <option value="mizoram">Mizoram</option>
+                        <option value="nagaland">Nagaland</option>
+                        <option value="sikkim">Sikkim</option>
+                        <option value="tripura">Tripura</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="touristType">Tourist Type</label>
+                    <select id="touristType">
+                        <option value="all">All Tourists</option>
+                        <option value="domestic">Domestic</option>
+                        <option value="international">International</option>
+                        <option value="business">Business</option>
+                        <option value="leisure">Leisure</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="ageGroup">Age Group</label>
+                    <select id="ageGroup">
+                        <option value="all">All Ages</option>
+                        <option value="18-25">18-25 years</option>
+                        <option value="26-35">26-35 years</option>
+                        <option value="36-50">36-50 years</option>
+                        <option value="50+">50+ years</option>
+                    </select>
+                </div>
+                <button class="btn btn-primary" onclick="applyFilters()">Apply Filters</button>
+                <button class="btn btn-success" onclick="exportData()">📊 Export Data</button>
+            </div>
+        </div>
+
+        <!-- Statistics Overview -->
+        <div class="stats-overview">
+            <div class="stat-card">
+                <div class="stat-icon">👥</div>
+                <div class="stat-value" style="color: #667eea;">1,247</div>
+                <div class="stat-label">Total Active Tourists</div>
+                <div class="stat-change stat-increase">↑ 15.3% from last month</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🌍</div>
+                <div class="stat-value" style="color: #28a745;">847</div>
+                <div class="stat-label">International Visitors</div>
+                <div class="stat-change stat-increase">↑ 22.1% from last month</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">🏠</div>
+                <div class="stat-value" style="color: #17a2b8;">400</div>
+                <div class="stat-label">Domestic Visitors</div>
+                <div class="stat-change stat-increase">↑ 8.7% from last month</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">💰</div>
+                <div class="stat-value" style="color: #ffc107;">₹2.3Cr</div>
+                <div class="stat-label">Tourism Revenue</div>
+                <div class="stat-change stat-increase">↑ 18.5% from last month</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">⭐</div>
+                <div class="stat-value" style="color: #fd7e14;">4.6</div>
+                <div class="stat-label">Average Rating</div>
+                <div class="stat-change stat-increase">↑ 0.2 from last month</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📱</div>
+                <div class="stat-value" style="color: #6f42c1;">89.3%</div>
+                <div class="stat-label">App Adoption Rate</div>
+                <div class="stat-change stat-increase">↑ 5.1% from last month</div>
+            </div>
+        </div>
+
+        <!-- Charts Grid -->
+        <div class="charts-grid">
+            <!-- Tourist Arrivals Trend -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3 class="chart-title">📈 Tourist Arrivals Trend</h3>
+                    <select style="padding: 5px; border: 1px solid #ddd; border-radius: 3px;">
+                        <option>Last 30 Days</option>
+                        <option>Last 90 Days</option>
+                        <option>Last Year</option>
+                    </select>
+                </div>
+                <div class="chart-placeholder">
+                    📊 Interactive Line Chart<br>
+                    <small>Daily tourist arrivals across NE states</small>
+                </div>
+            </div>
+
+            <!-- State-wise Distribution -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3 class="chart-title">🗺️ State-wise Distribution</h3>
+                </div>
+                <div class="chart-placeholder" style="height: 200px;">
+                    🥧 Pie Chart<br>
+                    <small>Tourist distribution by state</small>
+                </div>
+                <div style="margin-top: 15px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                        <span>Assam</span><span><strong>32.1%</strong></span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                        <span>Meghalaya</span><span><strong>18.7%</strong></span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                        <span>Arunachal Pradesh</span><span><strong>15.3%</strong></span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                        <span>Sikkim</span><span><strong>12.9%</strong></span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span>Others</span><span><strong>21.0%</strong></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Demographics & Detailed Analytics -->
+        <div class="charts-grid">
+            <!-- Demographics -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3 class="chart-title">👥 Tourist Demographics</h3>
+                </div>
+                <div class="demographic-grid">
+                    <div>
+                        <h4 style="margin-bottom: 15px;">Age Groups</h4>
+                        <div class="demographic-item">
+                            <div class="demographic-label">18-25 years (28.3%)</div>
+                            <div class="demographic-bar">
+                                <div class="demographic-fill" style="width: 28.3%;"></div>
+                            </div>
+                        </div>
+                        <div class="demographic-item">
+                            <div class="demographic-label">26-35 years (35.7%)</div>
+                            <div class="demographic-bar">
+                                <div class="demographic-fill" style="width: 35.7%;"></div>
+                            </div>
+                        </div>
+                        <div class="demographic-item">
+                            <div class="demographic-label">36-50 years (24.1%)</div>
+                            <div class="demographic-bar">
+                                <div class="demographic-fill" style="width: 24.1%;"></div>
+                            </div>
+                        </div>
+                        <div class="demographic-item">
+                            <div class="demographic-label">50+ years (11.9%)</div>
+                            <div class="demographic-bar">
+                                <div class="demographic-fill" style="width: 11.9%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div>
+                        <h4 style="margin-bottom: 15px;">Nationality</h4>
+                        <div class="demographic-item">
+                            <div class="demographic-label">India (32.1%)</div>
+                            <div class="demographic-bar">
+                                <div class="demographic-fill" style="width: 32.1%;"></div>
+                            </div>
+                        </div>
+                        <div class="demographic-item">
+                            <div class="demographic-label">USA (18.5%)</div>
+                            <div class="demographic-bar">
+                                <div class="demographic-fill" style="width: 18.5%;"></div>
+                            </div>
+                        </div>
+                        <div class="demographic-item">
+                            <div class="demographic-label">UK (12.3%)</div>
+                            <div class="demographic-bar">
+                                <div class="demographic-fill" style="width: 12.3%;"></div>
+                            </div>
+                        </div>
+                        <div class="demographic-item">
+                            <div class="demographic-label">Others (37.1%)</div>
+                            <div class="demographic-bar">
+                                <div class="demographic-fill" style="width: 37.1%;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Popular Destinations -->
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3 class="chart-title">🏞️ Popular Destinations</h3>
+                </div>
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Destination</th>
+                            <th>Visitors</th>
+                            <th>Rating</th>
+                            <th>Growth</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Kamakhya Temple</td>
+                            <td>234</td>
+                            <td>4.7⭐</td>
+                            <td style="color: #28a745;">+12%</td>
+                        </tr>
+                        <tr>
+                            <td>Kaziranga National Park</td>
+                            <td>189</td>
+                            <td>4.8⭐</td>
+                            <td style="color: #28a745;">+18%</td>
+                        </tr>
+                        <tr>
+                            <td>Shillong Peak</td>
+                            <td>156</td>
+                            <td>4.5⭐</td>
+                            <td style="color: #28a745;">+8%</td>
+                        </tr>
+                        <tr>
+                            <td>Tawang Monastery</td>
+                            <td>143</td>
+                            <td>4.9⭐</td>
+                            <td style="color: #28a745;">+25%</td>
+                        </tr>
+                        <tr>
+                            <td>Gangtok</td>
+                            <td>127</td>
+                            <td>4.6⭐</td>
+                            <td style="color: #28a745;">+15%</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Detailed Statistics Table -->
+        <div class="chart-card">
+            <div class="chart-header">
+                <h3 class="chart-title">📋 Detailed Statistics</h3>
+                <button class="btn btn-primary" onclick="refreshData()">🔄 Refresh Data</button>
+            </div>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Metric</th>
+                        <th>Current Month</th>
+                        <th>Previous Month</th>
+                        <th>Change</th>
+                        <th>YTD Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Total Arrivals</td>
+                        <td>1,247</td>
+                        <td>1,082</td>
+                        <td style="color: #28a745;">+15.3%</td>
+                        <td>14,567</td>
+                    </tr>
+                    <tr>
+                        <td>International Tourists</td>
+                        <td>847</td>
+                        <td>693</td>
+                        <td style="color: #28a745;">+22.1%</td>
+                        <td>9,234</td>
+                    </tr>
+                    <tr>
+                        <td>Domestic Tourists</td>
+                        <td>400</td>
+                        <td>368</td>
+                        <td style="color: #28a745;">+8.7%</td>
+                        <td>5,333</td>
+                    </tr>
+                    <tr>
+                        <td>Average Stay (days)</td>
+                        <td>4.2</td>
+                        <td>3.8</td>
+                        <td style="color: #28a745;">+10.5%</td>
+                        <td>4.1</td>
+                    </tr>
+                    <tr>
+                        <td>Revenue per Tourist</td>
+                        <td>₹18,456</td>
+                        <td>₹16,234</td>
+                        <td style="color: #28a745;">+13.7%</td>
+                        <td>₹17,892</td>
+                    </tr>
+                    <tr>
+                        <td>Safety Incidents</td>
+                        <td>23</td>
+                        <td>31</td>
+                        <td style="color: #28a745;">-25.8%</td>
+                        <td>287</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
+
+    <script>
+        function applyFilters() {
+            const filters = {
+                dateRange: document.getElementById('dateRange').value,
+                state: document.getElementById('stateFilter').value,
+                touristType: document.getElementById('touristType').value,
+                ageGroup: document.getElementById('ageGroup').value
+            };
+            
+            console.log('Applying filters:', filters);
+            alert('Filters applied successfully! Statistics updated.');
+            // In real implementation, this would update all charts and data
+        }
+
+        function exportData() {
+            const format = prompt('Export format (CSV/PDF/Excel):', 'CSV');
+            if (format) {
+                alert(`Exporting tourism statistics as ${format.toUpperCase()}...`);
+                // In real implementation, this would generate and download the file
+            }
+        }
+
+        function refreshData() {
+            alert('Refreshing tourism statistics...');
+            // In real implementation, this would fetch latest data from backend
+            setTimeout(() => {
+                alert('Data refreshed successfully!');
+            }, 1500);
+        }
+
+        // Auto-refresh data every 5 minutes
+        setInterval(() => {
+            console.log('Auto-refreshing tourism statistics...');
+            // In real implementation, this would update statistics automatically
+        }, 300000);
+
+        // Initialize charts and data
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Loading tourism statistics dashboard...');
+            // In real implementation, this would initialize charts and load data
+        });
+    </script>
+    <!-- Universal Menu Script -->`n    <script src="universal-menu.js"></script>`n</body>
+</html>

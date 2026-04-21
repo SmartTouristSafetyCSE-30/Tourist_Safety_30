@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Evidence Logs | Police Module | Tourist Safety System</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f8f9fa; }
+        .header { background: linear-gradient(135deg, #1e3c72, #2a5298); color: white; padding: 20px 0; }
+        .header-content { max-width: 1400px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 30px 20px; }
+        .filters-card { background: white; border-radius: 10px; padding: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); margin-bottom: 30px; }
+        .filters-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; align-items: end; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 600; }
+        .form-group input, .form-group select { width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; }
+        .btn { padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-weight: 600; }
+        .btn-primary { background: #1e3c72; color: white; }
+        .btn-success { background: #28a745; color: white; }
+        .btn-danger { background: #dc3545; color: white; }
+        .evidence-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+        .evidence-card { background: white; border-radius: 10px; padding: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .evidence-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
+        .evidence-type { padding: 4px 8px; border-radius: 12px; font-size: 12px; font-weight: bold; }
+        .type-photo { background: #e3f2fd; color: #1976d2; }
+        .type-video { background: #f3e5f5; color: #7b1fa2; }
+        .type-audio { background: #e8f5e8; color: #388e3c; }
+        .type-document { background: #fff3e0; color: #f57c00; }
+        .type-gps { background: #fce4ec; color: #c2185b; }
+        .evidence-meta { font-size: 12px; color: #666; margin-bottom: 10px; }
+        .evidence-preview { height: 150px; background: #f8f9fa; border-radius: 5px; display: flex; align-items: center; justify-content: center; margin-bottom: 15px; color: #666; }
+        .evidence-actions { display: flex; gap: 10px; }
+        .btn-sm { padding: 6px 12px; font-size: 12px; }
+        .chain-custody { background: #f8f9fa; border-radius: 5px; padding: 10px; margin-top: 10px; }
+        .custody-item { font-size: 12px; margin-bottom: 5px; }
+        .upload-area { border: 2px dashed #ddd; border-radius: 10px; padding: 40px; text-align: center; color: #666; cursor: pointer; transition: all 0.3s; }
+        .upload-area:hover { border-color: #1e3c72; background: #f8f9fa; }
+        .upload-area.dragover { border-color: #1e3c72; background: #e3f2fd; }
+    </style>
+</head>
+<body>    <script src="universal-menu.js"></script>
+    <header class="header">
+        <div class="header-content">
+            <div style="display: flex; align-items: center;">
+                <div style="width: 50px; height: 50px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #1e3c72; margin-right: 15px;">📁</div>
+                <div>
+                    <div style="font-size: 24px; font-weight: bold;">Evidence Management System</div>
+                    <div style="font-size: 14px; opacity: 0.9;">Digital Evidence Logs & Chain of Custody</div>
+                </div>
+            </div>
+            <button class="btn btn-primary" onclick="window.location.href='police-dashboard.html'">← Back to Dashboard</button>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Filters -->
+        <div class="filters-card">
+            <h3 style="margin-bottom: 20px;">🔍 Filter Evidence</h3>
+            <div class="filters-grid">
+                <div class="form-group">
+                    <label for="incidentFilter">Incident ID</label>
+                    <input type="text" id="incidentFilter" placeholder="e.g., INC-2024-001">
+                </div>
+                <div class="form-group">
+                    <label for="typeFilter">Evidence Type</label>
+                    <select id="typeFilter">
+                        <option value="">All Types</option>
+                        <option value="photo">Photo</option>
+                        <option value="video">Video</option>
+                        <option value="audio">Audio</option>
+                        <option value="document">Document</option>
+                        <option value="gps">GPS Data</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="dateFilter">Date Range</label>
+                    <select id="dateFilter">
+                        <option value="today">Today</option>
+                        <option value="week">This Week</option>
+                        <option value="month">This Month</option>
+                        <option value="all">All Time</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="statusFilter">Status</label>
+                    <select id="statusFilter">
+                        <option value="">All Status</option>
+                        <option value="pending">Pending Review</option>
+                        <option value="verified">Verified</option>
+                        <option value="archived">Archived</option>
+                    </select>
+                </div>
+                <button class="btn btn-primary" onclick="filterEvidence()">Apply Filters</button>
+                <button class="btn btn-success" onclick="showUploadModal()">📤 Upload Evidence</button>
+            </div>
+        </div>
+
+        <!-- Evidence Grid -->
+        <div class="evidence-grid" id="evidenceGrid">
+            <!-- Photo Evidence -->
+            <div class="evidence-card">
+                <div class="evidence-header">
+                    <span class="evidence-type type-photo">PHOTO</span>
+                    <span style="font-size: 12px; color: #666;">EV-2024-001</span>
+                </div>
+                <div class="evidence-meta">
+                    <div><strong>Incident:</strong> INC-2024-001</div>
+                    <div><strong>Uploaded:</strong> Today, 2:45 PM</div>
+                    <div><strong>Officer:</strong> SI Rajesh Kumar</div>
+                    <div><strong>Size:</strong> 2.3 MB</div>
+                </div>
+                <div class="evidence-preview">
+                    📸 panic_button_screenshot.jpg<br>
+                    <small>Tourist panic button activation</small>
+                </div>
+                <div class="evidence-actions">
+                    <button class="btn btn-primary btn-sm" onclick="viewEvidence('EV-2024-001')">👁️ View</button>
+                    <button class="btn btn-primary btn-sm" onclick="downloadEvidence('EV-2024-001')">⬇️ Download</button>
+                    <button class="btn btn-danger btn-sm" onclick="deleteEvidence('EV-2024-001')">🗑️ Delete</button>
+                </div>
+                <div class="chain-custody">
+                    <strong>Chain of Custody:</strong>
+                    <div class="custody-item">• Collected by: SI Rajesh Kumar (2:45 PM)</div>
+                    <div class="custody-item">• Verified by: Inspector Sharma (3:00 PM)</div>
+                </div>
+            </div>
+
+            <!-- Video Evidence -->
+            <div class="evidence-card">
+                <div class="evidence-header">
+                    <span class="evidence-type type-video">VIDEO</span>
+                    <span style="font-size: 12px; color: #666;">EV-2024-002</span>
+                </div>
+                <div class="evidence-meta">
+                    <div><strong>Incident:</strong> INC-2024-001</div>
+                    <div><strong>Uploaded:</strong> Today, 3:15 PM</div>
+                    <div><strong>Officer:</strong> Constable Patel</div>
+                    <div><strong>Duration:</strong> 2:34 | <strong>Size:</strong> 15.7 MB</div>
+                </div>
+                <div class="evidence-preview">
+                    🎥 incident_cctv_footage.mp4<br>
+                    <small>CCTV footage from temple premises</small>
+                </div>
+                <div class="evidence-actions">
+                    <button class="btn btn-primary btn-sm" onclick="viewEvidence('EV-2024-002')">▶️ Play</button>
+                    <button class="btn btn-primary btn-sm" onclick="downloadEvidence('EV-2024-002')">⬇️ Download</button>
+                    <button class="btn btn-danger btn-sm" onclick="deleteEvidence('EV-2024-002')">🗑️ Delete</button>
+                </div>
+                <div class="chain-custody">
+                    <strong>Chain of Custody:</strong>
+                    <div class="custody-item">• Collected by: Constable Patel (3:15 PM)</div>
+                    <div class="custody-item">• Pending verification</div>
+                </div>
+            </div>
+
+            <!-- Audio Evidence -->
+            <div class="evidence-card">
+                <div class="evidence-header">
+                    <span class="evidence-type type-audio">AUDIO</span>
+                    <span style="font-size: 12px; color: #666;">EV-2024-003</span>
+                </div>
+                <div class="evidence-meta">
+                    <div><strong>Incident:</strong> INC-2024-001</div>
+                    <div><strong>Uploaded:</strong> Today, 2:50 PM</div>
+                    <div><strong>Officer:</strong> SI Rajesh Kumar</div>
+                    <div><strong>Duration:</strong> 1:23 | <strong>Size:</strong> 1.1 MB</div>
+                </div>
+                <div class="evidence-preview">
+                    🎵 emergency_call_recording.mp3<br>
+                    <small>Tourist emergency call recording</small>
+                </div>
+                <div class="evidence-actions">
+                    <button class="btn btn-primary btn-sm" onclick="viewEvidence('EV-2024-003')">🔊 Play</button>
+                    <button class="btn btn-primary btn-sm" onclick="downloadEvidence('EV-2024-003')">⬇️ Download</button>
+                    <button class="btn btn-danger btn-sm" onclick="deleteEvidence('EV-2024-003')">🗑️ Delete</button>
+                </div>
+                <div class="chain-custody">
+                    <strong>Chain of Custody:</strong>
+                    <div class="custody-item">• Collected by: SI Rajesh Kumar (2:50 PM)</div>
+                    <div class="custody-item">• Verified by: Inspector Sharma (3:05 PM)</div>
+                </div>
+            </div>
+
+            <!-- GPS Evidence -->
+            <div class="evidence-card">
+                <div class="evidence-header">
+                    <span class="evidence-type type-gps">GPS DATA</span>
+                    <span style="font-size: 12px; color: #666;">EV-2024-004</span>
+                </div>
+                <div class="evidence-meta">
+                    <div><strong>Incident:</strong> INC-2024-001</div>
+                    <div><strong>Uploaded:</strong> Today, 2:32 PM</div>
+                    <div><strong>Officer:</strong> System Auto</div>
+                    <div><strong>Points:</strong> 47 | <strong>Size:</strong> 0.3 MB</div>
+                </div>
+                <div class="evidence-preview">
+                    📍 location_trail_2hours.gpx<br>
+                    <small>Tourist location trail (2 hours)</small>
+                </div>
+                <div class="evidence-actions">
+                    <button class="btn btn-primary btn-sm" onclick="viewEvidence('EV-2024-004')">🗺️ View Map</button>
+                    <button class="btn btn-primary btn-sm" onclick="downloadEvidence('EV-2024-004')">⬇️ Download</button>
+                    <button class="btn btn-danger btn-sm" onclick="deleteEvidence('EV-2024-004')">🗑️ Delete</button>
+                </div>
+                <div class="chain-custody">
+                    <strong>Chain of Custody:</strong>
+                    <div class="custody-item">• Auto-collected by System (2:32 PM)</div>
+                    <div class="custody-item">• Verified by: SI Rajesh Kumar (2:45 PM)</div>
+                </div>
+            </div>
+
+            <!-- Document Evidence -->
+            <div class="evidence-card">
+                <div class="evidence-header">
+                    <span class="evidence-type type-document">DOCUMENT</span>
+                    <span style="font-size: 12px; color: #666;">EV-2024-005</span>
+                </div>
+                <div class="evidence-meta">
+                    <div><strong>Incident:</strong> INC-2024-002</div>
+                    <div><strong>Uploaded:</strong> Yesterday, 4:20 PM</div>
+                    <div><strong>Officer:</strong> Inspector Sharma</div>
+                    <div><strong>Pages:</strong> 3 | <strong>Size:</strong> 0.8 MB</div>
+                </div>
+                <div class="evidence-preview">
+                    📄 witness_statement.pdf<br>
+                    <small>Witness statement document</small>
+                </div>
+                <div class="evidence-actions">
+                    <button class="btn btn-primary btn-sm" onclick="viewEvidence('EV-2024-005')">📖 View</button>
+                    <button class="btn btn-primary btn-sm" onclick="downloadEvidence('EV-2024-005')">⬇️ Download</button>
+                    <button class="btn btn-danger btn-sm" onclick="deleteEvidence('EV-2024-005')">🗑️ Delete</button>
+                </div>
+                <div class="chain-custody">
+                    <strong>Chain of Custody:</strong>
+                    <div class="custody-item">• Collected by: Inspector Sharma (4:20 PM)</div>
+                    <div class="custody-item">• Archived (Status: Verified)</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Upload Modal -->
+        <div id="uploadModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000;">
+            <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); background: white; border-radius: 10px; padding: 30px; max-width: 600px; width: 90%;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h3>📤 Upload Evidence</h3>
+                    <button onclick="closeUploadModal()" style="background: none; border: none; font-size: 24px; cursor: pointer;">×</button>
+                </div>
+                
+                <div class="form-group" style="margin-bottom: 20px;">
+                    <label>Incident ID</label>
+                    <input type="text" id="uploadIncidentId" placeholder="e.g., INC-2024-001">
+                </div>
+                
+                <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
+                    <div style="font-size: 48px; margin-bottom: 10px;">📁</div>
+                    <div>Click to select files or drag and drop</div>
+                    <div style="font-size: 12px; color: #666; margin-top: 10px;">Supported: JPG, PNG, MP4, MP3, PDF, GPX (Max: 50MB)</div>
+                </div>
+                
+                <input type="file" id="fileInput" multiple accept=".jpg,.jpeg,.png,.mp4,.mp3,.pdf,.gpx" style="display: none;">
+                
+                <div style="margin-top: 20px;">
+                    <div class="form-group">
+                        <label>Description</label>
+                        <textarea id="evidenceDescription" placeholder="Brief description of the evidence..."></textarea>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 20px;">
+                    <button class="btn btn-success" onclick="uploadEvidence()">📤 Upload Evidence</button>
+                    <button class="btn btn-primary" onclick="closeUploadModal()">Cancel</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function filterEvidence() {
+            const filters = {
+                incident: document.getElementById('incidentFilter').value,
+                type: document.getElementById('typeFilter').value,
+                date: document.getElementById('dateFilter').value,
+                status: document.getElementById('statusFilter').value
+            };
+            
+            console.log('Applying filters:', filters);
+            // In real implementation, this would filter the evidence grid
+            alert('Filters applied successfully!');
+        }
+
+        function viewEvidence(evidenceId) {
+            alert(`Opening evidence viewer for: ${evidenceId}`);
+            // In real implementation, this would open evidence in viewer/player
+        }
+
+        function downloadEvidence(evidenceId) {
+            alert(`Downloading evidence: ${evidenceId}`);
+            // In real implementation, this would download the file
+        }
+
+        function deleteEvidence(evidenceId) {
+            if (confirm(`Delete evidence ${evidenceId}? This action cannot be undone.`)) {
+                alert(`Evidence ${evidenceId} deleted successfully.`);
+                // In real implementation, this would delete from backend
+            }
+        }
+
+        function showUploadModal() {
+            document.getElementById('uploadModal').style.display = 'block';
+        }
+
+        function closeUploadModal() {
+            document.getElementById('uploadModal').style.display = 'none';
+            document.getElementById('fileInput').value = '';
+            document.getElementById('evidenceDescription').value = '';
+        }
+
+        function uploadEvidence() {
+            const incidentId = document.getElementById('uploadIncidentId').value;
+            const files = document.getElementById('fileInput').files;
+            const description = document.getElementById('evidenceDescription').value;
+            
+            if (!incidentId) {
+                alert('Please enter an Incident ID');
+                return;
+            }
+            
+            if (files.length === 0) {
+                alert('Please select at least one file');
+                return;
+            }
+            
+            alert(`Uploading ${files.length} file(s) for incident ${incidentId}...`);
+            closeUploadModal();
+            // In real implementation, this would upload files to backend
+        }
+
+        // Drag and drop functionality
+        const uploadArea = document.getElementById('uploadArea');
+        
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.classList.add('dragover');
+        });
+        
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.classList.remove('dragover');
+        });
+        
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.classList.remove('dragover');
+            
+            const files = e.dataTransfer.files;
+            document.getElementById('fileInput').files = files;
+            
+            if (files.length > 0) {
+                uploadArea.innerHTML = `
+                    <div style="font-size: 48px; margin-bottom: 10px;">✅</div>
+                    <div>${files.length} file(s) selected</div>
+                    <div style="font-size: 12px; color: #666; margin-top: 10px;">Click to change selection</div>
+                `;
+            }
+        });
+
+        // File input change handler
+        document.getElementById('fileInput').addEventListener('change', function() {
+            const files = this.files;
+            if (files.length > 0) {
+                uploadArea.innerHTML = `
+                    <div style="font-size: 48px; margin-bottom: 10px;">✅</div>
+                    <div>${files.length} file(s) selected</div>
+                    <div style="font-size: 12px; color: #666; margin-top: 10px;">Click to change selection</div>
+                `;
+            }
+        });
+    </script>
+    <!-- Universal Menu Script -->`n    <script src="universal-menu.js"></script>`n</body>
+</html>

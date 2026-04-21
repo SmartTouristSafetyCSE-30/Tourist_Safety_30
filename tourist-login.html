@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tourist Login - Smart Tourist Safety System</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; background: linear-gradient(rgba(0,51,102,0.9), rgba(0,51,102,0.9)), url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800"><rect fill="%23e3f2fd" width="1200" height="800"/><g fill="%23bbdefb" opacity="0.3"><circle cx="200" cy="150" r="30"/><circle cx="400" cy="200" r="25"/><circle cx="600" cy="100" r="35"/><circle cx="800" cy="180" r="28"/><circle cx="1000" cy="120" r="32"/><path d="M100,300 Q200,250 300,300 T500,300" stroke="%2390caf9" stroke-width="3" fill="none"/><path d="M600,400 Q700,350 800,400 T1000,400" stroke="%2390caf9" stroke-width="3" fill="none"/><polygon points="150,500 170,480 190,500 170,520" fill="%2381c784"/><polygon points="350,450 370,430 390,450 370,470" fill="%2381c784"/><polygon points="750,520 770,500 790,520 770,540" fill="%2381c784"/><rect x="250" y="600" width="40" height="60" fill="%23a5d6a7"/><rect x="500" y="580" width="35" height="80" fill="%23a5d6a7"/><rect x="850" y="620" width="45" height="40" fill="%23a5d6a7"/></g></svg>') fixed; background-size: cover; min-height: 100vh; }
+        .skip-link { position: absolute; top: -40px; left: 6px; background: #000; color: #fff; padding: 8px; text-decoration: none; z-index: 1000; }
+        .skip-link:focus { top: 6px; }
+        .gov-header { background: linear-gradient(135deg, #ff6600, #ff9933); color: white; padding: 10px 0; }
+        .header-top { display: flex; justify-content: space-between; align-items: center; max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        .logo-section { display: flex; align-items: center; gap: 15px; }
+        .emblem { width: 60px; height: 60px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #ff6600; }
+        .site-title { font-size: 24px; font-weight: bold; }
+        .site-subtitle { font-size: 14px; opacity: 0.9; }
+        .main-nav { background: #003366; }
+        .nav-container { max-width: 1200px; margin: 0 auto; }
+        .nav-menu { display: flex; list-style: none; }
+        .nav-menu li a { display: block; padding: 15px 20px; color: white; text-decoration: none; }
+        .nav-menu li a:hover { background: #004080; }
+        .login-container { max-width: 500px; margin: 50px auto; padding: 20px; }
+        .login-card { background: white; border-radius: 10px; padding: 40px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .login-header { text-align: center; margin-bottom: 30px; }
+        .login-title { font-size: 28px; color: #003366; margin-bottom: 10px; }
+        .login-subtitle { color: #666; }
+        .form-group { margin-bottom: 20px; }
+        .form-label { display: block; margin-bottom: 5px; font-weight: bold; color: #333; }
+        .form-input { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 5px; font-size: 16px; transition: border-color 0.3s; }
+        .form-input:focus { outline: none; border-color: #ff6600; }
+        .login-btn { width: 100%; background: #ff6600; color: white; padding: 15px; border: none; border-radius: 5px; font-size: 18px; font-weight: bold; cursor: pointer; transition: background 0.3s; }
+        .login-btn:hover { background: #e55a00; }
+        .login-links { text-align: center; margin-top: 20px; }
+        .login-links a { color: #ff6600; text-decoration: none; margin: 0 10px; }
+        .login-links a:hover { text-decoration: underline; }
+        .security-info { background: #e8f5e8; border: 1px solid #4caf50; border-radius: 5px; padding: 15px; margin-top: 20px; }
+        .security-title { font-weight: bold; color: #2e7d32; margin-bottom: 5px; }
+        .security-text { color: #388e3c; font-size: 14px; }
+        .gov-footer { background: #003366; color: white; padding: 20px 0; margin-top: 50px; text-align: center; }
+        @media (max-width: 768px) {
+            .header-top { flex-direction: column; gap: 10px; }
+            .nav-menu { flex-direction: column; }
+            .login-container { margin: 20px; padding: 10px; }
+            .login-card { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <script src="universal-menu.js"></script>
+    <a href="#main-content" class="skip-link">Skip to main content</a>
+    
+    <header class="gov-header">
+        <div class="header-top">
+            <div class="logo-section">
+                <div class="emblem">🇮🇳</div>
+                <div>
+                    <div class="site-title">Smart Tourist Safety System</div>
+                    <div class="site-subtitle">Ministry of Development of North Eastern Region</div>
+                    <div style="font-size: 11px; opacity: 0.8; margin-top: 2px;">SDG-9: Industry, Innovation & Infrastructure</div>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <nav class="main-nav">
+        <div class="nav-container">
+            <ul class="nav-menu">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="tourist-login.html">Tourist Login</a></li>
+                <li><a href="tourist-register.html">Register</a></li>
+                <li><a href="help-support.html">Help</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <main id="main-content" class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <h1 class="login-title">🎫 Tourist Login</h1>
+                <p class="login-subtitle">Access your Digital Tourist ID and safety services</p>
+            </div>
+            
+            <form id="loginForm" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label for="username" class="form-label">Username / Email</label>
+                    <input type="text" id="username" name="username" class="form-input" required 
+                           placeholder="Enter your username or email">
+                </div>
+                
+                <div class="form-group">
+                    <label for="password" class="form-label">Password</label>
+                    <input type="password" id="password" name="password" class="form-input" required 
+                           placeholder="Enter your password">
+                </div>
+                
+                <button type="submit" class="login-btn">🔐 Login Securely</button>
+            </form>
+            
+            <div class="login-links">
+                <a href="tourist-register.html">New Tourist? Register Here</a> |
+                <a href="#" onclick="forgotPassword()">Forgot Password?</a>
+            </div>
+            
+            <div class="security-info">
+                <div class="security-title">🔒 Secure Login</div>
+                <div class="security-text">
+                    Your login is protected with government-grade encryption. 
+                    All data is secured according to Digital India standards.
+                </div>
+            </div>
+        </div>
+    </main>
+    
+    <footer class="gov-footer">
+        <p>&copy; 2024 Ministry of Development of North Eastern Region, Government of India</p>
+    </footer>
+    
+    <script>
+        // Add animation styles
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+        `;
+        document.head.appendChild(style);
+        async function handleLogin(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            const loginBtn = document.querySelector('.login-btn');
+            const originalText = loginBtn.textContent;
+            loginBtn.textContent = '🔄 Authenticating...';
+            loginBtn.disabled = true;
+            
+            try {
+                const response = await fetch('/api/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username, password })
+                });
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    localStorage.setItem('touristLoggedIn', 'true');
+                    localStorage.setItem('userType', data.user.role);
+                    localStorage.setItem('authToken', data.token);
+                    localStorage.setItem('userInfo', JSON.stringify(data.user));
+                    
+                    showMessage('✅ Login Successful! Redirecting...', 'success');
+                    setTimeout(() => window.location.href = 'tourist-dashboard.html', 1000);
+                } else {
+                    showMessage('❌ ' + data.error, 'error');
+                    loginBtn.textContent = originalText;
+                    loginBtn.disabled = false;
+                }
+            } catch (error) {
+                showMessage('❌ Connection error. Please try again.', 'error');
+                loginBtn.textContent = originalText;
+                loginBtn.disabled = false;
+            }
+        }
+        
+        function showMessage(message, type) {
+            const messageDiv = document.createElement('div');
+            messageDiv.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 15px 20px;
+                border-radius: 8px;
+                color: white;
+                font-weight: 600;
+                z-index: 10000;
+                animation: slideIn 0.3s ease;
+                ${type === 'success' ? 'background: #4CAF50;' : 'background: #f44336;'}
+            `;
+            messageDiv.textContent = message;
+            document.body.appendChild(messageDiv);
+            
+            setTimeout(() => {
+                messageDiv.remove();
+            }, 4000);
+        }
+        
+        function forgotPassword() {
+            alert('Please contact tourist helpline 1363 for password recovery assistance.');
+        }
+        
+        // Check if already logged in
+        window.onload = function() {
+            const isLoggedIn = localStorage.getItem('touristLoggedIn');
+            const userType = localStorage.getItem('userType');
+            
+            if (isLoggedIn === 'true' && userType === 'tourist') {
+                window.location.href = 'tourist-dashboard.html';
+            }
+            
+            // Add demo credentials info
+            const demoInfo = document.createElement('div');
+            demoInfo.style.cssText = `
+                background: #e3f2fd;
+                border: 1px solid #2196f3;
+                border-radius: 8px;
+                padding: 15px;
+                margin-top: 20px;
+                text-align: center;
+            `;
+            demoInfo.innerHTML = `
+                <div style="font-weight: bold; color: #1976d2; margin-bottom: 8px;">🔑 Demo Credentials</div>
+                <div style="color: #1565c0; font-size: 14px;">
+                    <strong>Username:</strong> demo_tourist<br>
+                    <strong>Password:</strong> tourist123
+                </div>
+            `;
+            document.querySelector('.login-card').appendChild(demoInfo);
+        };
+    </script>
+    <!-- Universal Menu Script -->`n    <script src="universal-menu.js"></script>`n</body>
+</html>

@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tourist Notifications - Tourist Safety System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #f5f5f5; }
+        .header { background: linear-gradient(135deg, #FF6B35, #F7931E); color: white; padding: 1rem; text-align: center; }
+        .container { max-width: 800px; margin: 2rem auto; padding: 0 1rem; }
+        .notification { background: white; border-radius: 10px; padding: 1.5rem; margin: 1rem 0; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .notif-emergency { border-left: 5px solid #dc3545; }
+        .notif-warning { border-left: 5px solid #ffc107; }
+        .notif-info { border-left: 5px solid #17a2b8; }
+        .notif-success { border-left: 5px solid #28a745; }
+        .notif-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+        .btn { padding: 0.5rem 1rem; border: none; border-radius: 5px; cursor: pointer; margin: 0.2rem; }
+        .btn-primary { background: #007bff; color: white; }
+        .btn-danger { background: #dc3545; color: white; }
+        .timestamp { color: #666; font-size: 0.9em; }
+    </style>
+</head>
+<body>    <script src="universal-menu.js"></script>
+    <div class="header">
+        <h1><i class="fas fa-bell"></i> Tourist Notifications</h1>
+        <p>Stay updated with safety alerts and information</p>
+    </div>
+
+    <div class="container">
+        <div class="notification notif-emergency">
+            <div class="notif-header">
+                <h3><i class="fas fa-exclamation-triangle"></i> Emergency Alert</h3>
+                <span class="timestamp">2 min ago</span>
+            </div>
+            <p><strong>Weather Warning:</strong> Heavy rainfall expected in Kaziranga area. Avoid low-lying areas.</p>
+            <button class="btn btn-primary" onclick="viewDetails('weather')">View Details</button>
+            <button class="btn btn-danger" onclick="markRead(this)">Mark as Read</button>
+        </div>
+
+        <div class="notification notif-warning">
+            <div class="notif-header">
+                <h3><i class="fas fa-route"></i> Route Advisory</h3>
+                <span class="timestamp">15 min ago</span>
+            </div>
+            <p><strong>Road Closure:</strong> NH-37 partially blocked due to construction. Alternative route suggested.</p>
+            <button class="btn btn-primary" onclick="viewRoute()">View Alternative Route</button>
+            <button class="btn btn-danger" onclick="markRead(this)">Mark as Read</button>
+        </div>
+
+        <div class="notification notif-info">
+            <div class="notif-header">
+                <h3><i class="fas fa-info-circle"></i> Tourism Update</h3>
+                <span class="timestamp">1 hour ago</span>
+            </div>
+            <p><strong>Festival Alert:</strong> Bihu festival celebrations at Majuli Island. Special cultural programs available.</p>
+            <button class="btn btn-primary" onclick="viewEvents()">View Events</button>
+            <button class="btn btn-danger" onclick="markRead(this)">Mark as Read</button>
+        </div>
+
+        <div class="notification notif-success">
+            <div class="notif-header">
+                <h3><i class="fas fa-check-circle"></i> Safety Confirmation</h3>
+                <span class="timestamp">2 hours ago</span>
+            </div>
+            <p><strong>Check-in Successful:</strong> Your safety check-in at Kamakhya Temple has been recorded.</p>
+            <button class="btn btn-danger" onclick="markRead(this)">Mark as Read</button>
+        </div>
+
+        <div class="notification notif-info">
+            <div class="notif-header">
+                <h3><i class="fas fa-map-marked-alt"></i> Location Update</h3>
+                <span class="timestamp">3 hours ago</span>
+            </div>
+            <p><strong>Geo-fence Alert:</strong> You have entered Kaziranga National Park. Wildlife safety guidelines activated.</p>
+            <button class="btn btn-primary" onclick="viewGuidelines()">View Guidelines</button>
+            <button class="btn btn-danger" onclick="markRead(this)">Mark as Read</button>
+        </div>
+
+        <div class="notification">
+            <h3><i class="fas fa-cog"></i> Notification Settings</h3>
+            <p>Emergency alerts: <input type="checkbox" checked> Enabled</p>
+            <p>Route updates: <input type="checkbox" checked> Enabled</p>
+            <p>Tourism info: <input type="checkbox" checked> Enabled</p>
+            <p>Family notifications: <input type="checkbox" checked> Enabled</p>
+            <button class="btn btn-primary">Save Settings</button>
+        </div>
+    </div>
+
+    <script>
+        function viewDetails(type) {
+            alert(`Viewing ${type} details...`);
+        }
+        function viewRoute() {
+            alert('Opening alternative route map...');
+        }
+        function viewEvents() {
+            alert('Loading festival events...');
+        }
+        function viewGuidelines() {
+            alert('Opening wildlife safety guidelines...');
+        }
+        function markRead(btn) {
+            btn.closest('.notification').style.opacity = '0.6';
+            btn.textContent = 'Read';
+            btn.disabled = true;
+        }
+    </script>
+    <!-- Universal Menu Script -->`n    <script src="universal-menu.js"></script>`n</body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Wearable Device Status - Tourist Safety System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #f5f5f5; }
+        .header { background: linear-gradient(135deg, #FF6B35, #F7931E); color: white; padding: 1rem; text-align: center; }
+        .container { max-width: 800px; margin: 2rem auto; padding: 0 1rem; }
+        .device-card { background: white; border-radius: 10px; padding: 2rem; margin: 1rem 0; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .status-connected { border-left: 5px solid #28a745; }
+        .status-disconnected { border-left: 5px solid #dc3545; }
+        .status-low-battery { border-left: 5px solid #ffc107; }
+        .metric { display: flex; justify-content: space-between; padding: 0.5rem 0; border-bottom: 1px solid #eee; }
+        .btn { padding: 0.8rem 1.5rem; border: none; border-radius: 5px; cursor: pointer; margin: 0.5rem; }
+        .btn-primary { background: #007bff; color: white; }
+        .btn-success { background: #28a745; color: white; }
+        .battery-indicator { width: 100px; height: 20px; background: #ddd; border-radius: 10px; overflow: hidden; }
+        .battery-level { height: 100%; background: #28a745; transition: width 0.3s; }
+    </style>
+</head>
+<body>    <script src="universal-menu.js"></script>
+    <div class="header">
+        <h1><i class="fas fa-watch"></i> Wearable Device Status</h1>
+        <p>Monitor your safety wearable devices</p>
+    </div>
+
+    <div class="container">
+        <div class="device-card status-connected">
+            <h3><i class="fas fa-smartwatch"></i> Smart Watch - Connected</h3>
+            <div class="metric">
+                <span>Battery Level:</span>
+                <div>
+                    <div class="battery-indicator">
+                        <div class="battery-level" style="width: 75%;"></div>
+                    </div>
+                    <span>75%</span>
+                </div>
+            </div>
+            <div class="metric">
+                <span>Heart Rate:</span>
+                <span>72 BPM</span>
+            </div>
+            <div class="metric">
+                <span>Steps Today:</span>
+                <span>8,542</span>
+            </div>
+            <div class="metric">
+                <span>Last Sync:</span>
+                <span>2 minutes ago</span>
+            </div>
+            <button class="btn btn-primary" onclick="syncDevice('watch')">Sync Now</button>
+        </div>
+
+        <div class="device-card status-low-battery">
+            <h3><i class="fas fa-mobile-alt"></i> GPS Tracker - Low Battery</h3>
+            <div class="metric">
+                <span>Battery Level:</span>
+                <div>
+                    <div class="battery-indicator">
+                        <div class="battery-level" style="width: 15%; background: #dc3545;"></div>
+                    </div>
+                    <span>15%</span>
+                </div>
+            </div>
+            <div class="metric">
+                <span>GPS Accuracy:</span>
+                <span>3 meters</span>
+            </div>
+            <div class="metric">
+                <span>Signal Strength:</span>
+                <span>Strong</span>
+            </div>
+            <button class="btn btn-primary" onclick="findCharger()">Find Charger</button>
+        </div>
+
+        <div class="device-card status-disconnected">
+            <h3><i class="fas fa-headphones"></i> Emergency Earpiece - Disconnected</h3>
+            <p style="color: #dc3545; margin: 1rem 0;">Device not responding. Please check connection.</p>
+            <button class="btn btn-success" onclick="reconnectDevice('earpiece')">Reconnect</button>
+        </div>
+
+        <div class="device-card">
+            <h3><i class="fas fa-cog"></i> Device Settings</h3>
+            <p>Auto-sync interval: <select><option>1 min</option><option>5 min</option><option>15 min</option></select></p>
+            <p>Low battery alert: <input type="checkbox" checked> Enabled at 20%</p>
+            <p>Emergency mode: <input type="checkbox"> Auto-activate when battery < 10%</p>
+            <button class="btn btn-success">Save Settings</button>
+        </div>
+    </div>
+
+    <script>
+        function syncDevice(device) {
+            alert(`Syncing ${device}...`);
+        }
+        function findCharger() {
+            alert('Nearest charging station: Tourist Information Center - 200m');
+        }
+        function reconnectDevice(device) {
+            alert(`Attempting to reconnect ${device}...`);
+        }
+    </script>
+    <!-- Universal Menu Script -->`n    <script src="universal-menu.js"></script>`n</body>
+</html>

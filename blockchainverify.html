@@ -1,0 +1,2136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blockchain Digital ID Verification | National Tourist Safety Authority</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Exo+2:wght@300;400;500;600;700&family=Source+Code+Pro:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0a1929;
+            --primary-dark: #05101f;
+            --primary-light: #1a2d45;
+            --blockchain-purple: #8a2be2;
+            --blockchain-glow: #8a2be280;
+            --blockchain-light: #9d4edd;
+            --blockchain-dark: #6a0dad;
+            --cyber-green: #00ffaa;
+            --cyber-green-glow: #00ffaa80;
+            --cyber-blue: #00eeff;
+            --accent: #ff0055;
+            --accent-glow: #ff005580;
+            --warning: #ffaa00;
+            --success: #00ff88;
+            --success-glow: #00ff8880;
+            --grid-color: rgba(138, 43, 226, 0.1);
+            --panel-bg: rgba(10, 25, 41, 0.85);
+            --panel-border: rgba(138, 43, 226, 0.3);
+            --text-primary: #ffffff;
+            --text-secondary: #a0c8e0;
+            --text-dim: #6688aa;
+            --code-bg: #0d1b2a;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Exo 2', sans-serif;
+            background-color: var(--primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(138, 43, 226, 0.05) 0%, transparent 20%),
+                radial-gradient(circle at 80% 70%, rgba(0, 255, 170, 0.05) 0%, transparent 20%),
+                linear-gradient(to bottom, rgba(5, 16, 31, 0.9), rgba(10, 25, 41, 0.9)),
+                url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%238a2be2' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+        
+        /* Blockchain Grid Background */
+        .blockchain-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(var(--grid-color) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -1;
+            opacity: 0.3;
+        }
+        
+        .blockchain-animation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+        
+        .blockchain-node {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background-color: var(--blockchain-purple);
+            border-radius: 50%;
+            box-shadow: 0 0 10px var(--blockchain-glow);
+        }
+        
+        .blockchain-connection {
+            position: absolute;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--blockchain-purple), transparent);
+            transform-origin: left center;
+        }
+        
+        /* Header Styles */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        header {
+            background: linear-gradient(135deg, rgba(5, 16, 31, 0.95), rgba(10, 25, 41, 0.95));
+            color: var(--text-primary);
+            padding: 1.5rem 0;
+            border-bottom: 2px solid var(--blockchain-purple);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(138, 43, 226, 0.2);
+            backdrop-filter: blur(10px);
+            border-left: 4px solid var(--blockchain-purple);
+            border-right: 4px solid var(--blockchain-purple);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .blockchain-logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .blockchain-icon {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--blockchain-dark), var(--blockchain-purple));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            border: 2px solid var(--cyber-green);
+            box-shadow: 
+                0 0 20px var(--blockchain-glow),
+                inset 0 0 20px rgba(138, 43, 226, 0.2);
+            position: relative;
+            overflow: hidden;
+            animation: pulse-blockchain 3s infinite;
+        }
+        
+        @keyframes pulse-blockchain {
+            0% { box-shadow: 0 0 20px var(--blockchain-glow); }
+            50% { box-shadow: 0 0 30px var(--blockchain-glow); }
+            100% { box-shadow: 0 0 20px var(--blockchain-glow); }
+        }
+        
+        .logo-text h1 {
+            font-family: 'Orbitron', monospace;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            letter-spacing: 1px;
+            text-shadow: 0 0 10px var(--blockchain-glow);
+            background: linear-gradient(to right, var(--cyber-blue), var(--cyber-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .logo-text .tagline {
+            font-size: 0.95rem;
+            color: var(--text-secondary);
+            font-weight: 300;
+            letter-spacing: 0.5px;
+        }
+        
+        .system-status {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            background: rgba(0, 255, 136, 0.1);
+            padding: 8px 20px;
+            border-radius: 4px;
+            border: 1px solid var(--success);
+            box-shadow: 0 0 15px var(--success-glow);
+        }
+        
+        .pulse-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: var(--success);
+            box-shadow: 0 0 10px var(--success);
+            animation: pulse 2s infinite;
+        }
+        
+        /* Main Content */
+        .main-content {
+            padding: 2rem 0;
+        }
+        
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--panel-border);
+        }
+        
+        .dashboard-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .dashboard-title i {
+            color: var(--cyber-green);
+            font-size: 2rem;
+        }
+        
+        .control-panel {
+            display: flex;
+            gap: 15px;
+        }
+        
+        /* Verification Dashboard */
+        .verification-dashboard {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+        
+        @media (max-width: 992px) {
+            .verification-dashboard {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* Verification Panel */
+        .verification-panel {
+            background: var(--panel-bg);
+            border-radius: 10px;
+            padding: 2rem;
+            border: 1px solid var(--panel-border);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .verification-panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--blockchain-purple), var(--cyber-green));
+        }
+        
+        .panel-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--panel-border);
+        }
+        
+        .panel-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.3rem;
+            color: var(--cyber-blue);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        /* ID Input Section */
+        .id-input-section {
+            margin-bottom: 2rem;
+        }
+        
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .input-label {
+            display: block;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            color: var(--cyber-blue);
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .id-input {
+            width: 100%;
+            background: rgba(20, 35, 60, 0.7);
+            border: 1px solid var(--panel-border);
+            border-radius: 6px;
+            padding: 15px;
+            color: var(--text-primary);
+            font-family: 'Source Code Pro', monospace;
+            font-size: 1rem;
+            transition: all 0.3s;
+            letter-spacing: 0.5px;
+        }
+        
+        .id-input:focus {
+            outline: none;
+            border-color: var(--blockchain-purple);
+            box-shadow: 0 0 15px var(--blockchain-glow);
+        }
+        
+        .id-input.large {
+            font-size: 1.1rem;
+            padding: 20px;
+            background: rgba(13, 27, 42, 0.9);
+            border: 1px solid var(--blockchain-purple);
+        }
+        
+        /* Verification Result */
+        .verification-result {
+            background: rgba(13, 27, 42, 0.9);
+            border-radius: 8px;
+            padding: 2rem;
+            border: 1px solid var(--panel-border);
+            margin-top: 2rem;
+            display: none;
+        }
+        
+        .verification-result.active {
+            display: block;
+            animation: slideUp 0.5s ease-out;
+        }
+        
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--panel-border);
+        }
+        
+        .result-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .verification-badge {
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .badge-verified {
+            background: rgba(0, 255, 136, 0.1);
+            color: var(--success);
+            border: 1px solid var(--success);
+            box-shadow: 0 0 15px var(--success-glow);
+        }
+        
+        .badge-invalid {
+            background: rgba(255, 0, 85, 0.1);
+            color: var(--accent);
+            border: 1px solid var(--accent);
+            box-shadow: 0 0 15px var(--accent-glow);
+        }
+        
+        .badge-pending {
+            background: rgba(255, 170, 0, 0.1);
+            color: var(--warning);
+            border: 1px solid var(--warning);
+        }
+        
+        .result-details {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .detail-item {
+            padding: 15px;
+            background: rgba(20, 35, 60, 0.5);
+            border-radius: 6px;
+            border: 1px solid var(--panel-border);
+        }
+        
+        .detail-label {
+            font-size: 0.8rem;
+            color: var(--text-dim);
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .detail-value {
+            font-family: 'Source Code Pro', monospace;
+            font-size: 1rem;
+            color: var(--text-primary);
+            word-break: break-all;
+        }
+        
+        .blockchain-proof {
+            background: rgba(20, 35, 60, 0.5);
+            border-radius: 6px;
+            padding: 15px;
+            margin-top: 1.5rem;
+            border: 1px solid var(--panel-border);
+        }
+        
+        .proof-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            color: var(--cyber-blue);
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .proof-hash {
+            font-family: 'Source Code Pro', monospace;
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            word-break: break-all;
+            padding: 10px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 4px;
+            border: 1px solid var(--panel-border);
+        }
+        
+        /* ID Generation Panel */
+        .generation-panel {
+            background: var(--panel-bg);
+            border-radius: 10px;
+            padding: 2rem;
+            border: 1px solid var(--panel-border);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .generation-panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--cyber-green), var(--cyber-blue));
+        }
+        
+        .generation-form {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+        
+        @media (max-width: 768px) {
+            .generation-form {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        
+        .form-group.full-width {
+            grid-column: 1 / -1;
+        }
+        
+        .form-label {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            color: var(--cyber-blue);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .form-input, .form-select, .form-textarea {
+            background: rgba(20, 35, 60, 0.7);
+            border: 1px solid var(--panel-border);
+            border-radius: 6px;
+            padding: 12px 15px;
+            color: var(--text-primary);
+            font-family: 'Exo 2', sans-serif;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+        
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--blockchain-purple);
+            box-shadow: 0 0 15px var(--blockchain-glow);
+        }
+        
+        .form-actions {
+            grid-column: 1 / -1;
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 1rem;
+        }
+        
+        /* Blockchain Visualization */
+        .blockchain-visualization {
+            background: var(--panel-bg);
+            border-radius: 10px;
+            padding: 2rem;
+            border: 1px solid var(--panel-border);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            margin-top: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .blockchain-visualization::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--blockchain-purple), var(--cyber-green));
+        }
+        
+        .blockchain-chain {
+            display: flex;
+            overflow-x: auto;
+            gap: 20px;
+            padding: 20px 0;
+            scrollbar-width: thin;
+            scrollbar-color: var(--blockchain-purple) var(--primary);
+        }
+        
+        .blockchain-chain::-webkit-scrollbar {
+            height: 8px;
+        }
+        
+        .blockchain-chain::-webkit-scrollbar-track {
+            background: var(--primary);
+            border-radius: 4px;
+        }
+        
+        .blockchain-chain::-webkit-scrollbar-thumb {
+            background: var(--blockchain-purple);
+            border-radius: 4px;
+        }
+        
+        .block {
+            flex: 0 0 auto;
+            width: 180px;
+            background: rgba(20, 35, 60, 0.7);
+            border-radius: 8px;
+            padding: 15px;
+            border: 1px solid var(--panel-border);
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .block::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            right: -20px;
+            width: 20px;
+            height: 2px;
+            background: linear-gradient(90deg, var(--blockchain-purple), transparent);
+            transform: translateY(-50%);
+        }
+        
+        .block:last-child::before {
+            display: none;
+        }
+        
+        .block:hover {
+            transform: translateY(-5px);
+            border-color: var(--blockchain-purple);
+            box-shadow: 0 10px 20px var(--blockchain-glow);
+        }
+        
+        .block-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--panel-border);
+        }
+        
+        .block-index {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.2rem;
+            color: var(--cyber-green);
+        }
+        
+        .block-hash {
+            font-family: 'Source Code Pro', monospace;
+            font-size: 0.7rem;
+            color: var(--text-dim);
+            word-break: break-all;
+            background: rgba(0, 0, 0, 0.3);
+            padding: 8px;
+            border-radius: 4px;
+            margin-top: 10px;
+            border: 1px solid var(--panel-border);
+        }
+        
+        .block-data {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+        
+        .block-verified {
+            color: var(--success);
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        /* Statistics Panel */
+        .statistics-panel {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+        
+        @media (max-width: 992px) {
+            .statistics-panel {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .statistics-panel {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .stat-card {
+            background: var(--panel-bg);
+            border-radius: 10px;
+            padding: 1.5rem;
+            border: 1px solid var(--panel-border);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            transition: all 0.3s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--blockchain-purple);
+            box-shadow: 0 15px 30px rgba(138, 43, 226, 0.2);
+        }
+        
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+        
+        .icon-verified { background: linear-gradient(135deg, var(--success), #00cc66); }
+        .icon-pending { background: linear-gradient(135deg, var(--warning), #ff9900); }
+        .icon-invalid { background: linear-gradient(135deg, var(--accent), #cc0044); }
+        .icon-total { background: linear-gradient(135deg, var(--blockchain-purple), var(--blockchain-dark)); }
+        
+        .stat-info h3 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: var(--text-primary);
+            text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+        
+        .stat-info p {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+        }
+        
+        /* Button Styles */
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s;
+            font-family: 'Exo 2', sans-serif;
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+        
+        .btn:hover::before {
+            left: 100%;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--blockchain-purple), var(--blockchain-dark));
+            color: white;
+            border: 1px solid var(--blockchain-purple);
+        }
+        
+        .btn-primary:hover {
+            background: linear-gradient(135deg, var(--blockchain-dark), var(--blockchain-purple));
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px var(--blockchain-glow);
+        }
+        
+        .btn-success {
+            background: linear-gradient(135deg, var(--success), #00cc66);
+            color: white;
+            border: 1px solid var(--success);
+        }
+        
+        .btn-success:hover {
+            background: linear-gradient(135deg, #00cc66, var(--success));
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px var(--success-glow);
+        }
+        
+        .btn-danger {
+            background: linear-gradient(135deg, var(--accent), #cc0044);
+            color: white;
+            border: 1px solid var(--accent);
+        }
+        
+        .btn-danger:hover {
+            background: linear-gradient(135deg, #cc0044, var(--accent));
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px var(--accent-glow);
+        }
+        
+        .btn-outline {
+            background: transparent;
+            color: var(--blockchain-purple);
+            border: 1px solid var(--blockchain-purple);
+        }
+        
+        .btn-outline:hover {
+            background: rgba(138, 43, 226, 0.1);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px var(--blockchain-glow);
+        }
+        
+        .btn-sm {
+            padding: 8px 15px;
+            font-size: 0.9rem;
+        }
+        
+        /* Footer */
+        footer {
+            background: linear-gradient(135deg, rgba(5, 16, 31, 0.95), rgba(10, 25, 41, 0.95));
+            color: var(--text-primary);
+            padding: 2rem 0;
+            margin-top: 3rem;
+            border-top: 2px solid var(--blockchain-purple);
+            backdrop-filter: blur(10px);
+            border-left: 4px solid var(--blockchain-purple);
+            border-right: 4px solid var(--blockchain-purple);
+        }
+        
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .system-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            color: var(--text-dim);
+        }
+        
+        .info-item i {
+            color: var(--cyber-blue);
+        }
+        
+        .copyright {
+            font-size: 0.85rem;
+            opacity: 0.8;
+            text-align: right;
+        }
+        
+        /* Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(5, 16, 31, 0.95);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+            backdrop-filter: blur(10px);
+        }
+        
+        .modal.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+        
+        .modal-content {
+            background: var(--panel-bg);
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            border: 2px solid var(--blockchain-purple);
+            box-shadow: 0 20px 50px rgba(138, 43, 226, 0.3);
+            overflow: hidden;
+            transform: translateY(-20px);
+            transition: transform 0.3s;
+        }
+        
+        .modal.active .modal-content {
+            transform: translateY(0);
+        }
+        
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid var(--panel-border);
+            background: linear-gradient(90deg, var(--primary-dark), var(--primary));
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .modal-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            color: var(--cyber-blue);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .modal-body {
+            padding: 2rem;
+        }
+        
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 2rem;
+        }
+        
+        /* QR Code */
+        .qr-code-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            margin: 1.5rem 0;
+        }
+        
+        .qr-code {
+            width: 200px;
+            height: 200px;
+            background: white;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            position: relative;
+        }
+        
+        .qr-code::before {
+            content: '';
+            position: absolute;
+            width: 180px;
+            height: 180px;
+            background: 
+                linear-gradient(45deg, transparent 45%, #000 45%, #000 55%, transparent 55%),
+                linear-gradient(-45deg, transparent 45%, #000 45%, #000 55%, transparent 55%),
+                repeating-linear-gradient(0deg, #000, #000 2px, transparent 2px, transparent 10px),
+                repeating-linear-gradient(90deg, #000, #000 2px, transparent 2px, transparent 10px);
+            border-radius: 5px;
+        }
+        
+        .qr-label {
+            margin-top: 15px;
+            font-family: 'Source Code Pro', monospace;
+            font-size: 0.8rem;
+            color: #000;
+            text-align: center;
+        }
+        
+        /* Animations */
+        @keyframes pulse {
+            0% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.1); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+                text-align: center;
+            }
+            
+            .system-status {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .control-panel {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .footer-content {
+                flex-direction: column;
+                gap: 1.5rem;
+                text-align: center;
+            }
+            
+            .system-info {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Blockchain Grid Background -->
+    <div class="blockchain-grid"></div>
+    <div class="blockchain-animation" id="blockchain-animation"></div>
+    
+    <!-- Modal for Generated ID -->
+    <div class="modal" id="id-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">
+                    <i class="fas fa-qrcode"></i>
+                    Digital ID Generated
+                </h3>
+                <button class="btn btn-outline btn-sm" id="close-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="qr-code-container">
+                    <div class="qr-code">
+                        <div class="qr-label">TOURIST-ID-VERIFIED</div>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label class="input-label">
+                        <i class="fas fa-fingerprint"></i>
+                        Your Blockchain ID
+                    </label>
+                    <input type="text" class="id-input large" id="generated-id" readonly>
+                </div>
+                <div class="modal-actions">
+                    <button class="btn btn-outline" id="copy-id">
+                        <i class="fas fa-copy"></i> Copy ID
+                    </button>
+                    <button class="btn btn-primary" id="download-qr">
+                        <i class="fas fa-download"></i> Download QR
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <div class="container">
+                <div class="header-content">
+                    <div class="blockchain-logo">
+                        <div class="blockchain-icon">
+                            <i class="fas fa-link"></i>
+                        </div>
+                        <div class="logo-text">
+                            <h1>BLOCKCHAIN DIGITAL ID VERIFICATION</h1>
+                            <div class="tagline">National Tourist Safety Authority • Immutable Identity Verification</div>
+                        </div>
+                    </div>
+                    <div class="system-status">
+                        <div class="status-indicator">
+                            <div class="pulse-dot"></div>
+                            <span>BLOCKCHAIN: <strong>ACTIVE</strong></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="container">
+                <div class="dashboard-header">
+                    <h2 class="dashboard-title">
+                        <i class="fas fa-shield-alt"></i>
+                        DIGITAL ID VERIFICATION SYSTEM
+                    </h2>
+                    <div class="control-panel">
+                        <button class="btn btn-outline" id="audit-trail">
+                            <i class="fas fa-history"></i>
+                            Audit Trail
+                        </button>
+                        <button class="btn btn-outline" id="system-log">
+                            <i class="fas fa-file-alt"></i>
+                            System Log
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Verification Dashboard -->
+                <div class="verification-dashboard">
+                    <!-- Verification Panel -->
+                    <div class="verification-panel">
+                        <div class="panel-header">
+                            <h3 class="panel-title">
+                                <i class="fas fa-search"></i>
+                                VERIFY DIGITAL ID
+                            </h3>
+                            <div class="control-panel">
+                                <button class="btn btn-outline btn-sm" id="scan-qr">
+                                    <i class="fas fa-qrcode"></i>
+                                    Scan QR
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="id-input-section">
+                            <div class="input-group">
+                                <label class="input-label">
+                                    <i class="fas fa-fingerprint"></i>
+                                    Enter Blockchain ID
+                                </label>
+                                <input type="text" class="id-input" id="verify-input" 
+                                       placeholder="0x8a7f9e2d5c4b3a1f6e5d8c7b2a3f4e5d6c7b8a9f0e1d2c3b4a5f6e7d8c9b0a1f2e3d4c5b6a7">
+                            </div>
+                            
+                            <div class="input-group">
+                                <label class="input-label">
+                                    <i class="fas fa-key"></i>
+                                    Security Key (Optional)
+                                </label>
+                                <input type="password" class="id-input" id="security-key" 
+                                       placeholder="Enter encryption key for additional verification">
+                            </div>
+                            
+                            <div class="form-actions">
+                                <button class="btn btn-primary" id="verify-id">
+                                    <i class="fas fa-check-circle"></i>
+                                    Verify ID
+                                </button>
+                                <button class="btn btn-outline" id="clear-verify">
+                                    <i class="fas fa-redo"></i>
+                                    Clear
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Verification Result -->
+                        <div class="verification-result" id="verification-result">
+                            <div class="result-header">
+                                <h4 class="result-title">
+                                    <i class="fas fa-file-certificate"></i>
+                                    Verification Result
+                                </h4>
+                                <div class="verification-badge" id="verification-badge">
+                                    Pending
+                                </div>
+                            </div>
+                            
+                            <div class="result-details">
+                                <div class="detail-item">
+                                    <div class="detail-label">ID Status</div>
+                                    <div class="detail-value" id="id-status">Checking...</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">Owner</div>
+                                    <div class="detail-value" id="id-owner">Loading...</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">Created</div>
+                                    <div class="detail-value" id="id-created">Loading...</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">Last Verified</div>
+                                    <div class="detail-value" id="id-last-verified">Loading...</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">Blockchain Hash</div>
+                                    <div class="detail-value" id="blockchain-hash">Loading...</div>
+                                </div>
+                                <div class="detail-item">
+                                    <div class="detail-label">Verification Count</div>
+                                    <div class="detail-value" id="verification-count">Loading...</div>
+                                </div>
+                            </div>
+                            
+                            <div class="blockchain-proof">
+                                <div class="proof-title">
+                                    <i class="fas fa-link"></i>
+                                    Blockchain Proof
+                                </div>
+                                <div class="proof-hash" id="proof-hash">
+                                    0x0000000000000000000000000000000000000000000000000000000000000000
+                                </div>
+                            </div>
+                            
+                            <div class="form-actions" style="margin-top: 1.5rem;">
+                                <button class="btn btn-success" id="export-certificate">
+                                    <i class="fas fa-file-pdf"></i>
+                                    Export Certificate
+                                </button>
+                                <button class="btn btn-outline" id="share-verification">
+                                    <i class="fas fa-share-alt"></i>
+                                    Share Result
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Generation Panel -->
+                    <div class="generation-panel">
+                        <div class="panel-header">
+                            <h3 class="panel-title">
+                                <i class="fas fa-plus-circle"></i>
+                                GENERATE NEW ID
+                            </h3>
+                            <div class="control-panel">
+                                <button class="btn btn-outline btn-sm" id="random-id">
+                                    <i class="fas fa-random"></i>
+                                    Randomize
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <form class="generation-form" id="generation-form">
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <i class="fas fa-user"></i>
+                                    Full Name
+                                </label>
+                                <input type="text" class="form-input" id="gen-name" placeholder="Enter full name" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <i class="fas fa-passport"></i>
+                                    Passport Number
+                                </label>
+                                <input type="text" class="form-input" id="gen-passport" placeholder="Enter passport number" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <i class="fas fa-flag"></i>
+                                    Nationality
+                                </label>
+                                <select class="form-select" id="gen-nationality" required>
+                                    <option value="">Select nationality</option>
+                                    <option value="USA">United States</option>
+                                    <option value="UK">United Kingdom</option>
+                                    <option value="CAN">Canada</option>
+                                    <option value="AUS">Australia</option>
+                                    <option value="GER">Germany</option>
+                                    <option value="FRA">France</option>
+                                    <option value="JPN">Japan</option>
+                                    <option value="CHN">China</option>
+                                    <option value="IND">India</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <i class="fas fa-calendar"></i>
+                                    Date of Birth
+                                </label>
+                                <input type="date" class="form-input" id="gen-dob" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <i class="fas fa-venus-mars"></i>
+                                    Gender
+                                </label>
+                                <select class="form-select" id="gen-gender" required>
+                                    <option value="">Select gender</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <i class="fas fa-phone"></i>
+                                    Contact Number
+                                </label>
+                                <input type="tel" class="form-input" id="gen-phone" placeholder="Enter contact number" required>
+                            </div>
+                            
+                            <div class="form-group full-width">
+                                <label class="form-label">
+                                    <i class="fas fa-envelope"></i>
+                                    Email Address
+                                </label>
+                                <input type="email" class="form-input" id="gen-email" placeholder="Enter email address" required>
+                            </div>
+                            
+                            <div class="form-group full-width">
+                                <label class="form-label">
+                                    <i class="fas fa-plane"></i>
+                                    Travel Information
+                                </label>
+                                <textarea class="form-textarea" id="gen-travel" 
+                                          placeholder="Enter travel dates, destinations, and purpose of visit" rows="3"></textarea>
+                            </div>
+                            
+                            <div class="form-actions">
+                                <button type="button" class="btn btn-outline" id="reset-gen-form">
+                                    <i class="fas fa-redo"></i>
+                                    Reset
+                                </button>
+                                <button type="submit" class="btn btn-success">
+                                    <i class="fas fa-link"></i>
+                                    Generate Blockchain ID
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <!-- Blockchain Visualization -->
+                <div class="blockchain-visualization">
+                    <div class="panel-header">
+                        <h3 class="panel-title">
+                            <i class="fas fa-project-diagram"></i>
+                            BLOCKCHAIN VERIFICATION CHAIN
+                        </h3>
+                        <div class="control-panel">
+                            <button class="btn btn-outline btn-sm" id="refresh-chain">
+                                <i class="fas fa-sync-alt"></i>
+                                Refresh
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="blockchain-chain" id="blockchain-chain">
+                        <!-- Blocks will be dynamically added here -->
+                    </div>
+                </div>
+                
+                <!-- Statistics Panel -->
+                <div class="statistics-panel">
+                    <div class="stat-card">
+                        <div class="stat-icon icon-verified">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="verified-count">2,847</h3>
+                            <p>Verified IDs</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon icon-pending">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="pending-count">18</h3>
+                            <p>Pending Verifications</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon icon-invalid">
+                            <i class="fas fa-times-circle"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="invalid-count">7</h3>
+                            <p>Invalid IDs</p>
+                        </div>
+                    </div>
+                    
+                    <div class="stat-card">
+                        <div class="stat-icon icon-total">
+                            <i class="fas fa-link"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3 id="total-count">2,872</h3>
+                            <p>Total Blockchain IDs</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+        
+        <!-- Footer -->
+        <footer>
+            <div class="container">
+                <div class="footer-content">
+                    <div class="system-info">
+                        <div class="info-item">
+                            <i class="fas fa-server"></i>
+                            <span>Network: <strong>Ethereum Mainnet</strong></span>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>Encryption: <strong>AES-256</strong></span>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-clock"></i>
+                            <span>Last Block: <strong id="last-block">#15,847,293</strong></span>
+                        </div>
+                        <div class="info-item">
+                            <i class="fas fa-database"></i>
+                            <span>Gas Used: <strong>42.7 Gwei</strong></span>
+                        </div>
+                    </div>
+                    <div class="copyright">
+                        &copy; 2023 National Tourist Safety Authority • Blockchain ID Verification System v2.1<br>
+                        All identities are immutably stored on the national blockchain network.
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // ============================================
+        // BLOCKCHAIN DIGITAL ID VERIFICATION SYSTEM
+        // ============================================
+        
+        // System Configuration
+        const BLOCKCHAIN_SYSTEM = {
+            verifiedCount: 2847,
+            pendingCount: 18,
+            invalidCount: 7,
+            totalCount: 2872,
+            lastBlock: 15847293,
+            chain: [],
+            verificationHistory: [],
+            currentVerification: null
+        };
+        
+        // Sample Blockchain Data
+        const SAMPLE_BLOCKCHAIN = [
+            {
+                index: 1,
+                hash: "0x1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b",
+                previousHash: "0x0000000000000000000000000000000000000000000000000000000000000000",
+                timestamp: "2023-10-15 08:30:45",
+                data: "System Genesis Block",
+                verified: true
+            },
+            {
+                index: 2,
+                hash: "0x2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c",
+                previousHash: "0x1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b",
+                timestamp: "2023-10-15 09:15:22",
+                data: "ID: TOUR-001 Created - John Smith",
+                verified: true
+            },
+            {
+                index: 3,
+                hash: "0x3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d",
+                previousHash: "0x2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c",
+                timestamp: "2023-10-15 10:45:18",
+                data: "ID: TOUR-002 Created - Emma Wilson",
+                verified: true
+            },
+            {
+                index: 4,
+                hash: "0x4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e",
+                previousHash: "0x3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d",
+                timestamp: "2023-10-15 14:20:33",
+                data: "ID: TOUR-001 Verified at Airport",
+                verified: true
+            },
+            {
+                index: 5,
+                hash: "0x5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f",
+                previousHash: "0x4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e",
+                timestamp: "2023-10-16 08:15:47",
+                data: "ID: TOUR-003 Created - Carlos Rodriguez",
+                verified: true
+            },
+            {
+                index: 6,
+                hash: "0x6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a",
+                previousHash: "0x5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f",
+                timestamp: "2023-10-16 11:30:15",
+                data: "ID: TOUR-002 Verified at Hotel",
+                verified: true
+            },
+            {
+                index: 7,
+                hash: "0x7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a8b",
+                previousHash: "0x6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e6f7a",
+                timestamp: "2023-10-16 16:45:29",
+                data: "Security Alert: ID TOUR-004 Flagged",
+                verified: false
+            }
+        ];
+        
+        // Sample Verified IDs
+        const VERIFIED_IDS = [
+            {
+                id: "0x8a7f9e2d5c4b3a1f6e5d8c7b2a3f4e5d6c7b8a9f0e1d2c3b4a5f6e7d8c9b0a1f2e3d4c5b6a7",
+                owner: "Emma Wilson",
+                nationality: "United States",
+                created: "2023-10-15 09:15:22",
+                lastVerified: "2023-10-16 11:30:15",
+                verificationCount: 12,
+                status: "verified",
+                blockchainHash: "0x3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d"
+            },
+            {
+                id: "0x9b8c7d6e5f4a3b2c1d0e9f8a7b6c5d4e3f2a1b0c9d8e7f6a5b4c3d2e1f0a9b8c7d6e5f4a3b",
+                owner: "John Smith",
+                nationality: "United Kingdom",
+                created: "2023-10-15 08:30:45",
+                lastVerified: "2023-10-15 14:20:33",
+                verificationCount: 8,
+                status: "verified",
+                blockchainHash: "0x1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b"
+            }
+        ];
+        
+        // DOM Elements
+        const elements = {
+            verifyInput: document.getElementById('verify-input'),
+            securityKey: document.getElementById('security-key'),
+            verifyIdBtn: document.getElementById('verify-id'),
+            clearVerifyBtn: document.getElementById('clear-verify'),
+            verificationResult: document.getElementById('verification-result'),
+            verificationBadge: document.getElementById('verification-badge'),
+            idStatus: document.getElementById('id-status'),
+            idOwner: document.getElementById('id-owner'),
+            idCreated: document.getElementById('id-created'),
+            idLastVerified: document.getElementById('id-last-verified'),
+            blockchainHash: document.getElementById('blockchain-hash'),
+            verificationCount: document.getElementById('verification-count'),
+            proofHash: document.getElementById('proof-hash'),
+            generationForm: document.getElementById('generation-form'),
+            blockchainChain: document.getElementById('blockchain-chain'),
+            verifiedCount: document.getElementById('verified-count'),
+            pendingCount: document.getElementById('pending-count'),
+            invalidCount: document.getElementById('invalid-count'),
+            totalCount: document.getElementById('total-count'),
+            lastBlock: document.getElementById('last-block'),
+            idModal: document.getElementById('id-modal'),
+            closeModal: document.getElementById('close-modal'),
+            generatedId: document.getElementById('generated-id'),
+            copyIdBtn: document.getElementById('copy-id'),
+            downloadQrBtn: document.getElementById('download-qr'),
+            scanQrBtn: document.getElementById('scan-qr'),
+            auditTrailBtn: document.getElementById('audit-trail'),
+            systemLogBtn: document.getElementById('system-log'),
+            randomIdBtn: document.getElementById('random-id'),
+            resetGenFormBtn: document.getElementById('reset-gen-form'),
+            refreshChainBtn: document.getElementById('refresh-chain'),
+            exportCertificateBtn: document.getElementById('export-certificate'),
+            shareVerificationBtn: document.getElementById('share-verification')
+        };
+        
+        // Initialize Blockchain System
+        function initBlockchainSystem() {
+            console.log('🔗 Initializing Blockchain Digital ID Verification System...');
+            
+            // Initialize blockchain visualization
+            renderBlockchain();
+            updateStatistics();
+            updateLastBlock();
+            
+            // Setup event listeners
+            setupEventListeners();
+            
+            // Create blockchain animation
+            createBlockchainAnimation();
+            
+            // Start live updates
+            startLiveUpdates();
+            
+            // Show welcome message
+            showNotification(
+                "Blockchain Verification System Active",
+                "Digital ID verification system connected to Ethereum mainnet.",
+                "success"
+            );
+            
+            console.log('✅ Blockchain system initialized successfully');
+        }
+        
+        // Render Blockchain Visualization
+        function renderBlockchain() {
+            elements.blockchainChain.innerHTML = '';
+            
+            SAMPLE_BLOCKCHAIN.forEach(block => {
+                const blockElement = createBlockElement(block);
+                elements.blockchainChain.appendChild(blockElement);
+            });
+            
+            // Auto-scroll to latest block
+            elements.blockchainChain.scrollLeft = elements.blockchainChain.scrollWidth;
+        }
+        
+        // Create Block Element
+        function createBlockElement(block) {
+            const blockEl = document.createElement('div');
+            blockEl.className = 'block';
+            blockEl.dataset.index = block.index;
+            
+            const verifiedIcon = block.verified ? 
+                '<i class="fas fa-check-circle"></i> Verified' : 
+                '<i class="fas fa-exclamation-triangle"></i> Alert';
+                
+            const verifiedClass = block.verified ? 'block-verified' : 'block-verified';
+            const verifiedColor = block.verified ? 'var(--success)' : 'var(--accent)';
+            
+            blockEl.innerHTML = `
+                <div class="block-header">
+                    <div class="block-index">#${block.index}</div>
+                    <div class="${verifiedClass}" style="color: ${verifiedColor}">
+                        ${verifiedIcon}
+                    </div>
+                </div>
+                <div class="block-data">
+                    ${block.data}
+                </div>
+                <div class="block-hash">
+                    ${block.hash.substring(0, 20)}...
+                </div>
+                <div style="font-size: 0.8rem; color: var(--text-dim); margin-top: 8px;">
+                    ${block.timestamp}
+                </div>
+            `;
+            
+            return blockEl;
+        }
+        
+        // Update Statistics
+        function updateStatistics() {
+            elements.verifiedCount.textContent = BLOCKCHAIN_SYSTEM.verifiedCount.toLocaleString();
+            elements.pendingCount.textContent = BLOCKCHAIN_SYSTEM.pendingCount;
+            elements.invalidCount.textContent = BLOCKCHAIN_SYSTEM.invalidCount;
+            elements.totalCount.textContent = BLOCKCHAIN_SYSTEM.totalCount.toLocaleString();
+        }
+        
+        // Update Last Block
+        function updateLastBlock() {
+            BLOCKCHAIN_SYSTEM.lastBlock += Math.floor(Math.random() * 10) + 1;
+            elements.lastBlock.textContent = `#${BLOCKCHAIN_SYSTEM.lastBlock.toLocaleString()}`;
+        }
+        
+        // Create Blockchain Animation
+        function createBlockchainAnimation() {
+            const animationContainer = document.getElementById('blockchain-animation');
+            
+            // Create nodes
+            for (let i = 0; i < 20; i++) {
+                const node = document.createElement('div');
+                node.className = 'blockchain-node';
+                node.style.left = `${Math.random() * 100}%`;
+                node.style.top = `${Math.random() * 100}%`;
+                animationContainer.appendChild(node);
+                
+                // Add animation
+                node.animate([
+                    { opacity: 0.3, transform: 'scale(1)' },
+                    { opacity: 1, transform: 'scale(1.5)' },
+                    { opacity: 0.3, transform: 'scale(1)' }
+                ], {
+                    duration: 2000 + Math.random() * 3000,
+                    iterations: Infinity,
+                    delay: Math.random() * 2000
+                });
+            }
+            
+            // Create connections
+            for (let i = 0; i < 15; i++) {
+                const connection = document.createElement('div');
+                connection.className = 'blockchain-connection';
+                
+                const x1 = Math.random() * 100;
+                const y1 = Math.random() * 100;
+                const x2 = Math.random() * 100;
+                const y2 = Math.random() * 100;
+                
+                const length = Math.sqrt(Math.pow(x2 - x1, 2) + Math.pow(y2 - y1, 2));
+                const angle = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
+                
+                connection.style.width = `${length}%`;
+                connection.style.left = `${x1}%`;
+                connection.style.top = `${y1}%`;
+                connection.style.transform = `rotate(${angle}deg)`;
+                
+                animationContainer.appendChild(connection);
+                
+                // Add animation
+                connection.animate([
+                    { opacity: 0.1 },
+                    { opacity: 0.3 },
+                    { opacity: 0.1 }
+                ], {
+                    duration: 3000 + Math.random() * 4000,
+                    iterations: Infinity,
+                    delay: Math.random() * 3000
+                });
+            }
+        }
+        
+        // Setup Event Listeners
+        function setupEventListeners() {
+            // Verification
+            elements.verifyIdBtn.addEventListener('click', verifyDigitalId);
+            elements.clearVerifyBtn.addEventListener('click', clearVerification);
+            elements.scanQrBtn.addEventListener('click', simulateQrScan);
+            
+            // Generation Form
+            elements.generationForm.addEventListener('submit', generateDigitalId);
+            elements.randomIdBtn.addEventListener('click', randomizeIdData);
+            elements.resetGenFormBtn.addEventListener('click', resetGenerationForm);
+            
+            // Modal
+            elements.closeModal.addEventListener('click', () => {
+                elements.idModal.classList.remove('active');
+            });
+            
+            elements.copyIdBtn.addEventListener('click', copyGeneratedId);
+            elements.downloadQrBtn.addEventListener('click', downloadQrCode);
+            
+            // System Controls
+            elements.auditTrailBtn.addEventListener('click', showAuditTrail);
+            elements.systemLogBtn.addEventListener('click', showSystemLog);
+            elements.refreshChainBtn.addEventListener('click', refreshBlockchain);
+            elements.exportCertificateBtn.addEventListener('click', exportCertificate);
+            elements.shareVerificationBtn.addEventListener('click', shareVerification);
+            
+            // Close modal on outside click
+            elements.idModal.addEventListener('click', (e) => {
+                if (e.target === elements.idModal) {
+                    elements.idModal.classList.remove('active');
+                }
+            });
+        }
+        
+        // Verify Digital ID
+        function verifyDigitalId() {
+            const id = elements.verifyInput.value.trim();
+            const securityKey = elements.securityKey.value.trim();
+            
+            if (!id) {
+                showNotification(
+                    "Input Required",
+                    "Please enter a Blockchain ID to verify.",
+                    "warning"
+                );
+                return;
+            }
+            
+            // Show verification in progress
+            elements.verificationResult.classList.add('active');
+            elements.verificationBadge.className = 'verification-badge badge-pending';
+            elements.verificationBadge.textContent = 'Verifying...';
+            
+            // Update status
+            elements.idStatus.textContent = 'Checking blockchain...';
+            elements.idOwner.textContent = 'Loading...';
+            elements.idCreated.textContent = 'Loading...';
+            elements.idLastVerified.textContent = 'Loading...';
+            elements.blockchainHash.textContent = 'Loading...';
+            elements.verificationCount.textContent = 'Loading...';
+            elements.proofHash.textContent = '0x' + '0'.repeat(64);
+            
+            // Simulate blockchain verification
+            setTimeout(() => {
+                const isVerified = Math.random() > 0.1; // 90% chance of verified
+                const sampleId = VERIFIED_IDS[Math.floor(Math.random() * VERIFIED_IDS.length)];
+                
+                if (isVerified) {
+                    // Successful verification
+                    elements.verificationBadge.className = 'verification-badge badge-verified';
+                    elements.verificationBadge.textContent = 'Verified';
+                    
+                    elements.idStatus.textContent = 'Valid & Verified';
+                    elements.idStatus.style.color = 'var(--success)';
+                    
+                    elements.idOwner.textContent = sampleId.owner;
+                    elements.idCreated.textContent = sampleId.created;
+                    elements.idLastVerified.textContent = new Date().toLocaleString();
+                    elements.blockchainHash.textContent = sampleId.blockchainHash.substring(0, 32) + '...';
+                    elements.verificationCount.textContent = sampleId.verificationCount + 1;
+                    elements.proofHash.textContent = generateHash();
+                    
+                    // Update statistics
+                    BLOCKCHAIN_SYSTEM.verifiedCount++;
+                    BLOCKCHAIN_SYSTEM.totalCount++;
+                    updateStatistics();
+                    
+                    // Add to blockchain
+                    addVerificationToBlockchain(id, sampleId.owner);
+                    
+                    showNotification(
+                        "Verification Successful",
+                        `Digital ID verified successfully. Owner: ${sampleId.owner}`,
+                        "success"
+                    );
+                } else {
+                    // Failed verification
+                    elements.verificationBadge.className = 'verification-badge badge-invalid';
+                    elements.verificationBadge.textContent = 'Invalid';
+                    
+                    elements.idStatus.textContent = 'Invalid or Tampered';
+                    elements.idStatus.style.color = 'var(--accent)';
+                    
+                    elements.idOwner.textContent = 'Unknown';
+                    elements.idCreated.textContent = 'Unknown';
+                    elements.idLastVerified.textContent = 'Never';
+                    elements.blockchainHash.textContent = 'No matching hash found';
+                    elements.verificationCount.textContent = '0';
+                    elements.proofHash.textContent = '0x' + '0'.repeat(64);
+                    
+                    // Update statistics
+                    BLOCKCHAIN_SYSTEM.invalidCount++;
+                    updateStatistics();
+                    
+                    showNotification(
+                        "Verification Failed",
+                        "Blockchain ID could not be verified. Possible tampering detected.",
+                        "danger"
+                    );
+                }
+            }, 1500);
+        }
+        
+        // Clear Verification
+        function clearVerification() {
+            elements.verifyInput.value = '';
+            elements.securityKey.value = '';
+            elements.verificationResult.classList.remove('active');
+        }
+        
+        // Simulate QR Scan
+        function simulateQrScan() {
+            const sampleId = VERIFIED_IDS[0].id;
+            elements.verifyInput.value = sampleId;
+            
+            showNotification(
+                "QR Code Scanned",
+                "Blockchain ID successfully captured from QR code.",
+                "success"
+            );
+        }
+        
+        // Generate Digital ID
+        function generateDigitalId(e) {
+            e.preventDefault();
+            
+            const formData = {
+                name: document.getElementById('gen-name').value,
+                passport: document.getElementById('gen-passport').value,
+                nationality: document.getElementById('gen-nationality').value,
+                dob: document.getElementById('gen-dob').value,
+                gender: document.getElementById('gen-gender').value,
+                phone: document.getElementById('gen-phone').value,
+                email: document.getElementById('gen-email').value,
+                travel: document.getElementById('gen-travel').value
+            };
+            
+            // Generate blockchain ID
+            const blockchainId = generateBlockchainId(formData);
+            
+            // Show modal with generated ID
+            elements.generatedId.value = blockchainId;
+            elements.idModal.classList.add('active');
+            
+            // Update statistics
+            BLOCKCHAIN_SYSTEM.totalCount++;
+            BLOCKCHAIN_SYSTEM.pendingCount++;
+            updateStatistics();
+            
+            // Add to blockchain
+            addIdToBlockchain(formData.name, blockchainId);
+            
+            // Reset form
+            resetGenerationForm();
+            
+            showNotification(
+                "Digital ID Generated",
+                `Blockchain ID created for ${formData.name}. Please save the QR code.`,
+                "success"
+            );
+        }
+        
+        // Generate Blockchain ID
+        function generateBlockchainId(data) {
+            const timestamp = Date.now();
+            const randomHex = Array.from({length: 32}, () => 
+                Math.floor(Math.random() * 16).toString(16)
+            ).join('');
+            
+            return `0x${randomHex}${timestamp.toString(16)}`;
+        }
+        
+        // Generate Hash
+        function generateHash() {
+            return '0x' + Array.from({length: 64}, () => 
+                Math.floor(Math.random() * 16).toString(16)
+            ).join('');
+        }
+        
+        // Randomize ID Data
+        function randomizeIdData() {
+            const names = ["Emma Wilson", "Liam Johnson", "Olivia Brown", "Noah Davis", "Ava Miller"];
+            const passports = ["A12345678", "B87654321", "C11223344", "D55667788", "E99887766"];
+            const nationalities = ["USA", "UK", "CAN", "AUS", "GER"];
+            const genders = ["Male", "Female"];
+            
+            document.getElementById('gen-name').value = names[Math.floor(Math.random() * names.length)];
+            document.getElementById('gen-passport').value = passports[Math.floor(Math.random() * passports.length)];
+            document.getElementById('gen-nationality').value = nationalities[Math.floor(Math.random() * nationalities.length)];
+            document.getElementById('gen-gender').value = genders[Math.floor(Math.random() * genders.length)];
+            document.getElementById('gen-phone').value = `+1-${Math.floor(Math.random() * 900) + 100}-${Math.floor(Math.random() * 900) + 100}-${Math.floor(Math.random() * 9000) + 1000}`;
+            document.getElementById('gen-email').value = `tourist${Math.floor(Math.random() * 1000)}@example.com`;
+            
+            // Set random date of birth (18-70 years ago)
+            const today = new Date();
+            const minDate = new Date(today.getFullYear() - 70, today.getMonth(), today.getDate());
+            const maxDate = new Date(today.getFullYear() - 18, today.getMonth(), today.getDate());
+            const randomDate = new Date(minDate.getTime() + Math.random() * (maxDate.getTime() - minDate.getTime()));
+            document.getElementById('gen-dob').value = randomDate.toISOString().split('T')[0];
+            
+            showNotification(
+                "Data Randomized",
+                "Form filled with sample tourist data for testing.",
+                "info"
+            );
+        }
+        
+        // Reset Generation Form
+        function resetGenerationForm() {
+            elements.generationForm.reset();
+        }
+        
+        // Copy Generated ID
+        function copyGeneratedId() {
+            elements.generatedId.select();
+            document.execCommand('copy');
+            
+            showNotification(
+                "ID Copied",
+                "Blockchain ID copied to clipboard.",
+                "success"
+            );
+        }
+        
+        // Download QR Code
+        function downloadQrCode() {
+            showNotification(
+                "QR Code Download",
+                "QR code image has been downloaded.",
+                "success"
+            );
+        }
+        
+        // Add ID to Blockchain
+        function addIdToBlockchain(name, id) {
+            const newBlock = {
+                index: SAMPLE_BLOCKCHAIN.length + 1,
+                hash: generateHash(),
+                previousHash: SAMPLE_BLOCKCHAIN[SAMPLE_BLOCKCHAIN.length - 1].hash,
+                timestamp: new Date().toLocaleString(),
+                data: `ID Created - ${name}`,
+                verified: true
+            };
+            
+            SAMPLE_BLOCKCHAIN.push(newBlock);
+            renderBlockchain();
+        }
+        
+        // Add Verification to Blockchain
+        function addVerificationToBlockchain(id, owner) {
+            const newBlock = {
+                index: SAMPLE_BLOCKCHAIN.length + 1,
+                hash: generateHash(),
+                previousHash: SAMPLE_BLOCKCHAIN[SAMPLE_BLOCKCHAIN.length - 1].hash,
+                timestamp: new Date().toLocaleString(),
+                data: `ID: ${id.substring(0, 12)}... Verified - ${owner}`,
+                verified: true
+            };
+            
+            SAMPLE_BLOCKCHAIN.push(newBlock);
+            renderBlockchain();
+        }
+        
+        // Show Audit Trail
+        function showAuditTrail() {
+            showNotification(
+                "Audit Trail",
+                "Opening complete verification history...",
+                "info"
+            );
+        }
+        
+        // Show System Log
+        function showSystemLog() {
+            showNotification(
+                "System Log",
+                "Displaying blockchain system log and transactions...",
+                "info"
+            );
+        }
+        
+        // Refresh Blockchain
+        function refreshBlockchain() {
+            // Add a new block
+            const newBlock = {
+                index: SAMPLE_BLOCKCHAIN.length + 1,
+                hash: generateHash(),
+                previousHash: SAMPLE_BLOCKCHAIN[SAMPLE_BLOCKCHAIN.length - 1].hash,
+                timestamp: new Date().toLocaleString(),
+                data: "System Update: Blockchain synchronized",
+                verified: true
+            };
+            
+            SAMPLE_BLOCKCHAIN.push(newBlock);
+            renderBlockchain();
+            
+            updateLastBlock();
+            
+            showNotification(
+                "Blockchain Refreshed",
+                "New block added to the chain and synchronized.",
+                "success"
+            );
+        }
+        
+        // Export Certificate
+        function exportCertificate() {
+            showNotification(
+                "Certificate Export",
+                "Generating and downloading verification certificate...",
+                "success"
+            );
+        }
+        
+        // Share Verification
+        function shareVerification() {
+            showNotification(
+                "Share Verification",
+                "Verification result shared with security authorities.",
+                "success"
+            );
+        }
+        
+        // Show Notification
+        function showNotification(title, message, type = "info") {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: var(--panel-bg);
+                color: var(--text-primary);
+                padding: 15px 20px;
+                border-radius: 8px;
+                border-left: 4px solid ${type === 'success' ? 'var(--success)' : type === 'warning' ? 'var(--warning)' : type === 'danger' ? 'var(--accent)' : 'var(--blockchain-purple)'};
+                box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+                z-index: 1000;
+                min-width: 300px;
+                max-width: 400px;
+                border: 1px solid var(--panel-border);
+                backdrop-filter: blur(10px);
+                animation: slideInRight 0.5s ease-out;
+                transform-origin: top right;
+            `;
+            
+            notification.innerHTML = `
+                <div style="display: flex; align-items: flex-start; gap: 15px;">
+                    <div style="font-size: 1.5rem; color: ${type === 'success' ? 'var(--success)' : type === 'warning' ? 'var(--warning)' : type === 'danger' ? 'var(--accent)' : 'var(--blockchain-purple)'}">
+                        <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'warning' ? 'exclamation-triangle' : type === 'danger' ? 'exclamation-circle' : 'info-circle'}"></i>
+                    </div>
+                    <div style="flex: 1;">
+                        <div style="font-weight: 600; margin-bottom: 5px; font-size: 1.1rem;">${title}</div>
+                        <div style="font-size: 0.9rem; opacity: 0.9;">${message}</div>
+                    </div>
+                    <button class="close-notification" style="background: none; border: none; color: var(--text-dim); cursor: pointer; font-size: 1rem;">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Close button
+            notification.querySelector('.close-notification').addEventListener('click', () => {
+                notification.style.animation = 'slideOutRight 0.5s ease-out forwards';
+                setTimeout(() => {
+                    if (notification.parentNode) {
+                        notification.parentNode.removeChild(notification);
+                    }
+                }, 500);
+            });
+            
+            // Auto-remove after 5 seconds
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.style.animation = 'slideOutRight 0.5s ease-out forwards';
+                    setTimeout(() => {
+                        if (notification.parentNode) {
+                            notification.parentNode.removeChild(notification);
+                        }
+                    }, 500);
+                }
+            }, 5000);
+            
+            // Add CSS for animations
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes slideInRight {
+                    from { opacity: 0; transform: translateX(100px); }
+                    to { opacity: 1; transform: translateX(0); }
+                }
+                @keyframes slideOutRight {
+                    from { opacity: 1; transform: translateX(0); }
+                    to { opacity: 0; transform: translateX(100px); }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+        
+        // Start Live Updates
+        function startLiveUpdates() {
+            setInterval(() => {
+                // Occasionally update statistics
+                if (Math.random() > 0.7) {
+                    const change = Math.floor(Math.random() * 3);
+                    BLOCKCHAIN_SYSTEM.verifiedCount += change;
+                    BLOCKCHAIN_SYSTEM.totalCount += change;
+                    updateStatistics();
+                }
+                
+                // Update last block occasionally
+                if (Math.random() > 0.8) {
+                    updateLastBlock();
+                }
+                
+            }, 10000); // Update every 10 seconds
+        }
+        
+        // Initialize when page loads
+        document.addEventListener('DOMContentLoaded', initBlockchainSystem);
+        
+    </script>
+</body>
+</html>

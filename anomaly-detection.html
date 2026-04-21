@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anomaly Detection | Police Module | Tourist Safety System</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f8f9fa; }
+        .header { background: linear-gradient(135deg, #1e3c72, #2a5298); color: white; padding: 20px 0; }
+        .header-content { max-width: 1400px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; }
+        .container { max-width: 1400px; margin: 0 auto; padding: 30px 20px; }
+        .ai-status { background: white; border-radius: 10px; padding: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); margin-bottom: 30px; }
+        .status-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
+        .status-item { text-align: center; padding: 15px; background: #f8f9fa; border-radius: 10px; }
+        .status-value { font-size: 24px; font-weight: bold; margin-bottom: 5px; }
+        .status-active { color: #28a745; }
+        .status-warning { color: #ffc107; }
+        .status-danger { color: #dc3545; }
+        .status-info { color: #17a2b8; }
+        .anomaly-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+        .card { background: white; border-radius: 10px; padding: 25px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); margin-bottom: 20px; }
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        .card-title { font-size: 18px; font-weight: 600; color: #1e3c72; }
+        .anomaly-item { border: 1px solid #dee2e6; border-radius: 8px; padding: 15px; margin-bottom: 15px; }
+        .anomaly-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+        .anomaly-type { padding: 4px 8px; border-radius: 12px; font-size: 12px; font-weight: bold; }
+        .type-movement { background: #e3f2fd; color: #1976d2; }
+        .type-behavior { background: #f3e5f5; color: #7b1fa2; }
+        .type-location { background: #e8f5e8; color: #388e3c; }
+        .type-communication { background: #fff3e0; color: #f57c00; }
+        .severity-high { border-left: 4px solid #dc3545; }
+        .severity-medium { border-left: 4px solid #ffc107; }
+        .severity-low { border-left: 4px solid #28a745; }
+        .anomaly-details { font-size: 14px; color: #666; margin-bottom: 10px; }
+        .anomaly-actions { display: flex; gap: 10px; }
+        .btn { padding: 8px 16px; border: none; border-radius: 5px; cursor: pointer; font-weight: 600; font-size: 12px; }
+        .btn-primary { background: #1e3c72; color: white; }
+        .btn-success { background: #28a745; color: white; }
+        .btn-warning { background: #ffc107; color: #212529; }
+        .btn-danger { background: #dc3545; color: white; }
+        .ai-insights { background: linear-gradient(135deg, #667eea, #764ba2); color: white; border-radius: 10px; padding: 20px; margin-bottom: 20px; }
+        .pattern-analysis { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px; }
+        .pattern-item { background: rgba(255,255,255,0.1); border-radius: 5px; padding: 10px; text-align: center; }
+        .ml-model-status { background: #f8f9fa; border-radius: 5px; padding: 15px; margin-bottom: 15px; }
+        .model-metric { display: flex; justify-content: space-between; margin-bottom: 5px; }
+    </style>
+</head>
+<body>    <script src="universal-menu.js"></script>
+    <header class="header">
+        <div class="header-content">
+            <div style="display: flex; align-items: center;">
+                <div style="width: 50px; height: 50px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; color: #1e3c72; margin-right: 15px;">🤖</div>
+                <div>
+                    <div style="font-size: 24px; font-weight: bold;">AI Anomaly Detection System</div>
+                    <div style="font-size: 14px; opacity: 0.9;">Machine Learning-Powered Tourist Behavior Analysis</div>
+                </div>
+            </div>
+            <button class="btn btn-primary" onclick="window.location.href='police-dashboard.html'">← Back to Dashboard</button>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- AI System Status -->
+        <div class="ai-status">
+            <h3 style="margin-bottom: 20px;">🤖 AI System Status</h3>
+            <div class="status-grid">
+                <div class="status-item">
+                    <div class="status-value status-active">ACTIVE</div>
+                    <div>System Status</div>
+                </div>
+                <div class="status-item">
+                    <div class="status-value status-info">1,247</div>
+                    <div>Tourists Monitored</div>
+                </div>
+                <div class="status-item">
+                    <div class="status-value status-warning">23</div>
+                    <div>Anomalies Detected</div>
+                </div>
+                <div class="status-item">
+                    <div class="status-value status-active">97.3%</div>
+                    <div>Model Accuracy</div>
+                </div>
+                <div class="status-item">
+                    <div class="status-value status-info">2.1s</div>
+                    <div>Processing Time</div>
+                </div>
+                <div class="status-item">
+                    <div class="status-value status-active">15</div>
+                    <div>Auto-Resolved</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="anomaly-grid">
+            <!-- Real-time Anomalies -->
+            <div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">🚨 Real-time Anomaly Alerts</h3>
+                        <div>
+                            <button class="btn btn-primary" onclick="refreshAnomalies()">🔄 Refresh</button>
+                            <button class="btn btn-warning" onclick="tuneModel()">⚙️ Tune Model</button>
+                        </div>
+                    </div>
+
+                    <!-- High Priority Anomaly -->
+                    <div class="anomaly-item severity-high">
+                        <div class="anomaly-header">
+                            <span class="anomaly-type type-movement">MOVEMENT ANOMALY</span>
+                            <span style="font-size: 12px; color: #666;">2 min ago</span>
+                        </div>
+                        <div style="font-weight: 600; margin-bottom: 5px;">Tourist DT-2024-AS-001 - Unusual Movement Pattern</div>
+                        <div class="anomaly-details">
+                            Tourist has been stationary for 45 minutes in a crowded area after showing rapid movement patterns. 
+                            Location: Kamakhya Temple. Confidence: 94.2%
+                        </div>
+                        <div class="anomaly-actions">
+                            <button class="btn btn-danger" onclick="createAlert('DT-2024-AS-001')">🚨 Create Alert</button>
+                            <button class="btn btn-primary" onclick="viewDetails('DT-2024-AS-001')">👁️ View Details</button>
+                            <button class="btn btn-success" onclick="markFalsePositive('AN-001')">❌ False Positive</button>
+                        </div>
+                    </div>
+
+                    <!-- Medium Priority Anomaly -->
+                    <div class="anomaly-item severity-medium">
+                        <div class="anomaly-header">
+                            <span class="anomaly-type type-behavior">BEHAVIOR ANOMALY</span>
+                            <span style="font-size: 12px; color: #666;">8 min ago</span>
+                        </div>
+                        <div style="font-weight: 600; margin-bottom: 5px;">Tourist DT-2024-MN-002 - Deviation from Planned Route</div>
+                        <div class="anomaly-details">
+                            Tourist has deviated significantly from their registered itinerary. 
+                            Current location: Unknown area, 2.3km from planned route. Confidence: 87.6%
+                        </div>
+                        <div class="anomaly-actions">
+                            <button class="btn btn-warning" onclick="sendNotification('DT-2024-MN-002')">📱 Send Notification</button>
+                            <button class="btn btn-primary" onclick="viewDetails('DT-2024-MN-002')">👁️ View Details</button>
+                            <button class="btn btn-success" onclick="markFalsePositive('AN-002')">❌ False Positive</button>
+                        </div>
+                    </div>
+
+                    <!-- Low Priority Anomaly -->
+                    <div class="anomaly-item severity-low">
+                        <div class="anomaly-header">
+                            <span class="anomaly-type type-communication">COMMUNICATION ANOMALY</span>
+                            <span style="font-size: 12px; color: #666;">15 min ago</span>
+                        </div>
+                        <div style="font-weight: 600; margin-bottom: 5px;">Tourist DT-2024-ML-003 - Unusual App Usage Pattern</div>
+                        <div class="anomaly-details">
+                            Tourist has not used the safety app for 3 hours, unusual for their typical usage pattern. 
+                            Last seen: Shillong Peak. Confidence: 72.1%
+                        </div>
+                        <div class="anomaly-actions">
+                            <button class="btn btn-primary" onclick="checkStatus('DT-2024-ML-003')">📞 Check Status</button>
+                            <button class="btn btn-primary" onclick="viewDetails('DT-2024-ML-003')">👁️ View Details</button>
+                            <button class="btn btn-success" onclick="markFalsePositive('AN-003')">❌ False Positive</button>
+                        </div>
+                    </div>
+
+                    <!-- Location Anomaly -->
+                    <div class="anomaly-item severity-medium">
+                        <div class="anomaly-header">
+                            <span class="anomaly-type type-location">LOCATION ANOMALY</span>
+                            <span style="font-size: 12px; color: #666;">22 min ago</span>
+                        </div>
+                        <div style="font-weight: 600; margin-bottom: 5px;">Tourist DT-2024-TR-004 - Restricted Area Entry</div>
+                        <div class="anomaly-details">
+                            Tourist has entered a restricted/unsafe area near Tripura border. 
+                            Area marked as high-risk zone. Confidence: 96.8%
+                        </div>
+                        <div class="anomaly-actions">
+                            <button class="btn btn-danger" onclick="createAlert('DT-2024-TR-004')">🚨 Create Alert</button>
+                            <button class="btn btn-warning" onclick="sendWarning('DT-2024-TR-004')">⚠️ Send Warning</button>
+                            <button class="btn btn-primary" onclick="viewDetails('DT-2024-TR-004')">👁️ View Details</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AI Insights & Analytics -->
+            <div>
+                <!-- AI Insights -->
+                <div class="ai-insights">
+                    <h3 style="margin-bottom: 15px;">🧠 AI Insights & Predictions</h3>
+                    <div style="margin-bottom: 15px;">
+                        <strong>Today's Risk Assessment:</strong> MODERATE<br>
+                        <small>Based on weather conditions, tourist density, and historical patterns</small>
+                    </div>
+                    
+                    <div class="pattern-analysis">
+                        <div class="pattern-item">
+                            <div style="font-size: 18px; font-weight: bold;">73%</div>
+                            <div style="font-size: 12px;">Anomalies in Tourist Hotspots</div>
+                        </div>
+                        <div class="pattern-item">
+                            <div style="font-size: 18px; font-weight: bold;">2.3x</div>
+                            <div style="font-size: 12px;">Higher Risk During Peak Hours</div>
+                        </div>
+                        <div class="pattern-item">
+                            <div style="font-size: 18px; font-weight: bold;">15min</div>
+                            <div style="font-size: 12px;">Avg Time to Anomaly Detection</div>
+                        </div>
+                        <div class="pattern-item">
+                            <div style="font-size: 18px; font-weight: bold;">89%</div>
+                            <div style="font-size: 12px;">Prediction Accuracy Rate</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ML Model Performance -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">📊 ML Model Performance</h3>
+                        <button class="btn btn-primary" onclick="viewModelDetails()">📈 Detailed Metrics</button>
+                    </div>
+
+                    <div class="ml-model-status">
+                        <h4 style="margin-bottom: 10px;">Movement Pattern Detection Model</h4>
+                        <div class="model-metric">
+                            <span>Accuracy:</span>
+                            <span style="font-weight: bold; color: #28a745;">97.3%</span>
+                        </div>
+                        <div class="model-metric">
+                            <span>Precision:</span>
+                            <span style="font-weight: bold; color: #28a745;">94.8%</span>
+                        </div>
+                        <div class="model-metric">
+                            <span>Recall:</span>
+                            <span style="font-weight: bold; color: #28a745;">92.1%</span>
+                        </div>
+                        <div class="model-metric">
+                            <span>Last Updated:</span>
+                            <span>2 hours ago</span>
+                        </div>
+                    </div>
+
+                    <div class="ml-model-status">
+                        <h4 style="margin-bottom: 10px;">Behavioral Analysis Model</h4>
+                        <div class="model-metric">
+                            <span>Accuracy:</span>
+                            <span style="font-weight: bold; color: #ffc107;">89.7%</span>
+                        </div>
+                        <div class="model-metric">
+                            <span>Precision:</span>
+                            <span style="font-weight: bold; color: #28a745;">91.2%</span>
+                        </div>
+                        <div class="model-metric">
+                            <span>Recall:</span>
+                            <span style="font-weight: bold; color: #ffc107;">87.4%</span>
+                        </div>
+                        <div class="model-metric">
+                            <span>Last Updated:</span>
+                            <span>4 hours ago</span>
+                        </div>
+                    </div>
+
+                    <div class="ml-model-status">
+                        <h4 style="margin-bottom: 10px;">Risk Prediction Model</h4>
+                        <div class="model-metric">
+                            <span>Accuracy:</span>
+                            <span style="font-weight: bold; color: #28a745;">95.1%</span>
+                        </div>
+                        <div class="model-metric">
+                            <span>Precision:</span>
+                            <span style="font-weight: bold; color: #28a745;">93.6%</span>
+                        </div>
+                        <div class="model-metric">
+                            <span>Recall:</span>
+                            <span style="font-weight: bold; color: #28a745;">96.8%</span>
+                        </div>
+                        <div class="model-metric">
+                            <span>Last Updated:</span>
+                            <span>1 hour ago</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">⚡ Quick Actions</h3>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <button class="btn btn-primary" onclick="bulkAnalysis()">📊 Bulk Analysis</button>
+                        <button class="btn btn-warning" onclick="adjustSensitivity()">🎛️ Adjust Sensitivity</button>
+                        <button class="btn btn-success" onclick="exportAnomalies()">📤 Export Data</button>
+                        <button class="btn btn-danger" onclick="emergencyMode()">🚨 Emergency Mode</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        function refreshAnomalies() {
+            console.log('Refreshing anomaly data...');
+            alert('Anomaly data refreshed. 3 new anomalies detected.');
+            // In real implementation, this would fetch latest anomalies
+        }
+
+        function createAlert(touristId) {
+            if (confirm(`Create high-priority alert for tourist ${touristId}?`)) {
+                alert(`Alert created for ${touristId}. Emergency response team notified.`);
+                // In real implementation, this would create an alert
+            }
+        }
+
+        function viewDetails(touristId) {
+            window.location.href = `tourist-lookup.html?id=${touristId}`;
+        }
+
+        function markFalsePositive(anomalyId) {
+            if (confirm('Mark this anomaly as false positive? This will help improve the AI model.')) {
+                alert('Anomaly marked as false positive. Model will be retrained.');
+                // In real implementation, this would update the ML model
+            }
+        }
+
+        function sendNotification(touristId) {
+            const message = prompt('Enter notification message:', 'Please confirm your safety status.');
+            if (message) {
+                alert(`Notification sent to ${touristId}: "${message}"`);
+            }
+        }
+
+        function sendWarning(touristId) {
+            alert(`Warning sent to ${touristId} about restricted area entry.`);
+        }
+
+        function checkStatus(touristId) {
+            alert(`Initiating status check for ${touristId}. SMS and call will be made.`);
+        }
+
+        function tuneModel() {
+            alert('Opening AI model tuning interface...');
+            // In real implementation, this would open model configuration
+        }
+
+        function viewModelDetails() {
+            alert('Opening detailed ML model performance dashboard...');
+            // In real implementation, this would show detailed metrics
+        }
+
+        function bulkAnalysis() {
+            if (confirm('Run bulk analysis on all active tourists? This may take several minutes.')) {
+                alert('Bulk analysis started. Results will be available in 5-10 minutes.');
+            }
+        }
+
+        function adjustSensitivity() {
+            const sensitivity = prompt('Enter sensitivity level (1-10, current: 7):', '7');
+            if (sensitivity && sensitivity >= 1 && sensitivity <= 10) {
+                alert(`Anomaly detection sensitivity adjusted to level ${sensitivity}.`);
+            }
+        }
+
+        function exportAnomalies() {
+            alert('Exporting anomaly data as CSV file...');
+            // In real implementation, this would export data
+        }
+
+        function emergencyMode() {
+            if (confirm('Activate emergency mode? This will increase sensitivity and alert frequency.')) {
+                alert('Emergency mode activated. All anomalies will be treated as high priority.');
+            }
+        }
+
+        // Auto-refresh anomalies every 30 seconds
+        setInterval(() => {
+            console.log('Auto-refreshing anomaly detection...');
+            // In real implementation, this would fetch new anomalies
+        }, 30000);
+
+        // Simulate real-time anomaly detection
+        function simulateAnomalyDetection() {
+            // This would be replaced with real WebSocket connection
+            console.log('AI system monitoring 1,247 tourists...');
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            simulateAnomalyDetection();
+        });
+    </script>
+    <!-- Universal Menu Script -->`n    <script src="universal-menu.js"></script>`n</body>
+</html>
